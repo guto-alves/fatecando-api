@@ -1,4 +1,4 @@
-package com.gutotech.fatecandoapi.controller;
+package com.gutotech.fatecandoapi.rest;
 
 import java.util.List;
 
@@ -9,23 +9,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gutotech.fatecandoapi.model.Student;
-import com.gutotech.fatecandoapi.service.StudentService;
+import com.gutotech.fatecandoapi.model.Topic;
+import com.gutotech.fatecandoapi.service.TopicService;
 
 @RestController
-@RequestMapping("api/students")
-public class StudentController {
+@RequestMapping("api/topics")
+public class TopicController {
 
 	@Autowired
-	private StudentService service;
+	private TopicService service;
 
 	@GetMapping
-	public ResponseEntity<List<Student>> findAll() {
+	public ResponseEntity<List<Topic>> findAll() {
 		return ResponseEntity.ok(service.findAll());
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<Student> findById(@PathVariable("id") Long id) {
+	public ResponseEntity<Topic> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(service.findById(id));
 	}
+
 }

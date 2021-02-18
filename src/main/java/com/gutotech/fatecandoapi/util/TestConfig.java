@@ -1,4 +1,4 @@
-package com.gutotech.fatecandoapi.config;
+package com.gutotech.fatecandoapi.util;
 
 import java.util.Arrays;
 import java.util.Date;

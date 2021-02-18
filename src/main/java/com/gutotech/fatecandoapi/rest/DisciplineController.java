@@ -1,4 +1,4 @@
-package com.gutotech.fatecandoapi.controller;
+package com.gutotech.fatecandoapi.rest;
 
 import java.util.List;
 

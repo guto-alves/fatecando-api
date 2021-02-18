@@ -19,7 +19,7 @@ import com.gutotech.fatecandoapi.service.TopicService;
 
 @RestController
 @RequestMapping("api/disciplines")
-public class DisciplineController {
+public class DisciplineRestController {
 
 	@Autowired
 	private DisciplineService disciplineService;

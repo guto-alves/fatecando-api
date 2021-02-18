@@ -14,7 +14,7 @@ import com.gutotech.fatecandoapi.service.TopicService;
 
 @RestController
 @RequestMapping("api/topics")
-public class TopicController {
+public class TopicRestController {
 
 	@Autowired
 	private TopicService service;

@@ -14,7 +14,7 @@ import com.gutotech.fatecandoapi.service.StudentService;
 
 @RestController
 @RequestMapping("api/students")
-public class StudentController {
+public class StudentRestController {
 
 	@Autowired
 	private StudentService service;

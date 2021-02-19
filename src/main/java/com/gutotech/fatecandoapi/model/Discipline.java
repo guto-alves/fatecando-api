@@ -1,8 +1,10 @@
 package com.gutotech.fatecandoapi.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,28 +23,29 @@ public class Discipline {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank
 	@Column(unique = true)
 	private String name;
 
+	@NotBlank
 	@Column(unique = true)
 	private String code;
 
+	@NotBlank
 	@Column(length = 2500)
 	private String description;
 
-	private String objetive;
+	@NotBlank
+	private String objective;
 
 	private int semester;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Topic> topics = new ArrayList<>();
-
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Test> tests = new ArrayList<>();
+	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
+	private Set<Topic> topics = new HashSet<>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
 	private List<ForumTopic> forum = new ArrayList<>();
 
 	public Discipline() {
@@ -51,10 +55,12 @@ public class Discipline {
 		this.name = name;
 		this.code = code;
 		this.description = description;
-		this.objetive = objetive;
+		this.objective = objetive;
 		this.semester = semester;
 	}
 
+	// Utility methods that synchronize both ends whenever a child element is added
+	// or removed.
 	public void addTopic(Topic topic) {
 		topics.add(topic);
 		topic.setDiscipline(this);
@@ -97,28 +103,28 @@ public class Discipline {
 		this.description = description;
 	}
 
-	public String getObjetive() {
-		return objetive;
+	public String getObjective() {
+		return objective;
 	}
 
-	public void setObjetive(String objetive) {
-		this.objetive = objetive;
+	public void setObjective(String objective) {
+		this.objective = objective;
 	}
 
-	public int getSemestre() {
+	public int getSemester() {
 		return semester;
 	}
 
-	public void setSemestre(int semester) {
+	public void setSemester(int semester) {
 		this.semester = semester;
 	}
 
-	public List<Topic> getTopics() {
+	public Set<Topic> getTopics() {
 		return topics;
 	}
 
-	public List<Test> getTests() {
-		return tests;
+	public List<ForumTopic> getForum() {
+		return forum;
 	}
 
 	@Override
@@ -136,6 +142,11 @@ public class Discipline {
 		}
 		Discipline other = (Discipline) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "Discipline [id=" + id + ", name=" + name + ", code=" + code + "]";
 	}
 
 }

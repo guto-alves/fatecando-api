@@ -8,19 +8,26 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import com.gutotech.fatecandoapi.model.Alternative;
+import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.ForumTopic;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Student;
 import com.gutotech.fatecandoapi.model.Test;
 import com.gutotech.fatecandoapi.model.Topic;
+import com.gutotech.fatecandoapi.repository.CourseRepository;
 import com.gutotech.fatecandoapi.repository.DisciplineRepository;
 import com.gutotech.fatecandoapi.repository.ForumTopicRepository;
+import com.gutotech.fatecandoapi.repository.QuestionRepository;
 import com.gutotech.fatecandoapi.repository.StudentRepository;
 import com.gutotech.fatecandoapi.repository.TestRepository;
+import com.gutotech.fatecandoapi.repository.TopicRepository;
 
 @Configuration
-public class TestConfig implements CommandLineRunner {
+public class LoadDatabase implements CommandLineRunner {
+	
+	@Autowired
+	private CourseRepository courseRepository;
 
 	@Autowired
 	private StudentRepository studentRepository;
@@ -34,10 +41,26 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private ForumTopicRepository forumTopicRepository;
 
+	@Autowired
+	private QuestionRepository questionRepository;
+	
+	@Autowired
+	private TopicRepository topicRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 		studentRepository.deleteAll();
+		questionRepository.deleteAll();
+		topicRepository.deleteAll();
 		disciplineRepository.deleteAll();
+		courseRepository.deleteAll();
+		testRepository.deleteAll();
+
+		Course ads = new Course(null, "Análise e Desenvolvimento de Sistemas", 6);
+		Course log = new Course(null, "Logística", 6);
+		Course comex = new Course(null, "Comércio Exterior", 5);
+		Course rh = new Course(null, "Gestão de Recursos Humanos", 5);
+		courseRepository.saveAll(Arrays.asList(ads, log, comex, rh));
 
 		// Storing Students with topics
 		Student gustavo = new Student(null, "Gustavo", "Alves", "gu@g.com", "123", "M", new Date());

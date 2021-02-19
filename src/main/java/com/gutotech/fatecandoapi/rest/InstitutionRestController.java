@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,15 +56,6 @@ public class InstitutionRestController {
 
 	@PostMapping
 	public ResponseEntity<?> addInstitution(@RequestBody @Valid Institution institution, BindingResult bindingResult) {
-		BindingErrorsResponse errors = new BindingErrorsResponse();
-		HttpHeaders headers = new HttpHeaders();
-
-		if (bindingResult.hasErrors() || institution == null) {
-			errors.addAllErrors(bindingResult);
-			headers.add("errors", errors.toJSON());
-			return ResponseEntity.badRequest().headers(headers).build();
-		}
-
 		EntityModel<Institution> entityModel = assembler.toModel(service.save(institution));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -75,15 +65,6 @@ public class InstitutionRestController {
 	@PutMapping("{id}")
 	public ResponseEntity<?> updateInstitution(@RequestBody @Valid Institution newInstitution, //
 			@PathVariable Long id, BindingResult bindingResult) {
-		BindingErrorsResponse errors = new BindingErrorsResponse();
-		HttpHeaders headers = new HttpHeaders();
-
-		if (bindingResult.hasErrors() || newInstitution == null) {
-			errors.addAllErrors(bindingResult);
-			headers.add("errors", errors.toJSON());
-			return ResponseEntity.badRequest().headers(headers).build();
-		}
-
 		Institution institution = service.findById(id);
 		institution.setName(newInstitution.getName());
 
@@ -99,4 +80,5 @@ public class InstitutionRestController {
 		service.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
+
 }

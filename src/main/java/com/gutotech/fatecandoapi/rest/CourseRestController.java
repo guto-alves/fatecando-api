@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,15 +56,6 @@ public class CourseRestController {
 
 	@PostMapping
 	public ResponseEntity<?> addCourse(@RequestBody @Valid Course course, BindingResult bindingResult) {
-		BindingErrorsResponse errors = new BindingErrorsResponse();
-		HttpHeaders headers = new HttpHeaders();
-
-		if (bindingResult.hasErrors() || course == null) {
-			errors.addAllErrors(bindingResult);
-			headers.add("errors", errors.toJSON());
-			return ResponseEntity.badRequest().headers(headers).build();
-		}
-
 		EntityModel<Course> entityModel = assembler.toModel(service.save(course));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -73,22 +63,13 @@ public class CourseRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateCourse(@RequestBody @Valid Course newCourse, //
+	public ResponseEntity<?> updateCourse(@RequestBody @Valid Course course, //
 			@PathVariable Long id, BindingResult bindingResult) {
-		BindingErrorsResponse errors = new BindingErrorsResponse();
-		HttpHeaders headers = new HttpHeaders();
+		Course currentCourse = service.findById(id);
+		currentCourse.setName(course.getName());
+		currentCourse.setSemesters(course.getSemesters());
 
-		if (bindingResult.hasErrors() || newCourse == null) {
-			errors.addAllErrors(bindingResult);
-			headers.add("errors", errors.toJSON());
-			return ResponseEntity.badRequest().headers(headers).build();
-		}
-
-		Course course = service.findById(id);
-		course.setName(newCourse.getName());
-		course.setSemesters(newCourse.getSemesters());
-
-		EntityModel<Course> entityModel = assembler.toModel(course);
+		EntityModel<Course> entityModel = assembler.toModel(currentCourse);
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

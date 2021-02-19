@@ -7,9 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,17 +75,7 @@ public class DisciplineRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<Discipline>> addDiscipline(@RequestBody @Valid Discipline discipline,
-			BindingResult bindingResult) {
-		BindingErrorsResponse errors = new BindingErrorsResponse();
-		HttpHeaders headers = new HttpHeaders();
-
-		if (bindingResult.hasErrors() || discipline == null) {
-			errors.addAllErrors(bindingResult);
-			headers.add("errors", errors.toJSON());
-			return ResponseEntity.badRequest().headers(headers).build();
-		}
-
+	public ResponseEntity<EntityModel<Discipline>> addDiscipline(@RequestBody @Valid Discipline discipline) {
 		EntityModel<Discipline> entityModel = disciplineAssembler.toModel(disciplineService.save(discipline));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

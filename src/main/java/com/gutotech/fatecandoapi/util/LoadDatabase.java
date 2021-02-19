@@ -11,6 +11,7 @@ import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.ForumTopic;
+import com.gutotech.fatecandoapi.model.Institution;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Student;
 import com.gutotech.fatecandoapi.model.Test;
@@ -18,6 +19,7 @@ import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.repository.CourseRepository;
 import com.gutotech.fatecandoapi.repository.DisciplineRepository;
 import com.gutotech.fatecandoapi.repository.ForumTopicRepository;
+import com.gutotech.fatecandoapi.repository.InstitutionRepository;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
 import com.gutotech.fatecandoapi.repository.StudentRepository;
 import com.gutotech.fatecandoapi.repository.TestRepository;
@@ -25,7 +27,10 @@ import com.gutotech.fatecandoapi.repository.TopicRepository;
 
 @Configuration
 public class LoadDatabase implements CommandLineRunner {
-	
+
+	@Autowired
+	private InstitutionRepository institutionRepository;
+
 	@Autowired
 	private CourseRepository courseRepository;
 
@@ -43,12 +48,13 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Autowired
 	private QuestionRepository questionRepository;
-	
+
 	@Autowired
 	private TopicRepository topicRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
+		institutionRepository.deleteAll();
 		studentRepository.deleteAll();
 		questionRepository.deleteAll();
 		topicRepository.deleteAll();
@@ -56,6 +62,10 @@ public class LoadDatabase implements CommandLineRunner {
 		courseRepository.deleteAll();
 		testRepository.deleteAll();
 
+		Institution fatecZl = new Institution("Fatec Zona Leste");
+		Institution fatecSp = new Institution("Fatec São Paulo");
+		institutionRepository.saveAll(Arrays.asList(fatecZl, fatecSp));
+		
 		Course ads = new Course(null, "Análise e Desenvolvimento de Sistemas", 6);
 		Course log = new Course(null, "Logística", 6);
 		Course comex = new Course(null, "Comércio Exterior", 5);

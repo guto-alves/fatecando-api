@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Reward;
+import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
 import com.gutotech.fatecandoapi.service.RewardService;
+import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
@@ -31,6 +33,9 @@ public class UserRestController {
 
 	@Autowired
 	private RewardService rewardService;
+
+	@Autowired
+	private TopicService topicService;
 
 	@Autowired
 	private UserModelAssembler assembler;
@@ -72,5 +77,11 @@ public class UserRestController {
 	public ResponseEntity<List<Reward>> getUserRewards(@PathVariable Long id) {
 		User user = userService.findById(id);
 		return ResponseEntity.ok(rewardService.findAllByUser(user));
+	}
+
+	@GetMapping("{id}/topics")
+	public ResponseEntity<List<Topic>> getUserTopics(@PathVariable Long id) {
+		User user = userService.findById(id);
+		return ResponseEntity.ok(topicService.findAllByUser(user));
 	}
 }

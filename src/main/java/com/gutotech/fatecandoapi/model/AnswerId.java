@@ -11,17 +11,17 @@ public class AnswerId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
-	private Student student;
+	private User user;
 
 	@ManyToOne
 	private Question question;
 
-	public Student getStudent() {
-		return student;
+	public User getStudent() {
+		return user;
 	}
 
-	public void setStudent(Student student) {
-		this.student = student;
+	public void setStudent(User user) {
+		this.user = user;
 	}
 
 	public Question getQuestion() {
@@ -34,7 +34,7 @@ public class AnswerId implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(question, student);
+		return Objects.hash(question, user);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class AnswerId implements Serializable {
 			return false;
 		}
 		AnswerId other = (AnswerId) obj;
-		return Objects.equals(question, other.question) && Objects.equals(student, other.student);
+		return Objects.equals(question, other.question) && Objects.equals(user, other.user);
 	}
 
 }

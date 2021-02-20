@@ -27,8 +27,8 @@ public class Answer {
 	public Answer() {
 	}
 
-	public Answer(Student student, Question question) {
-		id.setStudent(student);
+	public Answer(User user, Question question) {
+		id.setStudent(user);
 		id.setQuestion(question);
 	}
 

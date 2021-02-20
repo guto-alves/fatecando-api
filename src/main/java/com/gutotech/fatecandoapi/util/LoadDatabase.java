@@ -11,19 +11,23 @@ import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.ForumTopic;
+import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Institution;
 import com.gutotech.fatecandoapi.model.Question;
-import com.gutotech.fatecandoapi.model.Student;
+import com.gutotech.fatecandoapi.model.Reward;
+import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.Test;
 import com.gutotech.fatecandoapi.model.Topic;
+import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.CourseRepository;
 import com.gutotech.fatecandoapi.repository.DisciplineRepository;
 import com.gutotech.fatecandoapi.repository.ForumTopicRepository;
 import com.gutotech.fatecandoapi.repository.InstitutionRepository;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
-import com.gutotech.fatecandoapi.repository.StudentRepository;
+import com.gutotech.fatecandoapi.repository.RewardRepository;
 import com.gutotech.fatecandoapi.repository.TestRepository;
 import com.gutotech.fatecandoapi.repository.TopicRepository;
+import com.gutotech.fatecandoapi.repository.UserRepository;
 
 @Configuration
 public class LoadDatabase implements CommandLineRunner {
@@ -35,7 +39,7 @@ public class LoadDatabase implements CommandLineRunner {
 	private CourseRepository courseRepository;
 
 	@Autowired
-	private StudentRepository studentRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private DisciplineRepository disciplineRepository;
@@ -52,10 +56,13 @@ public class LoadDatabase implements CommandLineRunner {
 	@Autowired
 	private TopicRepository topicRepository;
 
+	@Autowired
+	private RewardRepository rewardRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 		institutionRepository.deleteAll();
-		studentRepository.deleteAll();
+		userRepository.deleteAll();
 		questionRepository.deleteAll();
 		topicRepository.deleteAll();
 		disciplineRepository.deleteAll();
@@ -65,7 +72,7 @@ public class LoadDatabase implements CommandLineRunner {
 		Institution fatecZl = new Institution("Fatec Zona Leste");
 		Institution fatecSp = new Institution("Fatec São Paulo");
 		institutionRepository.saveAll(Arrays.asList(fatecZl, fatecSp));
-		
+
 		Course ads = new Course(null, "Análise e Desenvolvimento de Sistemas", 6);
 		Course log = new Course(null, "Logística", 6);
 		Course comex = new Course(null, "Comércio Exterior", 5);
@@ -73,11 +80,18 @@ public class LoadDatabase implements CommandLineRunner {
 		courseRepository.saveAll(Arrays.asList(ads, log, comex, rh));
 
 		// Storing Students with topics
-		Student gustavo = new Student(null, "Gustavo", "Alves", "gu@g.com", "123", "M", new Date());
-		Student kaik = new Student(null, "Kayk", "Vida", "kayk@g.com", "123", "M", new Date());
-		Student kaizer = new Student(null, "Kaizer", "Variola", "kaizer@gmail.com", "123", "M", new Date());
-		Student maria = new Student(null, "Maria", "Silva", "maria@hotmail.com", "123", "F", new Date());
-		studentRepository.saveAll(Arrays.asList(gustavo, kaik, kaizer, maria));
+		User gustavo = new User("Gustavo", "Alves", "gu@g.com", "123", Gender.MALE, new Date(), ads);
+		User kaik = new User("Kayk", "Vida", "kayk@g.com", "123", Gender.MALE, new Date(), ads);
+		User kaizer = new User("Kaizer", "Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date(), ads);
+		User maria = new User("Maria", "Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date(), rh);
+		User alice = new User("Alice", "Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
+		userRepository.saveAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
+
+		Reward reward1 = new Reward(RewardType.QUESTION, gustavo);
+		Reward reward2 = new Reward(RewardType.GAME, gustavo);
+		Reward reward3 = new Reward(RewardType.QUESTION, alice);
+		Reward reward4 = new Reward(RewardType.TEST, alice);
+		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4));
 
 		// Storing Disciplines
 		Discipline alp = new Discipline("Algoritmos e Logíca de Programação", "IAL002",
@@ -157,7 +171,6 @@ public class LoadDatabase implements CommandLineRunner {
 		ago.addTopic(topic4);
 		ago.addTopic(topic5);
 		cee.addTopic(topic6);
-
 		irc1.addTopic(topic7);
 		irc1.addTopic(topic8);
 		irc1.addTopic(topic9);

@@ -1,16 +1,30 @@
 package com.gutotech.fatecandoapi.model;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -19,30 +33,60 @@ public class Topic {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank
 	private String name;
 
-	@Column(length = 1000)
+	@NotBlank
+	@Column(length = 2000)
 	private String description;
 
-	// TODO: fix content type
-	@Column(length = 5000)
-	private String contentHtml;
+	@NotBlank
+	@Column(length = 10000)
+	private String htmlContent;
 
-	@OneToOne
-	@JoinColumn(name = "test_id")
-	private Test test;
+	private boolean required;
+
+	@NotNull
+	private TopicStatus status;
 
 	@JsonIgnore
 	@ManyToOne
 	private Discipline discipline;
 
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	@JsonIgnore
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private List<User> usersWhoLiked = new ArrayList<>();
+
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
+	@Column(name = "creation_date")
+	private Date creationDate;
+
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
+	@Column(name = "update_date")
+	private Date updateDate;
+
 	public Topic() {
 	}
 
-	public Topic(String name, String description, String contentHtml) {
+	public Topic(String name, String description, String htmlContent, TopicStatus status, Discipline discipline,
+			User user) {
 		this.name = name;
 		this.description = description;
-		this.contentHtml = contentHtml;
+		this.htmlContent = htmlContent;
+		this.status = status;
+		this.discipline = discipline;
+		this.user = user;
 	}
 
 	public Long getId() {
@@ -69,12 +113,32 @@ public class Topic {
 		this.description = description;
 	}
 
-	public String getContentHtml() {
-		return contentHtml;
+	public String getHtmlContent() {
+		return htmlContent;
 	}
 
-	public void setContentHtml(String contentHtml) {
-		this.contentHtml = contentHtml;
+	public void setHtmlContent(String htmlContent) {
+		this.htmlContent = htmlContent;
+	}
+
+	public int getLikes() {
+		return usersWhoLiked.size();
+	}
+
+	public boolean isRequired() {
+		return required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
+
+	public TopicStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TopicStatus status) {
+		this.status = status;
 	}
 
 	public Discipline getDiscipline() {
@@ -85,12 +149,32 @@ public class Topic {
 		this.discipline = discipline;
 	}
 
-	public Test getTest() {
-		return test;
+	public User getUser() {
+		return user;
 	}
 
-	public void setTest(Test test) {
-		this.test = test;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<User> getUsersWhoLiked() {
+		return usersWhoLiked;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	@Override
@@ -108,6 +192,11 @@ public class Topic {
 		}
 		Topic other = (Topic) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "Topic [id=" + id + ", name=" + name + "]";
 	}
 
 }

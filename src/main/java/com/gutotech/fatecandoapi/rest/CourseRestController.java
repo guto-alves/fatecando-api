@@ -13,7 +13,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +54,7 @@ public class CourseRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> addCourse(@RequestBody @Valid Course course, BindingResult bindingResult) {
+	public ResponseEntity<?> addCourse(@RequestBody @Valid Course course) {
 		EntityModel<Course> entityModel = assembler.toModel(service.save(course));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -64,7 +63,7 @@ public class CourseRestController {
 
 	@PutMapping("{id}")
 	public ResponseEntity<?> updateCourse(@RequestBody @Valid Course course, //
-			@PathVariable Long id, BindingResult bindingResult) {
+			@PathVariable Long id) {
 		Course currentCourse = service.findById(id);
 		currentCourse.setName(course.getName());
 		currentCourse.setSemesters(course.getSemesters());

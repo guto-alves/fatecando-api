@@ -133,7 +133,7 @@ public class QuestionRestController {
 		Question question = questionService.findById(questionId);
 		User user = userService.findById(userId);
 
-		Alternative choosenAlternative = question.getAlternatives().stream() //
+		Alternative chosenAlternative = question.getAlternatives().stream() //
 				.filter((a) -> a.getId() == alternativeId) //
 				.findFirst() //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + alternativeId));
@@ -147,7 +147,7 @@ public class QuestionRestController {
 		if (!lastAnswer.isCorrect()) {
 			Reward reward;
 
-			if (choosenAlternative.isCorrect()) {
+			if (chosenAlternative.isCorrect()) {
 				reward = new Reward(RewardType.RIGHT_ANSWER, user);
 				user.getUserActivity().incrementRightAnswers();
 			} else {
@@ -158,13 +158,13 @@ public class QuestionRestController {
 			rewardService.save(reward);
 			userService.save(user);
 
-			lastAnswer.setCorrect(choosenAlternative.isCorrect());
+			lastAnswer.setCorrect(chosenAlternative.isCorrect());
 			answerService.save(lastAnswer);
 		}
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("isCorrect", choosenAlternative.isCorrect());
-		map.put("feedback", choosenAlternative.getFeedback());
+		map.put("isCorrect", chosenAlternative.isCorrect());
+		map.put("feedback", chosenAlternative.getFeedback());
 
 		return ResponseEntity.ok(map);
 	}

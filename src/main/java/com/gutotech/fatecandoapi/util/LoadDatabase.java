@@ -178,28 +178,28 @@ public class LoadDatabase implements CommandLineRunner {
 						new Alternative("9", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Error", "Errado! Estude com mais atenção!", false),
 						new Alternative("10", "Errado! Estude com mais atenção!", false)),
-				topic11, staff);
+				topic1, staff);
 		Question lpQuestion3 = new Question("Pergunta 1:", QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
-				topic11, staff);
+				topic2, staff);
 		Question lpQuestion4 = new Question("Pergunta 2:", QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
-				topic11, staff);
+				topic3, staff);
 		Question lpQuestion5 = new Question("Pergunta 3:", QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
-				topic11, staff);
+				topic4, staff);
 		Question lpQuestion6 = new Question("x = 10 + 1;\nSystem.out.print(\"x--\");\n\n A saída será:",
 				QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("11", "Errado! Estude com mais atenção!", false),
@@ -207,7 +207,7 @@ public class LoadDatabase implements CommandLineRunner {
 						new Alternative("Error", "Errado! Estude com mais atenção!", false),
 						new Alternative("x--", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("10", "Resposta Errada!", false)),
-				topic11, staff);
+				topic5, staff);
 		questionRepository
 				.saveAll(Arrays.asList(lpQuestion1, lpQuestion2, lpQuestion3, lpQuestion4, lpQuestion5, lpQuestion6));
 

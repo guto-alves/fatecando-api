@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.Test;
 import com.gutotech.fatecandoapi.repository.TestRepository;
+import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
 
 @Service
 public class TestService {
@@ -19,10 +20,15 @@ public class TestService {
 	}
 
 	public Test findById(Long id) {
-		return repository.findById(id).get();
+		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not find test " + id));
 	}
 
-	public void save(Test test) {
-		repository.save(test);
+	public Test save(Test test) {
+		return repository.save(test);
 	}
+
+	public void deleteById(Long id) {
+		repository.deleteById(id);
+	}
+
 }

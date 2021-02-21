@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
 import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
 
@@ -17,6 +18,10 @@ public class QuestionService {
 
 	public List<Question> findAll() {
 		return repository.findAll();
+	}
+
+	public List<Question> findAllByTopic(Topic topic) {
+		return repository.findAllByTopic(topic);
 	}
 
 	public Question findById(Long id) {

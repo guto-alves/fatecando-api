@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.rest.CourseRestController;
+import com.gutotech.fatecandoapi.rest.ForumRestController;
 
 @Component
 public class DisciplineModelAssembler implements RepresentationModelAssembler<Discipline, EntityModel<Discipline>> {
@@ -17,7 +18,9 @@ public class DisciplineModelAssembler implements RepresentationModelAssembler<Di
 	public EntityModel<Discipline> toModel(Discipline discipline) {
 		return EntityModel.of(discipline,
 				linkTo(methodOn(CourseRestController.class).getCourse(discipline.getId())).withSelfRel(),
-				linkTo(methodOn(CourseRestController.class).getAllCourses()).withRel("disciplines"));
+				linkTo(methodOn(CourseRestController.class).getAllCourses()).withRel("disciplines"),
+				linkTo(methodOn(ForumRestController.class).getForumTopicsByDiscipline(discipline.getId()))
+						.withRel("forumTopics"));
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
+import com.gutotech.fatecandoapi.model.ForumTopic;
 import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Institution;
 import com.gutotech.fatecandoapi.model.Question;
@@ -210,15 +211,14 @@ public class LoadDatabase implements CommandLineRunner {
 		questionRepository
 				.saveAll(Arrays.asList(lpQuestion1, lpQuestion2, lpQuestion3, lpQuestion4, lpQuestion5, lpQuestion6));
 
-//		// Forum Topics
-//		ForumTopic forumTopic1 = new ForumTopic("Duvida Routers", "alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi",
-//				new Date(), irc1);
-//		ForumTopic forumTopic2 = new ForumTopic("Alguem me ajuda por favoor!!!",
-//				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", new Date(), irc1);
-//		ForumTopic forumTopic3 = new ForumTopic("Configurar um Roteador",
-//				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", new Date(), irc1);
-//
-//		forumTopicRepository.saveAll(Arrays.asList(forumTopic1, forumTopic2, forumTopic3));
+		// Forum Topics
+		ForumTopic forumTopic1 = new ForumTopic("Duvida Routers", "alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi",
+				irc1, kaizer);
+		ForumTopic forumTopic2 = new ForumTopic("Alguem me ajuda por favoor!!!",
+				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, kaik);
+		ForumTopic forumTopic3 = new ForumTopic("Configurar um Roteador",
+				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, alice);
+		forumTopicRepository.saveAll(Arrays.asList(forumTopic1, forumTopic2, forumTopic3));
 	}
 
 }

@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Discipline;
-import com.gutotech.fatecandoapi.model.ForumTopic;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.assembler.DisciplineModelAssembler;
 import com.gutotech.fatecandoapi.service.DisciplineService;
-import com.gutotech.fatecandoapi.service.ForumTopicService;
 import com.gutotech.fatecandoapi.service.TopicService;
 
 @RestController
@@ -37,9 +35,6 @@ public class DisciplineRestController {
 
 	@Autowired
 	private TopicService topicService;
-
-	@Autowired
-	private ForumTopicService forumTopicService;
 
 	@GetMapping
 	public ResponseEntity<List<Discipline>> getDisciplines(
@@ -63,15 +58,6 @@ public class DisciplineRestController {
 		List<Topic> topics = topicService.findAllByDiscipline(discipline);
 
 		return ResponseEntity.ok(topics);
-	}
-
-	@GetMapping("{id}/forum-topics")
-	public ResponseEntity<List<ForumTopic>> findAllForumTopicsByDiscipline(@PathVariable("id") Long id) {
-		Discipline discipline = disciplineService.findById(id);
-
-		List<ForumTopic> forumTopics = forumTopicService.findAllByDiscipline(discipline);
-
-		return ResponseEntity.ok(forumTopics);
 	}
 
 	@PostMapping

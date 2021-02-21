@@ -1,18 +1,14 @@
 package com.gutotech.fatecandoapi.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
@@ -25,13 +21,10 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class ForumTopic {
+public class ForumTopicComment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@NotBlank
-	private String title;
 
 	@NotBlank
 	@Column(length = 2000)
@@ -39,30 +32,25 @@ public class ForumTopic {
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "dd/MM/yyyy dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date date;
 
 	private int likes;
 
 	@ManyToOne
-	private Discipline discipline;
-
-	@ManyToOne
 	private User user;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "forumTopic", cascade = CascadeType.ALL)
-	private Set<ForumTopicComment> comments = new HashSet<>();
+	@ManyToOne
+	private ForumTopic forumTopic;
 
-	public ForumTopic() {
+	public ForumTopicComment() {
 	}
 
-	public ForumTopic(String title, String description, Discipline discipline, User user) {
-		this.title = title;
+	public ForumTopicComment(String description, User user, ForumTopic forumTopic) {
 		this.description = description;
-		this.discipline = discipline;
 		this.user = user;
+		this.forumTopic = forumTopic;
 	}
 
 	public Long getId() {
@@ -71,14 +59,6 @@ public class ForumTopic {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public String getDescription() {
@@ -105,14 +85,6 @@ public class ForumTopic {
 		this.likes = likes;
 	}
 
-	public Discipline getDiscipline() {
-		return discipline;
-	}
-
-	public void setDiscipline(Discipline discipline) {
-		this.discipline = discipline;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -121,8 +93,13 @@ public class ForumTopic {
 		this.user = user;
 	}
 
-	public Set<ForumTopicComment> getComments() {
-		return comments;
+	@JsonIgnore
+	public ForumTopic getForumTopic() {
+		return forumTopic;
+	}
+
+	public void setForumTopic(ForumTopic forumTopic) {
+		this.forumTopic = forumTopic;
 	}
 
 	@Override
@@ -135,16 +112,11 @@ public class ForumTopic {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof ForumTopic)) {
+		if (!(obj instanceof ForumTopicComment)) {
 			return false;
 		}
-		ForumTopic other = (ForumTopic) obj;
+		ForumTopicComment other = (ForumTopicComment) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "ForumTopic [id=" + id + ", title=" + title + ", likes=" + likes + "]";
 	}
 
 }

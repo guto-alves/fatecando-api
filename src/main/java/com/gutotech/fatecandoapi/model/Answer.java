@@ -3,11 +3,13 @@ package com.gutotech.fatecandoapi.model;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.Basic;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Answer {
@@ -15,45 +17,36 @@ public class Answer {
 	@EmbeddedId
 	private AnswerId id = new AnswerId();
 
-	@Basic
+	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastAnswered;
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	private Date date;
 
-	// This is used to calculate the rating score
-	private int score;
-
-	private boolean hit;
+	private boolean correct;
 
 	public Answer() {
 	}
 
-	public Answer(User user, Question question) {
-		id.setStudent(user);
+	public Answer(User user, Question question, boolean correct) {
+		id.setUser(user);
 		id.setQuestion(question);
+		this.correct = correct;
 	}
 
-	public Date getLastAnswered() {
-		return lastAnswered;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setLastAnswered(Date lastAnswered) {
-		this.lastAnswered = lastAnswered;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	public int getScore() {
-		return score;
+	public boolean isCorrect() {
+		return correct;
 	}
 
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	public boolean isHit() {
-		return hit;
-	}
-
-	public void setHit(boolean hit) {
-		this.hit = hit;
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
 	}
 
 	@Override

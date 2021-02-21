@@ -16,11 +16,19 @@ public class AnswerId implements Serializable {
 	@ManyToOne
 	private Question question;
 
-	public User getStudent() {
+	public AnswerId() {
+	}
+
+	public AnswerId(User user, Question question) {
+		this.user = user;
+		this.question = question;
+	}
+
+	public User getUser() {
 		return user;
 	}
 
-	public void setStudent(User user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 

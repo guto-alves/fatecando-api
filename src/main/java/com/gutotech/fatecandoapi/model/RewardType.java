@@ -1,7 +1,7 @@
 package com.gutotech.fatecandoapi.model;
 
 public enum RewardType {
-	GAME(60, 1000), TEST(30, 500), QUESTION(5, 250);
+	RIGHT_ANSWER(5, 100), WRONG_ANSWER(-15, 0), TEST_SUCCESS(30, 500), TEST_FAILURE(-30, 0), GAME(60, 1000);
 
 	private final int score;
 	private final int coins;

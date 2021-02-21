@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Topic;
-import com.gutotech.fatecandoapi.model.TopicStatus;
+import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
 import com.gutotech.fatecandoapi.service.TopicService;
@@ -87,7 +87,7 @@ public class TopicRestController {
 
 	@PostMapping("upload")
 	public ResponseEntity<EntityModel<Topic>> uploadTopic(@RequestBody @Valid Topic topic) {
-		topic.setStatus(TopicStatus.WAITING_FOR_RESPONSE);
+		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		topic.setRequired(false);
 		topic.getUsersWhoLiked().clear();
 

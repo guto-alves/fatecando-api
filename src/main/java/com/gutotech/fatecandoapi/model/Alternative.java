@@ -7,13 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "alternatives")
 public class Alternative {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +20,10 @@ public class Alternative {
 	@NotBlank
 	private String description;
 
+	private boolean correct;
+
 	@NotBlank
 	private String feedback;
-
-	private boolean correct;
 
 	@JsonIgnore
 	@ManyToOne
@@ -56,14 +54,7 @@ public class Alternative {
 		this.description = description;
 	}
 
-	public String getFeedback() {
-		return feedback;
-	}
-
-	public void setFeedback(String feedback) {
-		this.feedback = feedback;
-	}
-
+	@JsonIgnore
 	public boolean isCorrect() {
 		return correct;
 	}
@@ -72,6 +63,16 @@ public class Alternative {
 		this.correct = correct;
 	}
 
+	@JsonIgnore
+	public String getFeedback() {
+		return feedback;
+	}
+
+	public void setFeedback(String feedback) {
+		this.feedback = feedback;
+	}
+
+	@JsonIgnore
 	public Question getQuestion() {
 		return question;
 	}
@@ -95,6 +96,11 @@ public class Alternative {
 		}
 		Alternative other = (Alternative) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "Alternative [id=" + id + ", description=" + description + "]";
 	}
 
 }

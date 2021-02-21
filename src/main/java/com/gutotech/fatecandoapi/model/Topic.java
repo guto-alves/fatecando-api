@@ -47,7 +47,7 @@ public class Topic {
 	private boolean required;
 
 	@NotNull
-	private TopicStatus status;
+	private UploadStatus status;
 
 	@JsonIgnore
 	@ManyToOne
@@ -79,7 +79,7 @@ public class Topic {
 	public Topic() {
 	}
 
-	public Topic(String name, String description, String htmlContent, TopicStatus status, Discipline discipline,
+	public Topic(String name, String description, String htmlContent, UploadStatus status, Discipline discipline,
 			User user) {
 		this.name = name;
 		this.description = description;
@@ -133,11 +133,11 @@ public class Topic {
 		this.required = required;
 	}
 
-	public TopicStatus getStatus() {
+	public UploadStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(TopicStatus status) {
+	public void setStatus(UploadStatus status) {
 		this.status = status;
 	}
 

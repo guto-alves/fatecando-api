@@ -49,6 +49,14 @@ public class UserActivity {
 		this.user = user;
 	}
 
+	public void incrementRightAnswers() {
+		rightAnswers++;
+	}
+
+	public void incrementWrongAnswers() {
+		wrongAnswers++;
+	}
+
 	public User getUser() {
 		return user;
 	}

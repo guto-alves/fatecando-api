@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+
 public class ErrorResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -16,6 +18,14 @@ public class ErrorResponse implements Serializable {
 	private String path;
 
 	public ErrorResponse() {
+	}
+
+	public ErrorResponse(HttpStatus status, String message, String path) {
+		this.timestamp = new Date();
+		this.status = status.value();
+		this.error = status.getReasonPhrase();
+		this.message = message;
+		this.path = path;
 	}
 
 	public ErrorResponse(Date timestamp, int status, String error, String message, String path) {

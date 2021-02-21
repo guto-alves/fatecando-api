@@ -7,14 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Institution;
+import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Reward;
 import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.Topic;
-import com.gutotech.fatecandoapi.model.TopicStatus;
+import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.CourseRepository;
 import com.gutotech.fatecandoapi.repository.DisciplineRepository;
@@ -88,10 +91,10 @@ public class LoadDatabase implements CommandLineRunner {
 		userRepository.saveAll(Arrays.asList(staff, gustavo, kaik, kaizer, maria, alice));
 
 		// Storing Rewards
-		Reward reward1 = new Reward(RewardType.QUESTION, gustavo);
+		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);
 		Reward reward2 = new Reward(RewardType.GAME, gustavo);
-		Reward reward3 = new Reward(RewardType.QUESTION, alice);
-		Reward reward4 = new Reward(RewardType.TEST, alice);
+		Reward reward3 = new Reward(RewardType.RIGHT_ANSWER, alice);
+		Reward reward4 = new Reward(RewardType.TEST_SUCCESS, alice);
 		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4));
 
 		// Storing Disciplines
@@ -134,68 +137,79 @@ public class LoadDatabase implements CommandLineRunner {
 
 		// Storing some Topics tests
 		Topic topic1 = new Topic("Topic 1", "Description description description description",
-				"<h3>Bla bla bla bla</h3>", TopicStatus.APPROVED, cee, staff);
+				"<h3>Bla bla bla bla</h3>", UploadStatus.APPROVED, cee, staff);
 		Topic topic2 = new Topic("Topic 2", "Description description description description",
-				"<h3>Bla bla bla bla</h3>", TopicStatus.WAITING_FOR_RESPONSE, cee, gustavo);
+				"<h3>Bla bla bla bla</h3>", UploadStatus.WAITING_FOR_RESPONSE, cee, gustavo);
 		Topic topic3 = new Topic("Topic 3", "Description description description description",
-				"<h3>Bla bla bla bla</h3>", TopicStatus.WAITING_FOR_RESPONSE, ago, staff);
+				"<h3>Bla bla bla bla</h3>", UploadStatus.WAITING_FOR_RESPONSE, ago, staff);
 		Topic topic4 = new Topic("Topic 4", "Description description description description",
-				"<h3>Bla bla bla bla</h3>", TopicStatus.APPROVED, ago, staff);
+				"<h3>Bla bla bla bla</h3>", UploadStatus.APPROVED, ago, staff);
 		Topic topic5 = new Topic("Topic 5", "Description description description description",
-				"<h3>Bla bla bla bla</h3>", TopicStatus.APPROVED, ago, gustavo);
+				"<h3>Bla bla bla bla</h3>", UploadStatus.APPROVED, ago, gustavo);
 		Topic topic6 = new Topic("Topic 6", "Description description description description",
-				"<h3>Bla bla bla bla</h3>", TopicStatus.APPROVED, eng1, staff);
+				"<h3>Bla bla bla bla</h3>", UploadStatus.APPROVED, eng1, staff);
 		Topic topic7 = new Topic("Dispositivos Finais e Dispositivos de WAN",
 				"Descrever os tipos de dispositvios e a função de cada um", "<p>Bla bla bla bla</p>",
-				TopicStatus.APPROVED, irc1, staff);
+				UploadStatus.APPROVED, irc1, staff);
 		Topic topic8 = new Topic("Cisco e ferramentas Cisco", "Description description description description",
-				"<h3>Title</h3><br><p>F açsdkfj  aklsdfj çla <b>lçagj</b></p>", TopicStatus.APPROVED, irc1, staff);
+				"<h3>Title</h3><br><p>F açsdkfj  aklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, irc1, staff);
 		Topic topic9 = new Topic("Wan e Roteadores", "Demonstrar a configuração de um Roteador",
-				"<h3>Title</h3><br><p>F afasd f açsdkfj  aklsdfj çla <b>lçagj</b></p>", TopicStatus.APPROVED, irc1,
+				"<h3>Title</h3><br><p>F afasd f açsdkfj  aklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, irc1,
 				staff);
 		Topic topic10 = new Topic("Roteamento estático", "Configurar um grupo de roteadores e o roteamento estático",
-				"<h3>Title</h3><br><p>F afasd fla lj açsdkfj  aklsdfj çla <b>lçagj</b></p>", TopicStatus.APPROVED, irc1,
-				staff);
+				"<h3>Title</h3><br><p>F afasd fla lj açsdkfj  aklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED,
+				irc1, staff);
 		Topic topic11 = new Topic("Introdução", "Introdução a linguagem de programação Java.",
-				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", TopicStatus.APPROVED, alp, gustavo);
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, alp, gustavo);
 		topicRepository.saveAll(Arrays.asList(topic1, topic2, topic3, topic4, topic5, topic6, //
 				topic7, topic8, topic9, topic10, topic11));
 
-//		// Storing the test as an exame (Discipline) and a quiz (Topic)
-//		Test lpQuiz = new Test("Quiz", "Description description description description");
-//		Question lpQuestion1 = new Question("Java é:", 50, 250, Arrays.asList(
-//				new Alternative("Linguagem de Marcação de Texto", "Parabéns! Esta é a resposta certa!", true),
-//				new Alternative("Uma linguagem de programação funcional", "Quasee! Estude com mais atenção!", false),
-//				new Alternative("Uma linguagem de programação orientada a objetos", "Errado! Estude com mais atenção!",
-//						false),
-//				new Alternative("uma IDE", "Errado! Estude com mais atenção!", false)));
-//		Question lpQuestion2 = new Question("x = 10;\nSystem.out.print(\"++x\")\n\n A saída será:", 50, 250,
-//				Arrays.asList(new Alternative("11", "Parabéns! Esta é a resposta certa!", true),
-//						new Alternative("9", "Quasee! Estude com mais atenção!", false),
-//						new Alternative("Error", "Errado! Estude com mais atenção!", false),
-//						new Alternative("10", "Errado! Estude com mais atenção!", false)));
-//		lpQuiz.addQuestion(lpQuestion1);
-//		lpQuiz.addQuestion(lpQuestion2);
-//
-//		Test lpTest = new Test("Quiz", "Description description description description");
-//		Question lpQuestion3 = new Question("Pergunta 1:", 50, 250,
-//				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
-//						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
-//						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
-//						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
-//						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)));
-//		Question lpQuestion4 = new Question("x = 10 + 1;\nSystem.out.print(\"x--\")\n\n A saída será:", 50, 250,
-//				Arrays.asList(new Alternative("11", "Errado! Estude com mais atenção!", false),
-//						new Alternative("9", "Quasee! Estude com mais atenção!", false),
-//						new Alternative("Error", "Errado! Estude com mais atenção!", false),
-//						new Alternative("10", "Parabéns! Esta é a resposta certa!", false)));
-//		lpTest.addQuestion(lpQuestion3);
-//		lpTest.addQuestion(lpQuestion4);
-//
-//		testRepository.saveAll(Arrays.asList(lpTest, lpQuiz));
-//
-//		disciplineRepository.save(alp);
-//
+		// Storing Questions
+		Question lpQuestion1 = new Question("Java é:", QuestionType.QUIZ, UploadStatus.APPROVED, Arrays.asList(
+				new Alternative("Linguagem de Marcação de Texto", "Errado! Estude com mais atenção!", false),
+				new Alternative("Uma linguagem de programação funcional", "Quasee! Estude com mais atenção!", false),
+				new Alternative("Uma linguagem de programação orientada a objetos",
+						"Parabéns! Esta é a resposta certa!", true),
+				new Alternative("uma IDE", "Errado! Estude com mais atenção!", false)), topic11, staff);
+		Question lpQuestion2 = new Question("x = 10;\nSystem.out.print(\"++x\")\n\n A saída será:", QuestionType.QUIZ,
+				UploadStatus.APPROVED,
+				Arrays.asList(new Alternative("11", "Parabéns! Esta é a resposta certa!", true),
+						new Alternative("9", "Quasee! Estude com mais atenção!", false),
+						new Alternative("Error", "Errado! Estude com mais atenção!", false),
+						new Alternative("10", "Errado! Estude com mais atenção!", false)),
+				topic11, staff);
+		Question lpQuestion3 = new Question("Pergunta 1:", QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
+						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
+						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
+						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
+				topic11, staff);
+		Question lpQuestion4 = new Question("Pergunta 2:", QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
+						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
+						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
+						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
+				topic11, staff);
+		Question lpQuestion5 = new Question("Pergunta 3:", QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
+						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
+						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
+						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
+				topic11, staff);
+		Question lpQuestion6 = new Question("x = 10 + 1;\nSystem.out.print(\"x--\");\n\n A saída será:",
+				QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(new Alternative("11", "Errado! Estude com mais atenção!", false),
+						new Alternative("9", "Quasee! Estude com mais atenção!", false),
+						new Alternative("Error", "Errado! Estude com mais atenção!", false),
+						new Alternative("x--", "Parabéns! Esta é a resposta certa!", true),
+						new Alternative("10", "Resposta Errada!", false)),
+				topic11, staff);
+		questionRepository
+				.saveAll(Arrays.asList(lpQuestion1, lpQuestion2, lpQuestion3, lpQuestion4, lpQuestion5, lpQuestion6));
+
 //		// Forum Topics
 //		ForumTopic forumTopic1 = new ForumTopic("Duvida Routers", "alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi",
 //				new Date(), irc1);

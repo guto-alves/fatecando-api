@@ -1,6 +1,7 @@
 package com.gutotech.fatecandoapi.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -8,10 +9,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -44,6 +48,8 @@ public class User {
 	@NotBlank
 	private String password;
 
+	private boolean enabled;
+
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
@@ -64,6 +70,10 @@ public class User {
 	@Column(name = "creation_date")
 	private Date creationDate;
 
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private List<Role> roles;
+
 	public User() {
 	}
 
@@ -76,6 +86,18 @@ public class User {
 		this.gender = gender;
 		this.birthDate = birthDate;
 		this.course = course;
+	}
+
+	public User(String firstName, String lastName, String email, String password, Gender gender, Date birthDate,
+			Course course, List<Role> roles) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.gender = gender;
+		this.birthDate = birthDate;
+		this.course = course;
+		this.roles = roles;
 	}
 
 	public Long getId() {
@@ -118,6 +140,14 @@ public class User {
 		this.password = password;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public Gender getGender() {
 		return gender;
 	}
@@ -156,6 +186,14 @@ public class User {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	@Override

@@ -1,13 +1,17 @@
 package com.gutotech.fatecandoapi.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.User;
+import com.gutotech.fatecandoapi.repository.RoleRepository;
 import com.gutotech.fatecandoapi.repository.UserRepository;
 import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
+import com.gutotech.fatecandoapi.security.Roles;
 
 @Service
 public class UserService {
@@ -15,9 +19,19 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleRepository roleRepository;
+
 	public User findById(Long id) {
 		return repository.findById(id) //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find user " + id));
+	}
+
+	public User findByEmail(String email) {
+		return repository.findByEmail(email);
 	}
 
 	public List<User> findAll() {
@@ -26,5 +40,21 @@ public class UserService {
 
 	public User save(User user) {
 		return repository.save(user);
+	}
+
+	public void registerAll(List<User> users) {
+		users.forEach(this::register);
+	}
+
+	public User register(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRoles(Arrays.asList(roleRepository.findByName(Roles.USER_ROLE)));
+		user.setEnabled(true);
+
+		return repository.save(user);
+	}
+
+	public void deleteAll() {
+		repository.deleteAll();
 	}
 }

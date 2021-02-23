@@ -51,8 +51,8 @@ public class UserRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<User>> saveUser(@RequestBody @Valid User user) {
-		EntityModel<User> entityModel = assembler.toModel(userService.save(user));
+	public ResponseEntity<EntityModel<User>> registerUser(@RequestBody @Valid User user) {
+		EntityModel<User> entityModel = assembler.toModel(userService.register(user));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);

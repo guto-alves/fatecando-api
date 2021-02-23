@@ -17,6 +17,7 @@ import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Reward;
 import com.gutotech.fatecandoapi.model.RewardType;
+import com.gutotech.fatecandoapi.model.Role;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
@@ -26,9 +27,11 @@ import com.gutotech.fatecandoapi.repository.ForumTopicRepository;
 import com.gutotech.fatecandoapi.repository.InstitutionRepository;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
 import com.gutotech.fatecandoapi.repository.RewardRepository;
+import com.gutotech.fatecandoapi.repository.RoleRepository;
 import com.gutotech.fatecandoapi.repository.TestRepository;
 import com.gutotech.fatecandoapi.repository.TopicRepository;
-import com.gutotech.fatecandoapi.repository.UserRepository;
+import com.gutotech.fatecandoapi.security.Roles;
+import com.gutotech.fatecandoapi.service.UserService;
 
 @Configuration
 public class LoadDatabase implements CommandLineRunner {
@@ -40,7 +43,7 @@ public class LoadDatabase implements CommandLineRunner {
 	private CourseRepository courseRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
 	private DisciplineRepository disciplineRepository;
@@ -60,6 +63,9 @@ public class LoadDatabase implements CommandLineRunner {
 	@Autowired
 	private RewardRepository rewardRepository;
 
+	@Autowired
+	private RoleRepository roleRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 		topicRepository.deleteAll();
@@ -67,7 +73,8 @@ public class LoadDatabase implements CommandLineRunner {
 		testRepository.deleteAll();
 		institutionRepository.deleteAll();
 		courseRepository.deleteAll();
-		userRepository.deleteAll();
+		userService.deleteAll();
+		roleRepository.deleteAll();
 		questionRepository.deleteAll();
 
 		// Storing Institutions
@@ -82,6 +89,11 @@ public class LoadDatabase implements CommandLineRunner {
 		Course rh = new Course(null, "Gestão de Recursos Humanos", 5);
 		courseRepository.saveAll(Arrays.asList(ads, log, comex, rh));
 
+		Role admin = new Role(Roles.ADMIN_ROLE);
+		Role professor = new Role(Roles.PROFESSOR_ROLE);
+		Role user = new Role(Roles.USER_ROLE);
+		roleRepository.saveAll(Arrays.asList(admin, professor, user));
+
 		// Storing Users
 		User staff = new User("Staff", "Staff", "staff@fatecando.com", "123", Gender.MALE, new Date(), null);
 		User gustavo = new User("Gustavo", "Alves", "gu@g.com", "123", Gender.MALE, new Date(), ads);
@@ -89,7 +101,7 @@ public class LoadDatabase implements CommandLineRunner {
 		User kaizer = new User("Kaizer", "Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date(), ads);
 		User maria = new User("Maria", "Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date(), rh);
 		User alice = new User("Alice", "Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
-		userRepository.saveAll(Arrays.asList(staff, gustavo, kaik, kaizer, maria, alice));
+		userService.registerAll(Arrays.asList(staff, gustavo, kaik, kaizer, maria, alice));
 
 		// Storing Rewards
 		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);

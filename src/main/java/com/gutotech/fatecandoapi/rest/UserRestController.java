@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,12 @@ public class UserRestController {
 
 	@Autowired
 	private UserModelAssembler assembler;
+
+	@GetMapping("current")
+	public EntityModel<User> getCurrentUser() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return assembler.toModel(userService.findByEmail(email));
+	}
 
 	@GetMapping
 	public ResponseEntity<List<User>> getUsers() {

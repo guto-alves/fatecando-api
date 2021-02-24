@@ -1,15 +1,10 @@
 package com.gutotech.fatecandoapi.rest;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +22,7 @@ import com.gutotech.fatecandoapi.model.assembler.CourseModelAssembler;
 import com.gutotech.fatecandoapi.service.CourseService;
 
 @RestController
-@RequestMapping("courses")
+@RequestMapping("api/courses")
 public class CourseRestController {
 
 	@Autowired
@@ -37,13 +32,8 @@ public class CourseRestController {
 	private CourseModelAssembler assembler;
 
 	@GetMapping
-	public CollectionModel<EntityModel<Course>> getAllCourses() {
-		List<EntityModel<Course>> courses = service.findAll().stream() //
-				.map(assembler::toModel) //
-				.collect(Collectors.toList());
-
-		return CollectionModel.of(courses, //
-				linkTo(methodOn(CourseRestController.class).getAllCourses()).withSelfRel());
+	public ResponseEntity<List<Course>> getAllCourses() {
+		return ResponseEntity.ok(service.findAll());
 	}
 
 	@GetMapping("{id}")
@@ -67,8 +57,9 @@ public class CourseRestController {
 		Course currentCourse = service.findById(id);
 		currentCourse.setName(course.getName());
 		currentCourse.setSemesters(course.getSemesters());
+		currentCourse.setDescription(course.getDescription());
 
-		EntityModel<Course> entityModel = assembler.toModel(currentCourse);
+		EntityModel<Course> entityModel = assembler.toModel(service.save(currentCourse));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

@@ -2,6 +2,7 @@ package com.gutotech.fatecandoapi.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,9 @@ public class Course {
 	private String name;
 
 	private int semesters;
+
+	@Column(length = 1000)
+	private String description;
 
 	public Course() {
 	}
@@ -50,6 +54,14 @@ public class Course {
 
 	public void setSemesters(int semesters) {
 		this.semesters = semesters;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override

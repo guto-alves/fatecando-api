@@ -68,7 +68,7 @@ public class InstitutionRestController {
 		Institution institution = service.findById(id);
 		institution.setName(newInstitution.getName());
 
-		EntityModel<Institution> entityModel = assembler.toModel(institution);
+		EntityModel<Institution> entityModel = assembler.toModel(service.save(institution));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

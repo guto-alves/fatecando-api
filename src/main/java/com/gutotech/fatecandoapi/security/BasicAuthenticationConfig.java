@@ -24,7 +24,9 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
 		// @formatter:off
         http
             .authorizeRequests()
-            	.antMatchers(HttpMethod.POST, "/api/users")
+            	.antMatchers(HttpMethod.POST, "/api/users") // for sign up
+            		.permitAll()
+            	.antMatchers(HttpMethod.GET, "/api/courses", "/api/disciplines")
             		.permitAll()
                 .anyRequest()
                     .authenticated()
@@ -34,7 +36,7 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
 	                .deleteCookies("JSESSIONID")
     			.and()
                 .httpBasic()
-                    .and()
+                .and()
                 .csrf()
                     .disable();
         // @formatter:on

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,6 +66,23 @@ public class DisciplineRestController {
 		EntityModel<Discipline> entityModel = disciplineAssembler.toModel(disciplineService.save(discipline));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+				.body(entityModel);
+	}
+
+	@PutMapping("{id}")
+	public ResponseEntity<?> updateCourse(@RequestBody @Valid Discipline discipline, //
+			@PathVariable Long id) {
+		Discipline currentDiscipline = disciplineService.findById(id);
+		currentDiscipline.setName(discipline.getName());
+		currentDiscipline.setCode(discipline.getCode());
+		currentDiscipline.setSemester(discipline.getSemester());
+		currentDiscipline.setDescription(discipline.getDescription());
+		currentDiscipline.setObjective(discipline.getObjective());
+
+		EntityModel<Discipline> entityModel = disciplineAssembler.toModel(disciplineService.save(currentDiscipline));
+
+		return ResponseEntity //
+				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
 	}
 

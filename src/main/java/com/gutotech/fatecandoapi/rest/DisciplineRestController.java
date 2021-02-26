@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.assembler.DisciplineModelAssembler;
+import com.gutotech.fatecandoapi.service.CourseService;
 import com.gutotech.fatecandoapi.service.DisciplineService;
 import com.gutotech.fatecandoapi.service.TopicService;
 
@@ -37,11 +39,18 @@ public class DisciplineRestController {
 	@Autowired
 	private TopicService topicService;
 
+	@Autowired
+	private CourseService courseService;
+
 	@GetMapping
 	public ResponseEntity<List<Discipline>> getDisciplines(
-			@RequestParam(value = "semester", required = false) Integer semester) {
+			@RequestParam(value = "semester", required = false) Integer semester,
+			@RequestParam(value = "course", required = false) Long courseId) {
 		if (semester != null) {
 			return ResponseEntity.ok(disciplineService.findAllBySemester(semester));
+		} else if (courseId != null) {
+			Course course = courseService.findById(courseId);
+			return ResponseEntity.ok(disciplineService.findAllByCourse(course));
 		}
 
 		return ResponseEntity.ok(disciplineService.findAll());
@@ -78,6 +87,11 @@ public class DisciplineRestController {
 		currentDiscipline.setSemester(discipline.getSemester());
 		currentDiscipline.setDescription(discipline.getDescription());
 		currentDiscipline.setObjective(discipline.getObjective());
+
+		if (discipline.getCourse() != null) {
+			Course course = courseService.findById(discipline.getCourse().getId());
+			currentDiscipline.setCourse(course);
+		}
 
 		EntityModel<Discipline> entityModel = disciplineAssembler.toModel(disciplineService.save(currentDiscipline));
 

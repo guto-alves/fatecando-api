@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.repository.DisciplineRepository;
 import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
@@ -26,6 +27,10 @@ public class DisciplineService {
 
 	public List<Discipline> findAllBySemester(Integer semester) {
 		return repository.findAllBySemesterOrderByName(semester);
+	}
+
+	public List<Discipline> findAllByCourse(Course course) {
+		return repository.findAllByCourseOrderByName(course);
 	}
 
 	public Discipline save(Discipline discipline) {

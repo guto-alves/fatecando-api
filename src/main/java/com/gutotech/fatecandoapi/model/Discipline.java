@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
@@ -48,15 +49,19 @@ public class Discipline {
 	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
 	private List<ForumTopic> forum = new ArrayList<>();
 
+	@ManyToOne
+	private Course course;
+
 	public Discipline() {
 	}
 
-	public Discipline(String name, String code, String description, String objetive, int semester) {
+	public Discipline(String name, String code, String description, String objetive, int semester, Course course) {
 		this.name = name;
 		this.code = code;
 		this.description = description;
 		this.objective = objetive;
 		this.semester = semester;
+		this.course = course;
 	}
 
 	// Utility methods that synchronize both ends whenever a child element is added
@@ -125,6 +130,14 @@ public class Discipline {
 
 	public List<ForumTopic> getForum() {
 		return forum;
+	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
 	}
 
 	@Override

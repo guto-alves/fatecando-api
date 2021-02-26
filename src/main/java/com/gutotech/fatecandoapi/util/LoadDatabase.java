@@ -115,26 +115,25 @@ public class LoadDatabase implements CommandLineRunner {
 				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
 						+ "Implementação de algoritmos usando uma linguagem de programação.",
-				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 1);
+				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 1, ads);
 		Discipline db = new Discipline("Banco de Dados", "IBD002",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Entender fundamentos, arquitetura e técnicas de projeto e implementação de banco de dados", 4);
-		Discipline ldb = new Discipline("Laboratória de Banco de Dados", "IBD100",
+				"Entender fundamentos, arquitetura e técnicas de projeto e implementação de banco de dados", 4, ads);
+		Discipline ldb = new Discipline("Laboratório de Banco de Dados", "IBD100",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 5);
-
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 5, ads);
 		Discipline ago = new Discipline("Gestão de Projetos", "AGO005A",
 				"Definição de projeto segundo concepção difundida pelas melhores práticas de gestão de projetos. Histórico do desenvolvimento do conjunto de conhecimentos de gestão de projetos. Comparação ente o gerenciamento por projetos com o gerenciamento tradicional. O ciclo de vida de um projeto. Os fatores de sucesso e insucesso de projetos e sua mensuração. As nove de conhecimento para a gestão de projetos e seus processos : Integração, Escopo, Tempo, Custo, Qualidade, Recursos Humanos, Comunicações, Riscos e Aquisições.",
-				"Conhecer e aplicar técnicas, métodos e ferramentas para uma gestão eficaz de projetos.", 6);
+				"Conhecer e aplicar técnicas, métodos e ferramentas para uma gestão eficaz de projetos.", 6, ads);
 		Discipline irc1 = new Discipline("Laboratório de Redes", "IRC100A",
 				"Prática em laboratório de instalação física de redes e suas diversas topologias, instalação de equipamentos de conectividade, cabeamento estruturado, protocolos TCP/IP, algorítmos e protocolos de roteamento, análise de tráfego, protocolos de transporte TCP e UDP, protocolos de aplicação e instalação de servidores/serviços  de redes.",
-				"Instalar redes", 6);
+				"Instalar redes", 6, ads);
 		Discipline cee = new Discipline("Empreendedorismo", "CEE002A",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 6);
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 6, rh);
 		Discipline eng1 = new Discipline("Engenharia de Software I", "IES100",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 2);
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 2, ads);
 		Discipline eng2 = new Discipline("Engenharia de Software II", "IES200",
 				"Contexto atual das empresas em relação aos projetos de tecnologia de informação. Modelagem de\r\n"
 						+ "Negócio para o desenvolvimento de software. Conceitos, evolução e importância da Engenharia de\r\n"
@@ -142,10 +141,10 @@ public class LoadDatabase implements CommandLineRunner {
 						+ "projeto. Técnicas de elicitação. Requisitos, seus tipos e matriz de rastreabilidade. Definição do sistema a partir\r\n"
 						+ "dos requisitos. Gerenciamento de requisitos.",
 				"Aplicar um processo de desenvolvimento de software, ênfase na definição e elicitação dos requisitos.",
-				3);
+				3, ads);
 		Discipline eng3 = new Discipline("Engenharia de Software III", "IES300",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 4);
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 4, ads);
 		disciplineRepository.saveAll(Arrays.asList(alp, ago, irc1, cee, db, ldb, eng1, eng2, eng3));
 
 		// Storing some Topics tests
@@ -172,7 +171,7 @@ public class LoadDatabase implements CommandLineRunner {
 		Topic topic10 = new Topic("Roteamento estático", "Configurar um grupo de roteadores e o roteamento estático",
 				"<h3>Title</h3><br><p>F afasd fla lj açsdkfj  aklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED,
 				irc1, staff);
-		Topic topic11 = new Topic("Introdução", "Introdução a linguagem de programação Java.",
+		Topic topic11 = new Topic("Introdução a Java", "Introdução a linguagem de programação Java.",
 				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, alp, gustavo);
 		topicRepository.saveAll(Arrays.asList(topic1, topic2, topic3, topic4, topic5, topic6, //
 				topic7, topic8, topic9, topic10, topic11));
@@ -184,34 +183,34 @@ public class LoadDatabase implements CommandLineRunner {
 				new Alternative("Uma linguagem de programação orientada a objetos",
 						"Parabéns! Esta é a resposta certa!", true),
 				new Alternative("uma IDE", "Errado! Estude com mais atenção!", false)), topic11, staff);
-		Question lpQuestion2 = new Question("x = 10;\nSystem.out.print(\"++x\")\n\n A saída será:", QuestionType.QUIZ,
+		Question lpQuestion2 = new Question("int x = 10;<br>System.out.print(++x);<br><br>A saída será:", QuestionType.QUIZ,
 				UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("11", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("9", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Error", "Errado! Estude com mais atenção!", false),
 						new Alternative("10", "Errado! Estude com mais atenção!", false)),
-				topic1, staff);
+				topic11, staff);
 		Question lpQuestion3 = new Question("Pergunta 1:", QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
-				topic2, staff);
+				topic11, staff);
 		Question lpQuestion4 = new Question("Pergunta 2:", QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
-				topic3, staff);
+				topic8, staff);
 		Question lpQuestion5 = new Question("Pergunta 3:", QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("Resposta 1", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("Resposta 2", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Resposta 3", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
-				topic4, staff);
+				topic8, staff);
 		Question lpQuestion6 = new Question("x = 10 + 1;\nSystem.out.print(\"x--\");\n\n A saída será:",
 				QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("11", "Errado! Estude com mais atenção!", false),
@@ -219,7 +218,7 @@ public class LoadDatabase implements CommandLineRunner {
 						new Alternative("Error", "Errado! Estude com mais atenção!", false),
 						new Alternative("x--", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("10", "Resposta Errada!", false)),
-				topic5, staff);
+				topic10, staff);
 		questionRepository
 				.saveAll(Arrays.asList(lpQuestion1, lpQuestion2, lpQuestion3, lpQuestion4, lpQuestion5, lpQuestion6));
 

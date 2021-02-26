@@ -1,6 +1,7 @@
 package com.gutotech.fatecandoapi.rest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +12,14 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Alternative;
@@ -26,6 +28,7 @@ import com.gutotech.fatecandoapi.model.AnswerId;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Reward;
 import com.gutotech.fatecandoapi.model.RewardType;
+import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.QuestionModelAssembler;
@@ -36,6 +39,7 @@ import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/questions")
 public class QuestionRestController {
 
@@ -57,9 +61,20 @@ public class QuestionRestController {
 	@Autowired
 	private RewardService rewardService;
 
+	@GetMapping
+	public ResponseEntity<List<Question>> getQuestions() {
+		return ResponseEntity.ok(questionService.findAll());
+	}
+
 	@GetMapping("{id}")
 	public EntityModel<Question> getQuestion(@PathVariable Long id) {
 		return questionAssembler.toModel(questionService.findById(id));
+	}
+
+	@GetMapping("topic/{topicId}")
+	public ResponseEntity<List<Question>> getTopicQuestions(@PathVariable Long topicId) {
+		Topic topic = topicService.findById(topicId);
+		return ResponseEntity.ok(questionService.findAllByTopic(topic));
 	}
 
 	@PostMapping("upload")
@@ -125,13 +140,13 @@ public class QuestionRestController {
 				.body(entityModel);
 	}
 
-	@PostMapping("{questionId}/answer")
+	@PostMapping("{questionId}/answer/{alternativeId}")
 	public ResponseEntity<Map<String, Object>> answerQuestion( //
 			@PathVariable("questionId") Long questionId, //
-			@RequestParam("alternativeId") Long alternativeId, //
-			@RequestParam("userId") Long userId) {
+			@PathVariable("alternativeId") Long alternativeId) {
+		User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
 		Question question = questionService.findById(questionId);
-		User user = userService.findById(userId);
 
 		Alternative chosenAlternative = question.getAlternatives().stream() //
 				.filter((a) -> a.getId() == alternativeId) //
@@ -163,7 +178,7 @@ public class QuestionRestController {
 		}
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("isCorrect", chosenAlternative.isCorrect());
+		map.put("correct", chosenAlternative.isCorrect());
 		map.put("feedback", chosenAlternative.getFeedback());
 
 		return ResponseEntity.ok(map);

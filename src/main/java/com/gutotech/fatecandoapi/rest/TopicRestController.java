@@ -1,18 +1,15 @@
 package com.gutotech.fatecandoapi.rest;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +23,7 @@ import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
+import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -43,13 +41,8 @@ public class TopicRestController {
 	private UserService userService;
 
 	@GetMapping
-	public CollectionModel<EntityModel<Topic>> getAllTopics() {
-		List<EntityModel<Topic>> topics = service.findAll().stream() //
-				.map(assembler::toModel) //
-				.collect(Collectors.toList());
-
-		return CollectionModel.of(topics, //
-				linkTo(methodOn(TopicRestController.class).getAllTopics()).withSelfRel());
+	public ResponseEntity<List<Topic>> getAllTopics() {
+		return ResponseEntity.ok(service.findAll());
 	}
 
 	@GetMapping("{id}")
@@ -72,6 +65,12 @@ public class TopicRestController {
 		currentTopic.setDescription(topic.getDescription());
 		currentTopic.setHtmlContent(topic.getHtmlContent());
 
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Roles.ADMIN_ROLE))) {
+			currentTopic.setStatus(topic.getStatus());
+			currentTopic.setRequired(topic.isRequired());
+		}
+
 		EntityModel<Topic> entityModel = assembler.toModel(service.save(currentTopic));
 
 		return ResponseEntity //
@@ -87,6 +86,9 @@ public class TopicRestController {
 
 	@PostMapping("upload")
 	public ResponseEntity<EntityModel<Topic>> uploadTopic(@RequestBody @Valid Topic topic) {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		topic.setUser(userService.findByEmail(email));
+
 		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		topic.setRequired(false);
 		topic.getUsersWhoLiked().clear();
@@ -111,21 +113,21 @@ public class TopicRestController {
 	}
 
 	@PostMapping("{id}/change-status")
-	public ResponseEntity<?> changeStatus(@RequestBody Topic topic, @PathVariable Long id) {
-		Topic currentTopic = service.findById(id);
+	public ResponseEntity<?> changeStatus(@RequestBody UploadStatus status, @PathVariable Long id) {
+		Topic topic = service.findById(id);
 
-		currentTopic.setStatus(topic.getStatus());
+		topic.setStatus(status);
 
-		EntityModel<Topic> entityModel = assembler.toModel(service.save(currentTopic));
+		EntityModel<Topic> entityModel = assembler.toModel(service.save(topic));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
 	}
 
-	@PostMapping("{id}/like/{userId}")
-	public ResponseEntity<?> addLikeTopic(@PathVariable Long id, @PathVariable("userId") Long userId) {
-		User user = userService.findById(userId);
+	@PostMapping("{id}/like")
+	public ResponseEntity<?> addLike(@PathVariable Long id) {
+		User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
 		Topic topic = service.findById(id);
 

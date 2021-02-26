@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
@@ -23,8 +22,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -49,13 +46,10 @@ public class Topic {
 	@NotNull
 	private UploadStatus status;
 
-	@JsonIgnore
 	@ManyToOne
 	private Discipline discipline;
 
-	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "user_id")
 	private User user;
 
 	@JsonIgnore
@@ -63,16 +57,14 @@ public class Topic {
 	private List<User> usersWhoLiked = new ArrayList<>();
 
 	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
 	@Column(name = "creation_date")
 	private Date creationDate;
 
 	@UpdateTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
 	@Column(name = "update_date")
 	private Date updateDate;
 

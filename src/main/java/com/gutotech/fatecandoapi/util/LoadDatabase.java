@@ -87,11 +87,17 @@ public class LoadDatabase implements CommandLineRunner {
 		institutionRepository.saveAll(Arrays.asList(fatecZl, fatecSp));
 
 		// Storing Courses
-		Course ads = new Course(null, "Análise e Desenvolvimento de Sistemas", 6);
-		Course log = new Course(null, "Logística", 6);
-		Course comex = new Course(null, "Comércio Exterior", 5);
-		Course rh = new Course(null, "Gestão de Recursos Humanos", 5);
-		courseRepository.saveAll(Arrays.asList(ads, log, comex, rh));
+		Course ads = new Course("Análise e Desenvolvimento de Sistemas", "ADS", "http://www.fatecsp.br/img/ti.jpg",
+				"Descrição ...", 6, fatecZl);
+		Course log = new Course("Logística", "LOG", "http://www.fateczl.edu.br/imagens/logistica.png", "Descrição ...",
+				6, fatecZl);
+		Course comex = new Course("Comércio Exterior", "COMEX", "http://www.fateczl.edu.br/imagens/comex.jpg",
+				"Descrição ...", 5, fatecZl);
+		Course rh = new Course("Gestão de Recursos Humanos", "RH", "http://www.fateczl.edu.br/imagens/gestao_rh.jpg",
+				"Descrição ...", 5, fatecZl);
+		Course gem = new Course("Gestão Empresarial", "GEM", "http://www.fateczl.edu.br/imagens/gestaoempresarial.jpg",
+				"Descrição ...", 5, fatecSp);
+		courseRepository.saveAll(Arrays.asList(ads, log, comex, rh, gem));
 
 		Role admin = new Role(Roles.ADMIN);
 		Role user = new Role(Roles.USER);

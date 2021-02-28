@@ -52,12 +52,14 @@ public class CourseRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateCourse(@RequestBody @Valid Course course, //
-			@PathVariable Long id) {
+	public ResponseEntity<?> updateCourse(@RequestBody @Valid Course course, @PathVariable Long id) {
 		Course currentCourse = service.findById(id);
 		currentCourse.setName(course.getName());
+		currentCourse.setCode(course.getCode());
+		currentCourse.setImageUrl(course.getImageUrl());
 		currentCourse.setSemesters(course.getSemesters());
 		currentCourse.setDescription(course.getDescription());
+		currentCourse.setInstitution(course.getInstitution());
 
 		EntityModel<Course> entityModel = assembler.toModel(service.save(currentCourse));
 

@@ -1,15 +1,10 @@
 package com.gutotech.fatecandoapi.rest;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +23,7 @@ import com.gutotech.fatecandoapi.model.assembler.InstitutionModelAssembler;
 import com.gutotech.fatecandoapi.service.InstitutionService;
 
 @RestController
-@RequestMapping("institutions")
+@RequestMapping("api/institutions")
 public class InstitutionRestController {
 
 	@Autowired
@@ -38,13 +33,10 @@ public class InstitutionRestController {
 	private InstitutionModelAssembler assembler;
 
 	@GetMapping
-	public CollectionModel<EntityModel<Institution>> getAllInstitutions() {
-		List<EntityModel<Institution>> courses = service.findAll().stream() //
-				.map(assembler::toModel) //
-				.collect(Collectors.toList());
+	public ResponseEntity<List<Institution>> getAllInstitutions() {
+		List<Institution> institutions = service.findAll();
 
-		return CollectionModel.of(courses, //
-				linkTo(methodOn(InstitutionRestController.class).getAllInstitutions()).withSelfRel());
+		return ResponseEntity.ok(institutions);
 	}
 
 	@GetMapping("{id}")
@@ -63,10 +55,11 @@ public class InstitutionRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateInstitution(@RequestBody @Valid Institution newInstitution, //
+	public ResponseEntity<?> updateInstitution(@RequestBody @Valid Institution updatedInstitution, //
 			@PathVariable Long id, BindingResult bindingResult) {
 		Institution institution = service.findById(id);
-		institution.setName(newInstitution.getName());
+		institution.setName(updatedInstitution.getName());
+		institution.setDescription(updatedInstitution.getDescription());
 
 		EntityModel<Institution> entityModel = assembler.toModel(service.save(institution));
 

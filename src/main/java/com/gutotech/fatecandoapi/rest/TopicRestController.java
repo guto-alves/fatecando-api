@@ -66,7 +66,7 @@ public class TopicRestController {
 		currentTopic.setHtmlContent(topic.getHtmlContent());
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Roles.ADMIN_ROLE))) {
+		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Roles.ADMIN))) {
 			currentTopic.setStatus(topic.getStatus());
 			currentTopic.setRequired(topic.isRequired());
 		}

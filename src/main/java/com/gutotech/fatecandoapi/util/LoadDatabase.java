@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Course;
@@ -66,6 +67,9 @@ public class LoadDatabase implements CommandLineRunner {
 	@Autowired
 	private RoleRepository roleRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Override
 	public void run(String... args) throws Exception {
 		topicRepository.deleteAll();
@@ -89,19 +93,22 @@ public class LoadDatabase implements CommandLineRunner {
 		Course rh = new Course(null, "Gestão de Recursos Humanos", 5);
 		courseRepository.saveAll(Arrays.asList(ads, log, comex, rh));
 
-		Role admin = new Role(Roles.ADMIN_ROLE);
-		Role professor = new Role(Roles.PROFESSOR_ROLE);
-		Role user = new Role(Roles.USER_ROLE);
-		roleRepository.saveAll(Arrays.asList(admin, professor, user));
+		Role admin = new Role(Roles.ADMIN);
+		Role user = new Role(Roles.USER);
+		roleRepository.saveAll(Arrays.asList(admin, user));
 
 		// Storing Users
-		User staff = new User("Staff", "Staff", "staff@fatecando.com", "123", Gender.MALE, new Date(), null);
+		User staff = new User("Staff", "Staff", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
+				new Date(), null);
+		staff.setRoles(Arrays.asList(user, admin));
+		userService.save(staff);
+
 		User gustavo = new User("Gustavo", "Alves", "gu@g.com", "123", Gender.MALE, new Date(), ads);
 		User kaik = new User("Kayk", "Vida", "kayk@g.com", "123", Gender.MALE, new Date(), ads);
 		User kaizer = new User("Kaizer", "Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date(), ads);
 		User maria = new User("Maria", "Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date(), rh);
 		User alice = new User("Alice", "Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
-		userService.registerAll(Arrays.asList(staff, gustavo, kaik, kaizer, maria, alice));
+		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
 
 		// Storing Rewards
 		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);
@@ -183,8 +190,8 @@ public class LoadDatabase implements CommandLineRunner {
 				new Alternative("Uma linguagem de programação orientada a objetos",
 						"Parabéns! Esta é a resposta certa!", true),
 				new Alternative("uma IDE", "Errado! Estude com mais atenção!", false)), topic11, staff);
-		Question lpQuestion2 = new Question("int x = 10;<br>System.out.print(++x);<br><br>A saída será:", QuestionType.QUIZ,
-				UploadStatus.APPROVED,
+		Question lpQuestion2 = new Question("int x = 10;<br>System.out.print(++x);<br><br>A saída será:",
+				QuestionType.QUIZ, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("11", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("9", "Quasee! Estude com mais atenção!", false),
 						new Alternative("Error", "Errado! Estude com mais atenção!", false),

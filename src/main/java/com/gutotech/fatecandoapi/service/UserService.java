@@ -48,13 +48,23 @@ public class UserService {
 
 	public User register(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(Arrays.asList(roleRepository.findByName(Roles.USER_ROLE)));
+		user.setRoles(Arrays.asList(roleRepository.findByName(Roles.USER)));
 		user.setEnabled(true);
-
 		return repository.save(user);
+	}
+
+	public User login(String email, String rawPassword) {
+		User user = repository.findByEmail(email);
+
+		if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
+			return user;
+		}
+
+		return null;
 	}
 
 	public void deleteAll() {
 		repository.deleteAll();
 	}
+
 }

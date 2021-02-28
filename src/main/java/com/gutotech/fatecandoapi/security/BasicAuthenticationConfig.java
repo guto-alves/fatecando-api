@@ -24,19 +24,20 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
 		// @formatter:off
         http
             .authorizeRequests()
-            	.antMatchers(HttpMethod.POST, "/api/users") // for sign up
+	            .antMatchers(HttpMethod.GET, "/api/courses", "/api/disciplines") 
+	    			.permitAll()
+            	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login") // for sign up and login
             		.permitAll()
-            	.antMatchers(HttpMethod.GET, "/api/courses", "/api/disciplines")
-            		.permitAll()
-                .anyRequest()
-                    .authenticated()
-                .and()
+            	.anyRequest()
+ 	            	.authenticated()
+ 	            	.and()
                 .logout()
 	                .invalidateHttpSession(true)
 	                .deleteCookies("JSESSIONID")
-    			.and()
+	                .permitAll()
+	                .and()
                 .httpBasic()
-                .and()
+                	.and()
                 .csrf()
                     .disable();
         // @formatter:on
@@ -59,4 +60,5 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 }

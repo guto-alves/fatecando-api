@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Reward;
@@ -40,6 +41,11 @@ public class UserRestController {
 
 	@Autowired
 	private UserModelAssembler assembler;
+
+	@PostMapping("login")
+	public User login(@RequestParam("email") String email, @RequestParam("password") String password) {
+		return userService.login(email, password);
+	}
 
 	@GetMapping("current")
 	public EntityModel<User> getCurrentUser() {

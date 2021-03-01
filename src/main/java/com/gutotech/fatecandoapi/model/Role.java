@@ -8,6 +8,8 @@ import javax.persistence.Id;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Role implements GrantedAuthority {
 	private static final long serialVersionUID = 1L;
@@ -42,6 +44,7 @@ public class Role implements GrantedAuthority {
 		this.name = name;
 	}
 
+	@JsonIgnore
 	@Override
 	public String getAuthority() {
 		return name;

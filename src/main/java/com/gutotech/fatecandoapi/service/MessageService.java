@@ -1,0 +1,43 @@
+package com.gutotech.fatecandoapi.service;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.gutotech.fatecandoapi.model.Message;
+import com.gutotech.fatecandoapi.model.User;
+import com.gutotech.fatecandoapi.repository.MessageRepository;
+import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
+
+@Service
+public class MessageService {
+
+	@Autowired
+	private MessageRepository messageRepository;
+
+	public Message findById(Long id) {
+		return messageRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Could not find message " + id));
+	}
+
+	public List<Message> findAllByRecipient(User user) {
+		return messageRepository.findAllByToOrderByDateDesc(user);
+	}
+
+	public Message save(Message message) {
+		return messageRepository.save(message);
+	}
+
+	public void delete(Long id) {
+		messageRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void deleteAll(User user) {
+		messageRepository.deleteByTo(user);
+	}
+
+}

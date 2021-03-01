@@ -14,6 +14,7 @@ import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.ForumTopic;
 import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Institution;
+import com.gutotech.fatecandoapi.model.Message;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Reward;
@@ -26,6 +27,7 @@ import com.gutotech.fatecandoapi.repository.CourseRepository;
 import com.gutotech.fatecandoapi.repository.DisciplineRepository;
 import com.gutotech.fatecandoapi.repository.ForumTopicRepository;
 import com.gutotech.fatecandoapi.repository.InstitutionRepository;
+import com.gutotech.fatecandoapi.repository.MessageRepository;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
 import com.gutotech.fatecandoapi.repository.RewardRepository;
 import com.gutotech.fatecandoapi.repository.RoleRepository;
@@ -70,6 +72,9 @@ public class LoadDatabase implements CommandLineRunner {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private MessageRepository messageRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 		topicRepository.deleteAll();
@@ -109,12 +114,20 @@ public class LoadDatabase implements CommandLineRunner {
 		staff.setRoles(Arrays.asList(user, admin));
 		userService.save(staff);
 
-		User gustavo = new User("Gustavo", "Alves", "gu@g.com", "123", Gender.MALE, new Date(), ads);
+		User gustavo = new User("Gustavo", "Alves", "guto@guto.com", "123", Gender.MALE, new Date(), ads);
 		User kaik = new User("Kayk", "Vida", "kayk@g.com", "123", Gender.MALE, new Date(), ads);
 		User kaizer = new User("Kaizer", "Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date(), ads);
 		User maria = new User("Maria", "Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date(), rh);
 		User alice = new User("Alice", "Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
+
+		messageRepository.saveAll(Arrays.asList(
+				new Message("Subject 1", "Text 1", maria, gustavo),
+				new Message("Subject 2", "Text 2", gustavo, maria), 
+				new Message("Subject 3", "Text 3", kaik, gustavo),
+				new Message("Subject 4", "Text 4", kaizer, maria),
+				new Message("Subject 5", "Text 5", staff, gustavo),
+				new Message("Subject 6", "Text 6", staff, gustavo)));
 
 		// Storing Rewards
 		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);

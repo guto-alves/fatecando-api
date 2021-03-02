@@ -32,6 +32,8 @@ public class Message {
 	@NotBlank(message = "Please provide a valid message text.")
 	private String text;
 
+	private boolean read;
+
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
@@ -76,6 +78,14 @@ public class Message {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
 	}
 
 	public Date getDate() {

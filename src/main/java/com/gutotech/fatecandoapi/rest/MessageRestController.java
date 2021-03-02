@@ -7,11 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,6 +80,23 @@ public class MessageRestController {
 		User user = userService.findCurrentUser();
 		messageService.deleteAll(user);
 		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("{id}/read")
+	public ResponseEntity<Message> markAsRead(@PathVariable Long id) {
+		Message message = messageService.findById(id);
+
+		User user = userService.findCurrentUser();
+
+		List<Message> messagesSentCurrentUser = messageService.findAllByRecipient(user);
+
+		if (messagesSentCurrentUser.contains(message) && !message.isRead()) {
+			message.setRead(true);
+			messageService.save(message);
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
 	}
 
 }

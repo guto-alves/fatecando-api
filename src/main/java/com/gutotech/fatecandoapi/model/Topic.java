@@ -11,8 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -50,11 +51,7 @@ public class Topic {
 	private Discipline discipline;
 
 	@ManyToOne
-	private User user;
-
-	@JsonIgnore
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private List<User> usersWhoLiked = new ArrayList<>();
+	private User createdBy;
 
 	@CreationTimestamp
 	@Temporal(TemporalType.DATE)
@@ -68,6 +65,10 @@ public class Topic {
 	@Column(name = "update_date")
 	private Date updateDate;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.topic", cascade = CascadeType.ALL)
+	private List<TopicUserInfo> topicUserInfos = new ArrayList<>();
+
 	public Topic() {
 	}
 
@@ -78,7 +79,7 @@ public class Topic {
 		this.htmlContent = htmlContent;
 		this.status = status;
 		this.discipline = discipline;
-		this.user = user;
+		this.createdBy = user;
 	}
 
 	public Long getId() {
@@ -113,8 +114,12 @@ public class Topic {
 		this.htmlContent = htmlContent;
 	}
 
-	public int getLikes() {
-		return usersWhoLiked.size();
+	public long getLikes() {
+		// @formatter:off
+		return topicUserInfos.stream()
+				.filter(TopicUserInfo::isLiked)
+				.count();
+		// @formatter:on
 	}
 
 	public boolean isRequired() {
@@ -141,16 +146,12 @@ public class Topic {
 		this.discipline = discipline;
 	}
 
-	public User getUser() {
-		return user;
+	public User getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public List<User> getUsersWhoLiked() {
-		return usersWhoLiked;
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Date getCreationDate() {
@@ -167,6 +168,23 @@ public class Topic {
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public List<TopicUserInfo> getTopicUserInfos() {
+		return topicUserInfos;
+	}
+
+	public void setTopicUserInfos(List<TopicUserInfo> topicUserInfos) {
+		this.topicUserInfos = topicUserInfos;
+	}
+
+	public TopicUserInfo getUserInfo() {
+		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		return topicUserInfos.stream() //
+				.filter(info -> info.getUser().getEmail().equals(currentUserEmail)) //
+				.findFirst() //
+				.orElse(new TopicUserInfo());
 	}
 
 	@Override

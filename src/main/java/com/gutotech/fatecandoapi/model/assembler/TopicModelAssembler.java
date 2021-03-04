@@ -8,7 +8,7 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 import com.gutotech.fatecandoapi.model.Topic;
-import com.gutotech.fatecandoapi.rest.CourseRestController;
+import com.gutotech.fatecandoapi.rest.TopicRestController;
 
 @Component
 public class TopicModelAssembler implements RepresentationModelAssembler<Topic, EntityModel<Topic>> {
@@ -16,8 +16,8 @@ public class TopicModelAssembler implements RepresentationModelAssembler<Topic, 
 	@Override
 	public EntityModel<Topic> toModel(Topic topic) {
 		return EntityModel.of(topic,
-				linkTo(methodOn(CourseRestController.class).getCourse(topic.getId())).withSelfRel(),
-				linkTo(methodOn(CourseRestController.class).getAllCourses()).withRel("topics"));
+				linkTo(methodOn(TopicRestController.class).getTopic(topic.getId())).withSelfRel(),
+				linkTo(methodOn(TopicRestController.class).getAllTopics()).withRel("topics"));
 	}
 
 }

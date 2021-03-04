@@ -1,5 +1,6 @@
 package com.gutotech.fatecandoapi.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Topic;
+import com.gutotech.fatecandoapi.model.TopicUserInfo;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
@@ -87,11 +89,10 @@ public class TopicRestController {
 	@PostMapping("upload")
 	public ResponseEntity<EntityModel<Topic>> uploadTopic(@RequestBody @Valid Topic topic) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		topic.setUser(userService.findByEmail(email));
+		topic.setCreatedBy(userService.findByEmail(email));
 
 		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		topic.setRequired(false);
-		topic.getUsersWhoLiked().clear();
 
 		EntityModel<Topic> entityModel = assembler.toModel(service.save(topic));
 
@@ -125,23 +126,68 @@ public class TopicRestController {
 				.body(entityModel);
 	}
 
-	@PostMapping("{id}/like")
-	public ResponseEntity<?> addLike(@PathVariable Long id) {
-		User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-
+	@PutMapping("{id}/like")
+	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
 		Topic topic = service.findById(id);
 
-		if (topic.getUsersWhoLiked().contains(user)) {
-			topic.getUsersWhoLiked().remove(user);
+		TopicUserInfo topicUserInfo = getUserInfo(topic);
+
+		topicUserInfo.setLiked(!topicUserInfo.isLiked());
+
+		service.save(topic);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("{id}/finished")
+	public ResponseEntity<Void> toggleFinished(@PathVariable Long id) {
+		Topic topic = service.findById(id);
+
+		TopicUserInfo topicUserInfo = getUserInfo(topic);
+
+		topicUserInfo.setFinished(!topicUserInfo.isFinished());
+
+		if (topicUserInfo.isFinished()) {
+			topicUserInfo.setFinishDate(new Date());
 		} else {
-			topic.getUsersWhoLiked().add(user);
+			topicUserInfo.setFinishDate(null);
 		}
 
-		EntityModel<Topic> entityModel = assembler.toModel(service.save(topic));
+		service.save(topic);
 
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("{id}/annotation")
+	public ResponseEntity<Void> saveAnnotation(@RequestBody String annotation, @PathVariable Long id) {
+		Topic topic = service.findById(id);
+
+		TopicUserInfo topicUserInfo = getUserInfo(topic);
+
+		topicUserInfo.setAnnotation(annotation);
+
+		service.save(topic);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	private TopicUserInfo getUserInfo(Topic topic) {
+		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		TopicUserInfo topicUserInfo = topic.getTopicUserInfos().stream()
+				.filter(info -> info.getUser().getEmail().equals(currentUserEmail)) //
+				.findFirst() //
+				.orElse(null);
+
+		if (topicUserInfo == null) {
+			User currentUser = userService.findCurrentUser();
+
+			topicUserInfo = new TopicUserInfo(currentUser, topic);
+
+			topic.getTopicUserInfos().add(topicUserInfo);
+		}
+
+		return topicUserInfo;
 	}
 
 }

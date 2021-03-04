@@ -14,6 +14,6 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 	List<Topic> findAllByDiscipline(Discipline discipline);
 
-	List<Topic> findAllByUser(User user);
+	List<Topic> findAllByCreatedBy(User user);
 
 }

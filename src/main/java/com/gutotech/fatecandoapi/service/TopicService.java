@@ -24,8 +24,8 @@ public class TopicService {
 		return repository.findAllByDiscipline(discipline);
 	}
 
-	public List<Topic> findAllByUser(User user) {
-		return repository.findAllByUser(user);
+	public List<Topic> findAllByCreatedBy(User user) {
+		return repository.findAllByCreatedBy(user);
 	}
 
 	public Topic findById(Long id) {

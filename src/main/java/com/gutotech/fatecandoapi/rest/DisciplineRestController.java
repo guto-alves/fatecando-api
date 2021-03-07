@@ -83,7 +83,7 @@ public class DisciplineRestController {
 	}
 
 	@GetMapping("{id}/topics")
-	public ResponseEntity<List<Topic>> getTopicsByDiscipline(@PathVariable Long id) {
+	public ResponseEntity<List<Topic>> getDisciplineTopics(@PathVariable Long id) {
 		Discipline discipline = disciplineService.findById(id);
 
 		List<Topic> topics = topicService.findAllByDiscipline(discipline);
@@ -100,7 +100,7 @@ public class DisciplineRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateCourse(@RequestBody @Valid Discipline discipline, @PathVariable Long id) {
+	public ResponseEntity<?> updateDiscipline(@RequestBody @Valid Discipline discipline, @PathVariable Long id) {
 		Discipline currentDiscipline = disciplineService.findById(id);
 		currentDiscipline.setName(discipline.getName());
 		currentDiscipline.setCode(discipline.getCode());

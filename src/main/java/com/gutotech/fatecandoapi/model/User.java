@@ -72,8 +72,7 @@ public class User {
 	public User() {
 	}
 
-	public User(String fullName,String email, String password, Gender gender, Date birthDate,
-			Course course) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate, Course course) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
@@ -82,8 +81,8 @@ public class User {
 		this.course = course;
 	}
 
-	public User(String fullName, String email, String password, Gender gender, Date birthDate,
-			Course course, List<Role> roles) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate, Course course,
+			List<Role> roles) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;

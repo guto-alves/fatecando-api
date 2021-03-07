@@ -77,15 +77,6 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		topicRepository.deleteAll();
-		disciplineRepository.deleteAll();
-		testRepository.deleteAll();
-		institutionRepository.deleteAll();
-		courseRepository.deleteAll();
-		userService.deleteAll();
-		roleRepository.deleteAll();
-		questionRepository.deleteAll();
-
 		// Storing Institutions
 		Institution fatecZl = new Institution("Fatec Zona Leste");
 		Institution fatecSp = new Institution("Fatec São Paulo");

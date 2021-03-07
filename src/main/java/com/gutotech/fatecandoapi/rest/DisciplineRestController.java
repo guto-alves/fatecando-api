@@ -1,5 +1,6 @@
 package com.gutotech.fatecandoapi.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -20,11 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
+import com.gutotech.fatecandoapi.model.DisciplineUser;
 import com.gutotech.fatecandoapi.model.Topic;
+import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.DisciplineModelAssembler;
 import com.gutotech.fatecandoapi.service.CourseService;
 import com.gutotech.fatecandoapi.service.DisciplineService;
+import com.gutotech.fatecandoapi.service.DisciplineUserService;
 import com.gutotech.fatecandoapi.service.TopicService;
+import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
 @RequestMapping("api/disciplines")
@@ -41,6 +46,12 @@ public class DisciplineRestController {
 
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private DisciplineUserService disciplineUserService;
 
 	@GetMapping
 	public ResponseEntity<List<Discipline>> getDisciplines(
@@ -79,8 +90,7 @@ public class DisciplineRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateCourse(@RequestBody @Valid Discipline discipline, //
-			@PathVariable Long id) {
+	public ResponseEntity<?> updateCourse(@RequestBody @Valid Discipline discipline, @PathVariable Long id) {
 		Discipline currentDiscipline = disciplineService.findById(id);
 		currentDiscipline.setName(discipline.getName());
 		currentDiscipline.setCode(discipline.getCode());
@@ -106,4 +116,26 @@ public class DisciplineRestController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@PutMapping("{id}/like")
+	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
+		Discipline discipline = disciplineService.findById(id);
+
+		DisciplineUser disciplineUser = getDisciplineUser(discipline);
+		disciplineUser.setLiked(!disciplineUser.isLiked());
+		disciplineUserService.save(disciplineUser);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	private DisciplineUser getDisciplineUser(Discipline discipline) {
+		DisciplineUser disciplineUser = discipline.getUser();
+
+		if (disciplineUser.getUser() == null) {
+			User user = userService.findCurrentUser();
+			disciplineUser.setUser(user);
+		}
+
+		return disciplineUser;
+	}
+	
 }

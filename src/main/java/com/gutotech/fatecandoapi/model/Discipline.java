@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -51,6 +53,10 @@ public class Discipline {
 
 	@ManyToOne
 	private Course course;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.discipline")
+	private List<DisciplineUser> disciplineUsers = new ArrayList<>();
 
 	public Discipline() {
 	}
@@ -138,6 +144,29 @@ public class Discipline {
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	public List<DisciplineUser> getDisciplineUsers() {
+		return disciplineUsers;
+	}
+
+	public void setDisciplineUsers(List<DisciplineUser> disciplineUsers) {
+		this.disciplineUsers = disciplineUsers;
+	}
+
+	public DisciplineUser getUser() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		return disciplineUsers.stream() //
+				.filter(info -> info.getUser().getEmail().equals(email)) //
+				.findFirst() //
+				.orElse(new DisciplineUser(this, null));
+	}
+
+	public long getLikes() {
+		return disciplineUsers.stream() //
+				.filter(DisciplineUser::isLiked) //
+				.count();
 	}
 
 	@Override

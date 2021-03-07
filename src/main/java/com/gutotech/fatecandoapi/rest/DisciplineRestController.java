@@ -69,7 +69,17 @@ public class DisciplineRestController {
 
 	@GetMapping("{id}")
 	public EntityModel<Discipline> getDiscipline(@PathVariable Long id) {
-		return disciplineAssembler.toModel(disciplineService.findById(id));
+		Discipline discipline = disciplineService.findById(id);
+
+		DisciplineUser disciplineUser = getDisciplineUser(discipline);
+		disciplineUser.setAccessDate(new Date());
+		disciplineUserService.save(disciplineUser);
+
+		if (!discipline.getDisciplineUsers().contains(disciplineUser)) {
+			discipline.getDisciplineUsers().add(disciplineUser);
+		}
+
+		return disciplineAssembler.toModel(discipline);
 	}
 
 	@GetMapping("{id}/topics")
@@ -137,5 +147,5 @@ public class DisciplineRestController {
 
 		return disciplineUser;
 	}
-	
+
 }

@@ -90,8 +90,8 @@ public class MessageRestController {
 
 		List<Message> messagesSentCurrentUser = messageService.findAllByRecipient(user);
 
-		if (messagesSentCurrentUser.contains(message) && !message.isRead()) {
-			message.setRead(true);
+		if (messagesSentCurrentUser.contains(message) && !message.isNewMessage()) {
+			message.setNewMessage(true);
 			messageService.save(message);
 			return ResponseEntity.noContent().build();
 		}

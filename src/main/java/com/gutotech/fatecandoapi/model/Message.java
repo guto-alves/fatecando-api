@@ -3,6 +3,7 @@ package com.gutotech.fatecandoapi.model;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +33,8 @@ public class Message {
 	@NotBlank(message = "Please provide a valid message text.")
 	private String text;
 
-	private boolean read;
+	@Column(name = "new_message")
+	private boolean newMessage;
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
@@ -80,12 +82,12 @@ public class Message {
 		this.text = text;
 	}
 
-	public boolean isRead() {
-		return read;
+	public boolean isNewMessage() {
+		return newMessage;
 	}
 
-	public void setRead(boolean read) {
-		this.read = read;
+	public void setNewMessage(boolean read) {
+		this.newMessage = read;
 	}
 
 	public Date getDate() {

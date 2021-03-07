@@ -74,8 +74,7 @@ public class UserRestController {
 	@PutMapping("{id}")
 	public ResponseEntity<EntityModel<User>> updateUser(@RequestBody @Valid User user, @PathVariable Long id) {
 		User currentUser = userService.findById(id);
-		currentUser.setFirstName(user.getFirstName());
-		currentUser.setLastName(user.getLastName());
+		currentUser.setFullName(user.getFullName());
 		currentUser.setGender(user.getGender());
 		currentUser.setBirthDate(user.getBirthDate());
 		currentUser.setCourse(user.getCourse());

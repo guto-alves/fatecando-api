@@ -109,16 +109,16 @@ public class LoadDatabase implements CommandLineRunner {
 		roleRepository.saveAll(Arrays.asList(admin, user));
 
 		// Storing Users
-		User staff = new User("Staff", "Staff", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
+		User staff = new User("Staff Staff", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
 				new Date(), null);
 		staff.setRoles(Arrays.asList(user, admin));
 		userService.save(staff);
 
-		User gustavo = new User("Gustavo", "Alves", "guto@guto.com", "123", Gender.MALE, new Date(), ads);
-		User kaik = new User("Kayk", "Vida", "kayk@g.com", "123", Gender.MALE, new Date(), ads);
-		User kaizer = new User("Kaizer", "Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date(), ads);
-		User maria = new User("Maria", "Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date(), rh);
-		User alice = new User("Alice", "Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
+		User gustavo = new User("Gustavo Alves", "guto@guto.com", "123", Gender.MALE, new Date(), ads);
+		User kaik = new User("Kayk Vida", "kayk@g.com", "123", Gender.MALE, new Date(), ads);
+		User kaizer = new User("Kaizer Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date(), ads);
+		User maria = new User("Maria Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date(), rh);
+		User alice = new User("Alice Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
 
 		messageRepository.saveAll(Arrays.asList(

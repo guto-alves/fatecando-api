@@ -124,7 +124,7 @@ public class UserActivity {
 
 	@Override
 	public String toString() {
-		return "StudentActivity [user=" + user.getFirstName() + ", rightAnswers=" + rightAnswers + ", wrongAnswers="
+		return "StudentActivity [user=" + user.getFullName() + ", rightAnswers=" + rightAnswers + ", wrongAnswers="
 				+ wrongAnswers + ", gameWins=" + gameWins + ", gameLosses=" + gameLosses + ", completeTests="
 				+ completeTests + ", contentUploaded=" + contentUploaded + "]";
 	}

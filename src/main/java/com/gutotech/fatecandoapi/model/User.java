@@ -34,12 +34,8 @@ public class User {
 	private Long id;
 
 	@NotBlank
-	@Column(name = "first_name")
-	private String firstName;
-
-	@NotBlank
-	@Column(name = "last_name")
-	private String lastName;
+	@Column(name = "full_name")
+	private String fullName;
 
 	@NotBlank
 	@Column(unique = true)
@@ -76,10 +72,9 @@ public class User {
 	public User() {
 	}
 
-	public User(String firstName, String lastName, String email, String password, Gender gender, Date birthDate,
+	public User(String fullName,String email, String password, Gender gender, Date birthDate,
 			Course course) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
@@ -87,10 +82,9 @@ public class User {
 		this.course = course;
 	}
 
-	public User(String firstName, String lastName, String email, String password, Gender gender, Date birthDate,
+	public User(String fullName, String email, String password, Gender gender, Date birthDate,
 			Course course, List<Role> roles) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
@@ -107,20 +101,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getFullName() {
+		return fullName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public String getEmail() {

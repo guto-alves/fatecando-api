@@ -26,7 +26,7 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
 	            .antMatchers(HttpMethod.GET, "/api/courses", "/api/disciplines") 
 	    			.permitAll()
-            	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login") // for sign up and login
+            	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login", "/api/users") // for sign up and login
             		.permitAll()
             	.anyRequest()
  	            	.authenticated()

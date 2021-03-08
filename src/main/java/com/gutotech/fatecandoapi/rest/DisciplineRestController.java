@@ -66,6 +66,11 @@ public class DisciplineRestController {
 
 		return ResponseEntity.ok(disciplineService.findAll());
 	}
+	
+	@GetMapping("accessed")
+	public ResponseEntity<List<Discipline>> getDisciplinesByAccessDate() {
+		return ResponseEntity.ok(userService.findCurrentUser().getDisciplines());
+	}
 
 	@GetMapping("{id}")
 	public EntityModel<Discipline> getDiscipline(@PathVariable Long id) {

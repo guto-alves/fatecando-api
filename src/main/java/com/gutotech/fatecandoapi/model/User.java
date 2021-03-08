@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,6 +28,7 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
@@ -68,6 +71,10 @@ public class User {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.user")
+	private List<DisciplineUser> userDisciplines = new ArrayList<>();
 
 	public User() {
 	}
@@ -178,6 +185,22 @@ public class User {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public List<Discipline> getDisciplines() {
+		userDisciplines.sort((discipline1, discipline2) -> {
+			if (discipline1.getAccessDate().before(discipline2.getAccessDate())) {
+				return 1;
+			} else if (discipline1.getAccessDate().after(discipline2.getAccessDate())) {
+				return -1;
+			}
+
+			return 0;
+		});
+
+		return userDisciplines.stream() //
+				.map(DisciplineUser::getDiscipline) //
+				.collect(Collectors.toList());
 	}
 
 	@Override

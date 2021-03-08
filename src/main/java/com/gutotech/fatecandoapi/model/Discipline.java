@@ -49,7 +49,7 @@ public class Discipline {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
-	private List<ForumTopic> forum = new ArrayList<>();
+	private List<ForumTopic> forumTopics = new ArrayList<>();
 
 	@ManyToOne
 	private Course course;
@@ -134,8 +134,8 @@ public class Discipline {
 		return topics;
 	}
 
-	public List<ForumTopic> getForum() {
-		return forum;
+	public List<ForumTopic> getForumTopics() {
+		return forumTopics;
 	}
 
 	public Course getCourse() {

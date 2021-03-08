@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.DisciplineUser;
+import com.gutotech.fatecandoapi.model.ForumTopic;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.DisciplineModelAssembler;
+import com.gutotech.fatecandoapi.model.assembler.ForumTopicModelAssembler;
 import com.gutotech.fatecandoapi.service.CourseService;
 import com.gutotech.fatecandoapi.service.DisciplineService;
 import com.gutotech.fatecandoapi.service.DisciplineUserService;
+import com.gutotech.fatecandoapi.service.ForumTopicService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -66,7 +69,7 @@ public class DisciplineRestController {
 
 		return ResponseEntity.ok(disciplineService.findAll());
 	}
-	
+
 	@GetMapping("accessed")
 	public ResponseEntity<List<Discipline>> getDisciplinesByAccessDate() {
 		return ResponseEntity.ok(userService.findCurrentUser().getDisciplines());
@@ -151,6 +154,34 @@ public class DisciplineRestController {
 		}
 
 		return disciplineUser;
+	}
+
+	// Forum Topics
+	@Autowired
+	private ForumTopicService forumTopicService;
+
+	@Autowired
+	private ForumTopicModelAssembler forumTopicAssembler;
+
+	@GetMapping("{id}/forum-topics")
+	public ResponseEntity<List<ForumTopic>> getForumTopics(@PathVariable Long id) {
+		Discipline discipline = disciplineService.findById(id);
+		return ResponseEntity.ok(discipline.getForumTopics());
+	}
+
+	@PostMapping("{id}/forum-topics")
+	public ResponseEntity<EntityModel<ForumTopic>> addForumTopic(@PathVariable() Long id,
+			@RequestBody @Valid ForumTopic forumTopic) {
+		Discipline discipline = disciplineService.findById(id);
+		forumTopic.setDiscipline(discipline);
+
+		forumTopic.setUser(userService.findCurrentUser());
+
+		EntityModel<ForumTopic> entityModel = forumTopicAssembler.toModel(forumTopicService.save(forumTopic));
+
+		return ResponseEntity //
+				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+				.body(entityModel);
 	}
 
 }

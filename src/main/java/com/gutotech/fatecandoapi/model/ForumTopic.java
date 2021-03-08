@@ -18,10 +18,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -30,21 +27,20 @@ public class ForumTopic {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
+	@NotBlank(message = "Please provide a title")
 	private String title;
 
-	@NotBlank
+	@NotBlank(message = "Please provide a description")
 	@Column(length = 2000)
 	private String description;
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date date;
 
 	private int likes;
 
+	@JsonIgnore
 	@ManyToOne
 	private Discipline discipline;
 

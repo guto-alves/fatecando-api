@@ -14,10 +14,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -26,14 +23,12 @@ public class ForumTopicComment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
+	@NotBlank(message = "Please provide a valid content.")
 	@Column(length = 2000)
-	private String description;
+	private String content;
 
 	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy dd/MM/yyyy HH:mm:ss")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	@Temporal(TemporalType.DATE)
 	private Date date;
 
 	private int likes;
@@ -41,6 +36,7 @@ public class ForumTopicComment {
 	@ManyToOne
 	private User user;
 
+	@JsonIgnore
 	@ManyToOne
 	private ForumTopic forumTopic;
 
@@ -48,7 +44,7 @@ public class ForumTopicComment {
 	}
 
 	public ForumTopicComment(String description, User user, ForumTopic forumTopic) {
-		this.description = description;
+		this.content = description;
 		this.user = user;
 		this.forumTopic = forumTopic;
 	}
@@ -61,12 +57,12 @@ public class ForumTopicComment {
 		this.id = id;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getContent() {
+		return content;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public Date getDate() {
@@ -93,7 +89,6 @@ public class ForumTopicComment {
 		this.user = user;
 	}
 
-	@JsonIgnore
 	public ForumTopic getForumTopic() {
 		return forumTopic;
 	}

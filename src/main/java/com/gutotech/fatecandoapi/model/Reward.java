@@ -16,10 +16,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -29,15 +26,13 @@ public class Reward {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
-	private Date date;
-
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private RewardType rewardType;
+	private RewardType type;
+
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date;
 
 	@JsonIgnore
 	@ManyToOne
@@ -47,8 +42,8 @@ public class Reward {
 	public Reward() {
 	}
 
-	public Reward(RewardType rewardType, User user) {
-		this.rewardType = rewardType;
+	public Reward(RewardType type, User user) {
+		this.type = type;
 		this.user = user;
 	}
 
@@ -60,28 +55,20 @@ public class Reward {
 		this.id = id;
 	}
 
+	public RewardType getType() {
+		return type;
+	}
+
+	public void setType(RewardType type) {
+		this.type = type;
+	}
+
 	public Date getDate() {
 		return date;
 	}
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public int getScore() {
-		return rewardType.getScore();
-	}
-
-	public int getCoins() {
-		return rewardType.getCoins();
-	}
-
-	public RewardType getRewardType() {
-		return rewardType;
-	}
-
-	public void setRewardType(RewardType rewardType) {
-		this.rewardType = rewardType;
 	}
 
 	public User getUser() {

@@ -28,7 +28,7 @@ public class ForumTopicComment {
 	private String content;
 
 	@CreationTimestamp
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 
 	private int likes;
@@ -43,8 +43,8 @@ public class ForumTopicComment {
 	public ForumTopicComment() {
 	}
 
-	public ForumTopicComment(String description, User user, ForumTopic forumTopic) {
-		this.content = description;
+	public ForumTopicComment(String content, User user, ForumTopic forumTopic) {
+		this.content = content;
 		this.user = user;
 		this.forumTopic = forumTopic;
 	}

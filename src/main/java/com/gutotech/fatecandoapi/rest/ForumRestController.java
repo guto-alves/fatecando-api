@@ -25,7 +25,7 @@ import com.gutotech.fatecandoapi.service.ForumTopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
-@RequestMapping("forum-topics")
+@RequestMapping("api/forum-topics")
 public class ForumRestController {
 
 	@Autowired

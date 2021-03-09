@@ -187,6 +187,7 @@ public class User {
 		this.roles = roles;
 	}
 
+	@JsonIgnore
 	public List<Discipline> getDisciplines() {
 		userDisciplines.sort((discipline1, discipline2) -> {
 			if (discipline1.getAccessDate().before(discipline2.getAccessDate())) {

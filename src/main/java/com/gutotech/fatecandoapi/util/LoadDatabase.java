@@ -12,6 +12,7 @@ import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.ForumTopic;
+import com.gutotech.fatecandoapi.model.ForumTopicComment;
 import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Institution;
 import com.gutotech.fatecandoapi.model.Message;
@@ -25,6 +26,7 @@ import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.CourseRepository;
 import com.gutotech.fatecandoapi.repository.DisciplineRepository;
+import com.gutotech.fatecandoapi.repository.ForumTopicCommentRepository;
 import com.gutotech.fatecandoapi.repository.ForumTopicRepository;
 import com.gutotech.fatecandoapi.repository.InstitutionRepository;
 import com.gutotech.fatecandoapi.repository.MessageRepository;
@@ -56,6 +58,9 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Autowired
 	private ForumTopicRepository forumTopicRepository;
+
+	@Autowired
+	private ForumTopicCommentRepository forumTopicCommentRepository;
 
 	@Autowired
 	private QuestionRepository questionRepository;
@@ -112,12 +117,9 @@ public class LoadDatabase implements CommandLineRunner {
 		User alice = new User("Alice Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
 
-		messageRepository.saveAll(Arrays.asList(
-				new Message("Subject 1", "Text 1", maria, gustavo),
-				new Message("Subject 2", "Text 2", gustavo, maria), 
-				new Message("Subject 3", "Text 3", kaik, gustavo),
-				new Message("Subject 4", "Text 4", kaizer, maria),
-				new Message("Subject 5", "Text 5", staff, gustavo),
+		messageRepository.saveAll(Arrays.asList(new Message("Subject 1", "Text 1", maria, gustavo),
+				new Message("Subject 2", "Text 2", gustavo, maria), new Message("Subject 3", "Text 3", kaik, gustavo),
+				new Message("Subject 4", "Text 4", kaizer, maria), new Message("Subject 5", "Text 5", staff, gustavo),
 				new Message("Subject 6", "Text 6", staff, gustavo)));
 
 		// Storing Rewards
@@ -247,6 +249,15 @@ public class LoadDatabase implements CommandLineRunner {
 		ForumTopic forumTopic3 = new ForumTopic("Configurar um Roteador",
 				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, alice);
 		forumTopicRepository.saveAll(Arrays.asList(forumTopic1, forumTopic2, forumTopic3));
+
+		forumTopicCommentRepository.saveAll(Arrays.asList(
+				new ForumTopicComment("Comment 1", gustavo, forumTopic1),
+				new ForumTopicComment("Comment 2", kaik, forumTopic1),
+				new ForumTopicComment("Comment 3", kaizer, forumTopic1),
+				new ForumTopicComment("Comment 4", gustavo, forumTopic2),
+				new ForumTopicComment("Comment 5", maria, forumTopic3),
+				new ForumTopicComment("Comment 6", alice, forumTopic3),
+				new ForumTopicComment("Comment 7", alice, forumTopic3)));
 	}
 
 }

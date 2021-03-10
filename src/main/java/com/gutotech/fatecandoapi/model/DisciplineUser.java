@@ -2,6 +2,7 @@ package com.gutotech.fatecandoapi.model;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -66,6 +67,16 @@ public class DisciplineUser {
 		this.liked = liked;
 	}
 
+	public int getProgress() {
+		Set<Topic> topics = id.getDiscipline().getTopics();
+		
+		long totalFinished = topics.stream()
+				.filter(topic -> topic.getUser().isFinished())
+				.count();
+
+		return totalFinished > 0 ? (int) ((double) totalFinished / topics.size() * 100) : 0;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

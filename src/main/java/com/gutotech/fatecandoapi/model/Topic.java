@@ -67,7 +67,7 @@ public class Topic {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.topic", cascade = CascadeType.ALL)
-	private List<TopicUserInfo> topicUserInfos = new ArrayList<>();
+	private List<TopicUser> topicUsers = new ArrayList<>();
 
 	public Topic() {
 	}
@@ -116,8 +116,8 @@ public class Topic {
 
 	public long getLikes() {
 		// @formatter:off
-		return topicUserInfos.stream()
-				.filter(TopicUserInfo::isLiked)
+		return topicUsers.stream()
+				.filter(TopicUser::isLiked)
 				.count();
 		// @formatter:on
 	}
@@ -170,21 +170,21 @@ public class Topic {
 		this.updateDate = updateDate;
 	}
 
-	public List<TopicUserInfo> getTopicUserInfos() {
-		return topicUserInfos;
+	public List<TopicUser> getTopicUsers() {
+		return topicUsers;
 	}
 
-	public void setTopicUserInfos(List<TopicUserInfo> topicUserInfos) {
-		this.topicUserInfos = topicUserInfos;
+	public void setTopicUsers(List<TopicUser> topicUsers) {
+		this.topicUsers = topicUsers;
 	}
 
-	public TopicUserInfo getUserInfo() {
+	public TopicUser getUser() {
 		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		return topicUserInfos.stream() //
+		return topicUsers.stream() //
 				.filter(info -> info.getUser().getEmail().equals(currentUserEmail)) //
 				.findFirst() //
-				.orElse(new TopicUserInfo());
+				.orElse(new TopicUser());
 	}
 
 	@Override

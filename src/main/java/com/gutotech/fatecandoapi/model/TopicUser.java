@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class TopicUserInfo {
+public class TopicUser {
 
 	@EmbeddedId
 	private TopicUserId id = new TopicUserId();
@@ -25,14 +25,14 @@ public class TopicUserInfo {
 	@Column(name = "finish_date")
 	private Date finishDate;
 
-	public TopicUserInfo() {
+	public TopicUser() {
 	}
 
-	public TopicUserInfo(User user, Topic topic) {
+	public TopicUser(User user, Topic topic) {
 		this(new TopicUserId(user, topic), false, "", false, null);
 	}
 
-	public TopicUserInfo(TopicUserId id, boolean liked, String annotation, boolean finished, Date finishDate) {
+	public TopicUser(TopicUserId id, boolean liked, String annotation, boolean finished, Date finishDate) {
 		this.id = id;
 		this.liked = liked;
 		this.annotation = annotation;
@@ -100,10 +100,10 @@ public class TopicUserInfo {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof TopicUserInfo)) {
+		if (!(obj instanceof TopicUser)) {
 			return false;
 		}
-		TopicUserInfo other = (TopicUserInfo) obj;
+		TopicUser other = (TopicUser) obj;
 		return Objects.equals(id, other.id);
 	}
 

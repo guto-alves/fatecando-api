@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Topic;
-import com.gutotech.fatecandoapi.model.TopicUserInfo;
+import com.gutotech.fatecandoapi.model.TopicUser;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
@@ -130,9 +130,9 @@ public class TopicRestController {
 	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
 		Topic topic = service.findById(id);
 
-		TopicUserInfo topicUserInfo = getUserInfo(topic);
+		TopicUser topicUser = getUserInfo(topic);
 
-		topicUserInfo.setLiked(!topicUserInfo.isLiked());
+		topicUser.setLiked(!topicUser.isLiked());
 
 		service.save(topic);
 
@@ -143,14 +143,14 @@ public class TopicRestController {
 	public ResponseEntity<Void> toggleFinished(@PathVariable Long id) {
 		Topic topic = service.findById(id);
 
-		TopicUserInfo topicUserInfo = getUserInfo(topic);
+		TopicUser topicUser = getUserInfo(topic);
 
-		topicUserInfo.setFinished(!topicUserInfo.isFinished());
+		topicUser.setFinished(!topicUser.isFinished());
 
-		if (topicUserInfo.isFinished()) {
-			topicUserInfo.setFinishDate(new Date());
+		if (topicUser.isFinished()) {
+			topicUser.setFinishDate(new Date());
 		} else {
-			topicUserInfo.setFinishDate(null);
+			topicUser.setFinishDate(null);
 		}
 
 		service.save(topic);
@@ -162,32 +162,32 @@ public class TopicRestController {
 	public ResponseEntity<Void> saveAnnotation(@RequestBody String annotation, @PathVariable Long id) {
 		Topic topic = service.findById(id);
 
-		TopicUserInfo topicUserInfo = getUserInfo(topic);
+		TopicUser topicUser = getUserInfo(topic);
 
-		topicUserInfo.setAnnotation(annotation);
+		topicUser.setAnnotation(annotation);
 
 		service.save(topic);
 
 		return ResponseEntity.noContent().build();
 	}
 
-	private TopicUserInfo getUserInfo(Topic topic) {
+	private TopicUser getUserInfo(Topic topic) {
 		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		TopicUserInfo topicUserInfo = topic.getTopicUserInfos().stream()
+		TopicUser topicUser = topic.getTopicUsers().stream()
 				.filter(info -> info.getUser().getEmail().equals(currentUserEmail)) //
 				.findFirst() //
 				.orElse(null);
 
-		if (topicUserInfo == null) {
+		if (topicUser == null) {
 			User currentUser = userService.findCurrentUser();
 
-			topicUserInfo = new TopicUserInfo(currentUser, topic);
+			topicUser = new TopicUser(currentUser, topic);
 
-			topic.getTopicUserInfos().add(topicUserInfo);
+			topic.getTopicUsers().add(topicUser);
 		}
 
-		return topicUserInfo;
+		return topicUser;
 	}
 
 }

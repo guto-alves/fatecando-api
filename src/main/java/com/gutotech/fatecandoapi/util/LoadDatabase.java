@@ -135,6 +135,11 @@ public class LoadDatabase implements CommandLineRunner {
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
 						+ "Implementação de algoritmos usando uma linguagem de programação.",
 				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 1, ads);
+		Discipline ed = new Discipline("Estrutura de Dados", "ED001",
+				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
+						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
+						+ "Implementação de algoritmos usando uma linguagem de programação.",
+				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 3, ads);
 		Discipline db = new Discipline("Banco de Dados", "IBD002",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
 				"Entender fundamentos, arquitetura e técnicas de projeto e implementação de banco de dados", 4, ads);
@@ -164,7 +169,7 @@ public class LoadDatabase implements CommandLineRunner {
 		Discipline eng3 = new Discipline("Engenharia de Software III", "IES300",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
 				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 4, ads);
-		disciplineRepository.saveAll(Arrays.asList(alp, ago, irc1, cee, db, ldb, eng1, eng2, eng3));
+		disciplineRepository.saveAll(Arrays.asList(alp, ed, ago, irc1, cee, db, ldb, eng1, eng2, eng3));
 
 		// Storing some Topics tests
 		Topic topic1 = new Topic("Topic 1", "Description description description description",
@@ -192,8 +197,52 @@ public class LoadDatabase implements CommandLineRunner {
 				irc1, staff);
 		Topic topic11 = new Topic("Introdução a Java", "Introdução a linguagem de programação Java.",
 				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, alp, gustavo);
+
+		Topic topic12 = new Topic("Algoritmos", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic arrays = new Topic("Vetores e Matrizes", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic14 = new Topic("Modularização", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic linkedList = new Topic("Lista Encadeada", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic list = new Topic("Listas", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic stack = new Topic("Pilha", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic queue = new Topic("Fila", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic19 = new Topic("Recursividade", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic tree = new Topic("Ârvores", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic21 = new Topic("Percurso em Arvores", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic22 = new Topic("Percurso em Profundidade em Ârvores", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic23 = new Topic("Percurso Preordem, Inordem, Posordem", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic24 = new Topic("Ordenação", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic javaCollections = new Topic("Collections Java", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic filesAndDirectories = new Topic("Diretorios e Arquivos", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic27 = new Topic("Sorting Heapsort e Heapfy", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic28 = new Topic("Binary Search", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic29 = new Topic("Sorting - Selection", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic topic30 = new Topic("Sorting - QuickSort", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+		Topic mergeSort = new Topic("Sorting - MergeSort", "Introdução a linguagem de programação Java.",
+				"<h3>Title</h3><br><p>F afasdaklsdfj çla <b>lçagj</b></p>", UploadStatus.APPROVED, ed, gustavo);
+
 		topicRepository.saveAll(Arrays.asList(topic1, topic2, topic3, topic4, topic5, topic6, //
-				topic7, topic8, topic9, topic10, topic11));
+				topic7, topic8, topic9, topic10, topic11, topic12, arrays, topic14, linkedList, list, stack, queue,
+				topic19, tree, topic21, topic22, topic23, topic24, javaCollections, filesAndDirectories, topic27,
+				topic28, topic29, topic30, mergeSort));
 
 		// Storing Questions
 		Question lpQuestion1 = new Question("Java é:", QuestionType.QUIZ, UploadStatus.APPROVED, Arrays.asList(
@@ -230,6 +279,7 @@ public class LoadDatabase implements CommandLineRunner {
 						new Alternative("Resposta 4", "Errado! Estude com mais atenção!", false),
 						new Alternative("Resposta 5", "Errado! Estude com mais atenção!", false)),
 				topic8, staff);
+
 		Question lpQuestion6 = new Question("x = 10 + 1;\nSystem.out.print(\"x--\");\n\n A saída será:",
 				QuestionType.TEST, UploadStatus.APPROVED,
 				Arrays.asList(new Alternative("11", "Errado! Estude com mais atenção!", false),
@@ -238,8 +288,85 @@ public class LoadDatabase implements CommandLineRunner {
 						new Alternative("x--", "Parabéns! Esta é a resposta certa!", true),
 						new Alternative("10", "Resposta Errada!", false)),
 				topic10, staff);
-		questionRepository
-				.saveAll(Arrays.asList(lpQuestion1, lpQuestion2, lpQuestion3, lpQuestion4, lpQuestion5, lpQuestion6));
+
+		Question edQuestion6 = new Question(
+				"Considerando que uma queue seqüencial utiliza dois apontadores para indicar suas posições de final e início da estrutura, supondo que a queue foi criada com os apontadores apontando para a posição zero do vetor, qual das alternativas a seguir pode caracterizar uma fila vazia?",
+				QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(
+						new Alternative("Quando o apontador de início apontar para zero.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final apontar para zero.",
+								"Quasee! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final menos um (final-1) for igual ao início.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando os apontadores de final e início apontarem para zero.",
+								"Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Quando o apontador de posição final for igual ao início.", "Resposta Errada!",
+								false)),
+				queue, staff);
+		Question edQuestion7 = new Question(
+				"Leia com atenção as afirmativas abaixo e assinale a resposta correta. A estrutura de dados que melhor representa os diretórios ou pastas de arquivos do computador é a árvore II A estrutura de dados FILA é não linear assim como o Grafo.",
+				QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(
+						new Alternative("Quando o apontador de início apontar para zero.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final apontar para zero.",
+								"Quasee! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final menos um (final-1) for igual ao início.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando os apontadores de final e início apontarem para zero.",
+								"Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Quando o apontador de posição final for igual ao início.", "Resposta Errada!",
+								false)),
+				queue, staff);
+		Question edQuestion8 = new Question(
+				"Considerando que uma queue seqüencial utiliza dois apontadores para indicar suas posições de final e início da estrutura, supondo que a queue foi criada com os apontadores apontando para a posição zero do vetor, qual das alternativas a seguir pode caracterizar uma fila vazia?",
+				QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(
+						new Alternative("Quando o apontador de início apontar para zero.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final apontar para zero.",
+								"Quasee! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final menos um (final-1) for igual ao início.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando os apontadores de final e início apontarem para zero.",
+								"Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Quando o apontador de posição final for igual ao início.", "Resposta Errada!",
+								false)),
+				queue, staff);
+		Question edQuestion9 = new Question(
+				"Considerando que uma queue seqüencial utiliza dois apontadores para indicar suas posições de final e início da estrutura, supondo que a queue foi criada com os apontadores apontando para a posição zero do vetor, qual das alternativas a seguir pode caracterizar uma fila vazia?",
+				QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(
+						new Alternative("Quando o apontador de início apontar para zero.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final apontar para zero.",
+								"Quasee! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final menos um (final-1) for igual ao início.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando os apontadores de final e início apontarem para zero.",
+								"Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Quando o apontador de posição final for igual ao início.", "Resposta Errada!",
+								false)),
+				queue, staff);
+		Question edQuestion10 = new Question(
+				"Considerando que uma queue seqüencial utiliza dois apontadores para indicar suas posições de final e início da estrutura, supondo que a queue foi criada com os apontadores apontando para a posição zero do vetor, qual das alternativas a seguir pode caracterizar uma fila vazia?",
+				QuestionType.TEST, UploadStatus.APPROVED,
+				Arrays.asList(
+						new Alternative("Quando o apontador de início apontar para zero.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final apontar para zero.",
+								"Quasee! Estude com mais atenção!", false),
+						new Alternative("Quando o apontador de final menos um (final-1) for igual ao início.",
+								"Errado! Estude com mais atenção!", false),
+						new Alternative("Quando os apontadores de final e início apontarem para zero.",
+								"Parabéns! Esta é a resposta certa!", true),
+						new Alternative("Quando o apontador de posição final for igual ao início.", "Resposta Errada!",
+								false)),
+				queue, staff);
+
+		questionRepository.saveAll(Arrays.asList(lpQuestion1, lpQuestion2, lpQuestion3, lpQuestion4, lpQuestion5,
+				lpQuestion6, edQuestion6, edQuestion7, edQuestion8, edQuestion9, edQuestion10));
 
 		// Forum Topics
 		ForumTopic forumTopic1 = new ForumTopic("Duvida Routers", "alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi",
@@ -250,8 +377,7 @@ public class LoadDatabase implements CommandLineRunner {
 				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, alice);
 		forumTopicRepository.saveAll(Arrays.asList(forumTopic1, forumTopic2, forumTopic3));
 
-		forumTopicCommentRepository.saveAll(Arrays.asList(
-				new ForumTopicComment("Comment 1", gustavo, forumTopic1),
+		forumTopicCommentRepository.saveAll(Arrays.asList(new ForumTopicComment("Comment 1", gustavo, forumTopic1),
 				new ForumTopicComment("Comment 2", kaik, forumTopic1),
 				new ForumTopicComment("Comment 3", kaizer, forumTopic1),
 				new ForumTopicComment("Comment 4", gustavo, forumTopic2),

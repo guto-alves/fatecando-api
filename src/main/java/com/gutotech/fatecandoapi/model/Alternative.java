@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Alternative {
@@ -22,7 +23,6 @@ public class Alternative {
 
 	private boolean correct;
 
-	@NotBlank
 	private String feedback;
 
 	@JsonIgnore
@@ -59,6 +59,7 @@ public class Alternative {
 		return correct;
 	}
 
+	@JsonProperty
 	public void setCorrect(boolean correct) {
 		this.correct = correct;
 	}
@@ -68,6 +69,7 @@ public class Alternative {
 		return feedback;
 	}
 
+	@JsonProperty
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
 	}

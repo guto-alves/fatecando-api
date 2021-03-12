@@ -12,6 +12,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,18 +79,20 @@ public class QuestionRestController {
 	}
 
 	@PostMapping("upload")
-	public ResponseEntity<?> uploadQuestion(@RequestBody @Valid Question question, HttpServletRequest request) {
-		if (question.getTopic() == null || question.getUser() == null) {
-			// This will throw a exception if not find the topic or user
-			topicService.findById(question.getTopic().getId());
-			userService.findById(question.getUser().getId());
+	public ResponseEntity<?> uploadQuestion(@RequestBody @Valid Question question, @AuthenticationPrincipal User user,
+			HttpServletRequest request) {
+		if (question.getTopic() == null || question.getTopic().getId() == null) {
+			return ResponseEntity.badRequest()
+					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid question topic", request.getRequestURI()));
 		}
 
 		if (question.getAlternatives().stream().noneMatch(Alternative::isCorrect)) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
-					"Question must have at lest one correct alternative", request.getRequestURI()));
+					"The question must have at lest one correct alternative", request.getRequestURI()));
 		}
 
+		question.setTopic(topicService.findById(question.getTopic().getId()));
+		question.setUser(user);
 		question.setId(null);
 		question.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 

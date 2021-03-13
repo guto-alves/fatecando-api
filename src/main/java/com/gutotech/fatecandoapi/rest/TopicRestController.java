@@ -3,11 +3,13 @@ package com.gutotech.fatecandoapi.rest;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,7 @@ import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
+import com.gutotech.fatecandoapi.service.DisciplineService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -34,7 +37,7 @@ import com.gutotech.fatecandoapi.service.UserService;
 public class TopicRestController {
 
 	@Autowired
-	private TopicService service;
+	private TopicService topicService;
 
 	@Autowired
 	private TopicModelAssembler assembler;
@@ -42,47 +45,56 @@ public class TopicRestController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private DisciplineService disciplineService;
+
 	@GetMapping
 	public ResponseEntity<List<Topic>> getAllTopics() {
-		return ResponseEntity.ok(service.findAll());
+		return ResponseEntity.ok(topicService.findAll());
 	}
 
 	@GetMapping("{id}")
 	public EntityModel<Topic> getTopic(@PathVariable Long id) {
-		return assembler.toModel(service.findById(id));
+		return assembler.toModel(topicService.findById(id));
 	}
 
 	@PostMapping
 	public ResponseEntity<EntityModel<Topic>> addTopic(@RequestBody @Valid Topic topic) {
-		EntityModel<Topic> entityModel = assembler.toModel(service.save(topic));
+		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateTopic(@RequestBody @Valid Topic topic, @PathVariable Long id) {
-		Topic currentTopic = service.findById(id);
+	public ResponseEntity<?> updateTopic(@RequestBody @Valid Topic topic, @PathVariable Long id,
+			HttpServletRequest request) {
+		Topic currentTopic = topicService.findById(id);
 		currentTopic.setName(topic.getName());
 		currentTopic.setDescription(topic.getDescription());
 		currentTopic.setHtmlContent(topic.getHtmlContent());
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Roles.ADMIN))) {
-			currentTopic.setStatus(topic.getStatus());
-			currentTopic.setRequired(topic.isRequired());
+		if (topic.getDiscipline() == null || topic.getDiscipline().getId() == null) {
+			return ResponseEntity.badRequest().body(
+					new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid topic discipline", request.getRequestURI()));
 		}
 
-		EntityModel<Topic> entityModel = assembler.toModel(service.save(currentTopic));
+		currentTopic.setDiscipline(disciplineService.findById(topic.getDiscipline().getId()));
 
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Roles.ADMIN))) {
+			currentTopic.setRequired(topic.isRequired());
+			currentTopic.setStatus(topic.getStatus());
+		}
+
+		topicService.save(currentTopic);
+
+		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteTopic(@PathVariable Long id) {
-		service.deleteById(id);
+		topicService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -94,7 +106,7 @@ public class TopicRestController {
 		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		topic.setRequired(false);
 
-		EntityModel<Topic> entityModel = assembler.toModel(service.save(topic));
+		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
@@ -102,11 +114,11 @@ public class TopicRestController {
 
 	@PostMapping("{id}/toggle-required")
 	public ResponseEntity<?> makeRequired(@PathVariable Long id) {
-		Topic topic = service.findById(id);
+		Topic topic = topicService.findById(id);
 
 		topic.setRequired(!topic.isRequired());
 
-		EntityModel<Topic> entityModel = assembler.toModel(service.save(topic));
+		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -115,11 +127,11 @@ public class TopicRestController {
 
 	@PostMapping("{id}/change-status")
 	public ResponseEntity<?> changeStatus(@RequestBody UploadStatus status, @PathVariable Long id) {
-		Topic topic = service.findById(id);
+		Topic topic = topicService.findById(id);
 
 		topic.setStatus(status);
 
-		EntityModel<Topic> entityModel = assembler.toModel(service.save(topic));
+		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -128,20 +140,20 @@ public class TopicRestController {
 
 	@PutMapping("{id}/like")
 	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
-		Topic topic = service.findById(id);
+		Topic topic = topicService.findById(id);
 
 		TopicUser topicUser = getUserInfo(topic);
 
 		topicUser.setLiked(!topicUser.isLiked());
 
-		service.save(topic);
+		topicService.save(topic);
 
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("{id}/finished")
 	public ResponseEntity<Void> toggleFinished(@PathVariable Long id) {
-		Topic topic = service.findById(id);
+		Topic topic = topicService.findById(id);
 
 		TopicUser topicUser = getUserInfo(topic);
 
@@ -153,20 +165,20 @@ public class TopicRestController {
 			topicUser.setFinishDate(null);
 		}
 
-		service.save(topic);
+		topicService.save(topic);
 
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("{id}/annotation")
 	public ResponseEntity<Void> saveAnnotation(@RequestBody String annotation, @PathVariable Long id) {
-		Topic topic = service.findById(id);
+		Topic topic = topicService.findById(id);
 
 		TopicUser topicUser = getUserInfo(topic);
 
 		topicUser.setAnnotation(annotation);
 
-		service.save(topic);
+		topicService.save(topic);
 
 		return ResponseEntity.noContent().build();
 	}

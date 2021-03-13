@@ -6,10 +6,12 @@ import java.util.Set;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@Table(name = "discipline_users")
 public class DisciplineUser {
 
 	@EmbeddedId
@@ -69,14 +71,12 @@ public class DisciplineUser {
 
 	public int getProgress() {
 		Set<Topic> topics = id.getDiscipline().getTopics();
-		
-		long totalFinished = topics.stream()
-				.filter(topic -> topic.getUser().isFinished())
-				.count();
+
+		long totalFinished = topics.stream().filter(topic -> topic.getUser().isFinished()).count();
 
 		return totalFinished > 0 ? (int) ((double) totalFinished / topics.size() * 100) : 0;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

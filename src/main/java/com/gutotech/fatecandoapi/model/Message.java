@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gutotech.fatecandoapi.rest.JacksonCustomMessageSerializer;
 
 @Entity
+@Table(name = "messages")
 @JsonSerialize(using = JacksonCustomMessageSerializer.class)
 public class Message {
 

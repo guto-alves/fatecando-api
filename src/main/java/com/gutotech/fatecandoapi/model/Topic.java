@@ -8,6 +8,8 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +39,7 @@ public class Topic {
 	private String name;
 
 	@NotBlank
-	@Column(length = 2000)
+	@Column(length = 1000)
 	private String description;
 
 	@NotBlank
@@ -47,6 +49,7 @@ public class Topic {
 	private boolean required;
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private UploadStatus status;
 
 	@ManyToOne

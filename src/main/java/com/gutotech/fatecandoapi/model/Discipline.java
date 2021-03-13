@@ -33,14 +33,15 @@ public class Discipline {
 	private String name;
 
 	@NotBlank
-	@Column(unique = true)
+	@Column(length = 20, unique = true)
 	private String code;
 
 	@NotBlank
-	@Column(length = 2500)
+	@Column(length = 1000)
 	private String description;
 
 	@NotBlank
+	@Column(length = 500)
 	private String objective;
 
 	private int semester;

@@ -59,7 +59,15 @@ public class TopicRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<Topic>> addTopic(@RequestBody @Valid Topic topic) {
+	public ResponseEntity<?> addTopic(@RequestBody @Valid Topic topic, HttpServletRequest request) {
+		if (topic.getDiscipline() == null || topic.getDiscipline().getId() == null) {
+			return ResponseEntity.badRequest()
+					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid discipline", request.getRequestURI()));
+		}
+		
+		topic.setDiscipline(disciplineService.findById(topic.getDiscipline().getId()));
+		topic.setCreatedBy(userService.findCurrentUser());
+		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

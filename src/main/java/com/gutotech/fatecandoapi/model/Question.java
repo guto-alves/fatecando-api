@@ -33,7 +33,7 @@ public class Question {
 	private Long id;
 
 	@NotBlank
-	@Column(length = 2500)
+	@Column(columnDefinition = "TEXT")
 	private String description;
 
 	@NotNull

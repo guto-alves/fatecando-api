@@ -43,7 +43,7 @@ public class Topic {
 	private String description;
 
 	@NotBlank
-	@Column(length = 10000)
+	@Column(name = "html_content", columnDefinition = "TEXT")
 	private String htmlContent;
 
 	private boolean required;

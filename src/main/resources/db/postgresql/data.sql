@@ -104,6 +104,7 @@ INSERT INTO topics (id, creation_date, description, html_content, name, required
 </pre><p>de acordo com nossa convenção, é um comentário que descreve o propósito do programa.</p><p>O Java também tem comentários tradicionais, que podem ser distribuídos ao longo de várias linhas, como em</p><pre class="ql-syntax" spellcheck="false"><span class="hljs-comment">/* Esse é um comentário tradicional. Ele
 pode ser dividido em várias linhas */</span>
 </pre><p>Eles começam e terminam com delimitadores, <strong style="color: rgb(161, 0, 0);">/*</strong> e <strong style="color: rgb(161, 0, 0);">*/</strong>. O compilador ignora todo o texto entre os delimitadores. O Java incorporou</p><p>comentários tradicionais e comentários de fim de linha das linguagens de programação C e C++, respectivamente. Preferimos</p><p>usar comentários //.</p><p>O Java fornece comentários de um terceiro tipo: <strong style="color: rgb(161, 0, 0);">comentários Javadoc</strong>. Esses são delimitados por <strong style="color: rgb(161, 0, 0);">//**</strong> e<strong> </strong><strong style="color: rgb(161, 0, 0);">*/</strong>. O compilador</p><p>ignora todo o texto entre os delimitadores. Os comentários no estilo Javadoc permitem-lhe incorporar a documentação do programa</p><p>diretamente aos seus programas. Esses comentários são o formato de documentação Java preferido na indústria. O <strong style="color: rgb(161, 0, 0);">programa</strong></p><p><strong style="color: rgb(161, 0, 0);">utilitário javadoc</strong> (parte do JDK) lê comentários Javadoc e os usa para preparar a documentação do programa no formato HTML.</p><p>Demonstraremos comentários Javadoc e o utilitário javadoc no Apêndice G, na Sala Virtual (em inglês), “Criando documentação</p><p>com javadoc”.</p><p><br></p><p><br></p>', 'Introdução a aplicativos Java', true, 'WAITING_FOR_RESPONSE', '2021-03-15', 1, 2);
+INSERT INTO topics (id, creation_date, description, html_content, name, required, status, update_date, created_by_id, discipline_id) VALUES (33, '2021-03-15', 'O principal objetivo deste capítulo é fazer com que você pensando nas coisas que podem acontecer quando a segurança não é implementada em um computador ou rede - para aumentar um pouco a sua paranoia - e para lhe dar uma base em alguns conceitos-chave de segurança.', '<h2><strong>1 - Importância da Segurança do Computador e da Rede</strong></h2><p><br></p><h3 class="ql-align-justify"> 	A segurança do computador envolve a implementação de medidas para proteger um único computador. Ao proteger um único computador, você se preocupa em proteger o recursos armazenados nesse computador e protegendo esse computador contra ameaças. A segurança de rede envolve proteger todos os recursos de uma rede de ameaças. Você deve considerar não apenas os computadores da rede, mas outros dispositivos de rede, mídia de transmissão de rede e os dados sendo transmitidos em toda a rede. Nesta seção, você aprenderá a apreciar a importância de segurança de computador e rede, examinando alguns exemplos de ataques que poderia ocorrer. Esses exemplos devem fazer você pensar sobre o que poderia acontecer se a segurança do computador e da rede não for implementada. Também definiremos a segurança como será usado no contexto deste livro.</h3><p><br></p><h2><strong>2 - Expondo segredos</strong></h2><p><br></p><h3 class="ql-align-justify">	Quanto mais conectada nossa sociedade se torna, mais nossos dados confidenciais estão sujeitos a ser descoberto por aqueles que irão usá-lo maliciosamente ou para seu próprio benefício. Por exemplo, na primavera de 2005, os hackers descobriram a senha para T-Mobile © Sidekick © de Paris Hilton e publicou seu catálogo de endereços e outros informações pessoais na Internet. Pense sobre a vulnerabilidade dos dados você armazena no seu celular ou no seu assistente digital pessoal (PDA). Faz você usa senhas difíceis de adivinhar para protegê-lo?</h3><h3 class="ql-align-justify">	Questões de confidencialidade semelhantes são levantadas pelo uso de cartões de crédito para fazer compras pela Internet. Os protocolos básicos da Internet não fornecem proteção de confidencialidade, então as partes localizado entre o cliente e o comerciante poderia capturar números de cartão de crédito e use-os posteriormente para compras fraudulentas. Secure Sockets Layer (SSL) foi desenvolvido pela Netscape ® para lidar com este problema. SSL define o Hypertext Trans- fer Protocolo sobre SSL (HTTPS), que fornece criptografia de dados enviados usando Protocolo de transferência de hipertexto (HTTP), o protocolo usado no mundo inteiro Rede. Transport Layer Security (TLS) oferece proteção mais forte do que SSL e está substituindo-o gradualmente. Embora SSL e TLS possam proteger os dados enquanto eles estão sendo enviados através do Inter net (ou outra rede não segura), seu uso não significa o número do seu cartão de crédito ber está seguro. Verificando o tráfego da Internet em busca de pacotes contendo números de cartão de crédito é uma estratégia de ataque com baixo rendimento. Servidores mal protegidos em um site comercial que mantêm um banco de dados de números de cartão de crédito do cliente são uma recompensa muito mais alvo ing. Há evidências documentadas de que tais ataques ocorreram, ou para obter números de cartão de crédito ou para chantagear o comerciante. Outro risco potencial é o roubo de identidade. Roubo de identidade, ou seja, usando algum a “identidade” do outro (nome, número do seguro social, número da conta bancária, etc.) para obter acesso a um recurso ou serviço, explora uma fraqueza inerente aos serviços que usam informações de identificação não secretas para autenticar solicitações.</h3><p class="ql-align-justify"><br></p><h2><strong>3 - Causando Falhas do Sistema</strong></h2><h3 class="ql-align-justify"><br></h3><h3 class="ql-align-justify">	Alguns invasores não estão atrás de dados confidenciais. Em vez disso, eles querem interromper os negócios ness. Esses invasores usam uma variedade de técnicas para causar danos. Vulnerabilidades em software que aceita entrada do usuário, como navegadores de Internet ou software de e-mail, pode permitir que terceiros assumam o controle de um dispositivo. Atacantes pode corromper os dados no próprio dispositivo ou usar o dispositivo como um trampolim para ataques contra terceiros. Worms e vírus fazem uso de recursos generosos ou vulnerabilidades para espalhar-se amplamente e sobrecarregar redes e sistemas finais com o tráfego que geram erate. O worm da Internet de novembro de 1988 é um dos primeiros exemplos bem documentados desta espécie. Ataques de negação de serviço contra alvos específicos começaram a ocorreram na última década. Um ataque de negação de serviço é aquele que impede um servidor de realizar seu trabalho normal. A resiliência contra ataques de negação de serviço tornou-se um novo critério na concepção de protocolos de segurança.</h3>', 'Princípios de Segurança de Rede', false, 'WAITING_FOR_RESPONSE', '2021-03-15', 1, 12);
 
 
 --
@@ -124,6 +125,9 @@ INSERT INTO questions (id, creation_date, description, status, type, update_date
 INSERT INTO questions (id, creation_date, description, status, type, update_date, topic_id, user_id) VALUES (9, '2021-03-13 05:55:02.845', 'Considerando que uma queue seqüencial utiliza dois apontadores para indicar suas posições de final e início da estrutura, supondo que a queue foi criada com os apontadores apontando para a posição zero do vetor, qual das alternativas a seguir pode caracterizar uma fila vazia?', 'APPROVED', 'TEST', '2021-03-13 05:55:02.845', 18, 1);
 INSERT INTO questions (id, creation_date, description, status, type, update_date, topic_id, user_id) VALUES (10, '2021-03-13 05:55:02.866', 'Considerando que uma queue seqüencial utiliza dois apontadores para indicar suas posições de final e início da estrutura, supondo que a queue foi criada com os apontadores apontando para a posição zero do vetor, qual das alternativas a seguir pode caracterizar uma fila vazia?', 'APPROVED', 'TEST', '2021-03-13 05:55:02.866', 18, 1);
 INSERT INTO questions (id, creation_date, description, status, type, update_date, topic_id, user_id) VALUES (11, '2021-03-13 05:55:02.879', 'Considerando que uma queue seqüencial utiliza dois apontadores para indicar suas posições de final e início da estrutura, supondo que a queue foi criada com os apontadores apontando para a posição zero do vetor, qual das alternativas a seguir pode caracterizar uma fila vazia?', 'APPROVED', 'TEST', '2021-03-13 05:55:02.88', 18, 1);
+INSERT INTO questions (id, creation_date, description, status, type, update_date, topic_id, user_id) VALUES (12, '2021-03-15 23:13:43.356', '<p>Quantas letras tem a palavra "palavra"?</p>', 'WAITING_FOR_RESPONSE', 'QUIZ', '2021-03-15 23:13:43.356', 12, NULL);
+INSERT INTO questions (id, creation_date, description, status, type, update_date, topic_id, user_id) VALUES (13, '2021-03-15 23:47:50.927', '<p>Um ataque em que uma pessoa liga e finge ser um membro do departamento de TI para obter a senha de um usuário é conhecido como qual das seguintes?</p>', 'WAITING_FOR_RESPONSE', 'QUIZ', '2021-03-15 23:47:50.927', 33, NULL);
+INSERT INTO questions (id, creation_date, description, status, type, update_date, topic_id, user_id) VALUES (14, '2021-03-15 23:49:20.289', '<p>Qual aspecto da segurança está preocupado com a prevenção de pessoas não autorizadas modificação de informações?</p>', 'WAITING_FOR_RESPONSE', 'QUIZ', '2021-03-15 23:49:20.289', 33, NULL);
 
 
 --
@@ -183,12 +187,25 @@ INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUE
 INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (51, false, 'Quando o apontador de final menos um (final-1) for igual ao início.', 'Errado! Estude com mais atenção!', 11);
 INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (52, true, 'Quando os apontadores de final e início apontarem para zero.', 'Parabéns! Esta é a resposta certa!', 11);
 INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (53, false, 'Quando o apontador de posição final for igual ao início.', 'Resposta Errada!', 11);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (54, false, '2', '', 12);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (55, false, '3', '', 12);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (56, true, '7', '', 12);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (57, false, 'Script de ataque', '', 13);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (58, false, 'Ataque de força bruta', '', 13);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (59, false, 'Ataque de dicionário', '', 13);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (60, true, 'Ataque de engenharia social', '', 13);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (61, false, 'Autorização', '', 14);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (62, false, 'Confidencialidade', '', 14);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (63, true, 'Integridade', '', 14);
+INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUES (64, false, 'Não-repúdio', '', 14);
 
 
 --
 -- Data for Name: answers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO answers (correct, date, user_id, question_id) VALUES (true, '2021-03-15 23:13:59.435', 1, 12);
+INSERT INTO answers (correct, date, user_id, question_id) VALUES (true, '2021-03-15 23:48:01.992', 1, 13);
 
 
 --
@@ -202,7 +219,9 @@ INSERT INTO alternatives (id, correct, description, feedback, question_id) VALUE
 --
 
 INSERT INTO discipline_users (access_date, liked, user_id, discipline_id) VALUES ('2021-03-15 21:01:33.125', false, 1, 1);
-INSERT INTO discipline_users (access_date, liked, user_id, discipline_id) VALUES ('2021-03-15 21:38:20.769', false, 1, 2);
+INSERT INTO discipline_users (access_date, liked, user_id, discipline_id) VALUES ('2021-03-15 23:06:32.511', false, 1, 2);
+INSERT INTO discipline_users (access_date, liked, user_id, discipline_id) VALUES ('2021-03-15 23:22:25.273', false, 1, 3);
+INSERT INTO discipline_users (access_date, liked, user_id, discipline_id) VALUES ('2021-03-15 23:44:34.072', false, 1, 12);
 
 
 --
@@ -277,6 +296,8 @@ INSERT INTO rewards (id, date, type, user_id) VALUES (1, '2021-03-13 05:55:02.02
 INSERT INTO rewards (id, date, type, user_id) VALUES (2, '2021-03-13 05:55:02.031', 'GAME', 2);
 INSERT INTO rewards (id, date, type, user_id) VALUES (3, '2021-03-13 05:55:02.034', 'RIGHT_ANSWER', 6);
 INSERT INTO rewards (id, date, type, user_id) VALUES (4, '2021-03-13 05:55:02.037', 'TEST_SUCCESS', 6);
+INSERT INTO rewards (id, date, type, user_id) VALUES (5, '2021-03-15 23:13:59.419', 'RIGHT_ANSWER', 1);
+INSERT INTO rewards (id, date, type, user_id) VALUES (6, '2021-03-15 23:48:01.983', 'RIGHT_ANSWER', 1);
 
 
 --
@@ -322,12 +343,12 @@ INSERT INTO topic_users (annotation, finish_date, finished, liked, user_id, topi
 -- Data for Name: user_activities; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO user_activities (complete_tests, content_uploaded, game_losses, game_wins, right_answers, wrong_answers, user_id) VALUES (0, 0, 0, 0, 0, 0, 1);
 INSERT INTO user_activities (complete_tests, content_uploaded, game_losses, game_wins, right_answers, wrong_answers, user_id) VALUES (0, 0, 0, 0, 0, 0, 2);
 INSERT INTO user_activities (complete_tests, content_uploaded, game_losses, game_wins, right_answers, wrong_answers, user_id) VALUES (0, 0, 0, 0, 0, 0, 3);
 INSERT INTO user_activities (complete_tests, content_uploaded, game_losses, game_wins, right_answers, wrong_answers, user_id) VALUES (0, 0, 0, 0, 0, 0, 4);
 INSERT INTO user_activities (complete_tests, content_uploaded, game_losses, game_wins, right_answers, wrong_answers, user_id) VALUES (0, 0, 0, 0, 0, 0, 5);
 INSERT INTO user_activities (complete_tests, content_uploaded, game_losses, game_wins, right_answers, wrong_answers, user_id) VALUES (0, 0, 0, 0, 0, 0, 6);
+INSERT INTO user_activities (complete_tests, content_uploaded, game_losses, game_wins, right_answers, wrong_answers, user_id) VALUES (0, 0, 0, 0, 2, 0, 1);
 
 
 --
@@ -347,7 +368,7 @@ INSERT INTO user_role (user_id, role_id) VALUES (6, 2);
 -- Name: alternatives_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('alternatives_id_seq', 53, true);
+SELECT pg_catalog.setval('alternatives_id_seq', 64, true);
 
 
 --
@@ -410,14 +431,14 @@ SELECT pg_catalog.setval('messages_id_seq', 6, true);
 -- Name: questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('questions_id_seq', 11, true);
+SELECT pg_catalog.setval('questions_id_seq', 14, true);
 
 
 --
 -- Name: rewards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('rewards_id_seq', 4, true);
+SELECT pg_catalog.setval('rewards_id_seq', 6, true);
 
 
 --
@@ -445,7 +466,7 @@ SELECT pg_catalog.setval('tests_id_seq', 1, false);
 -- Name: topics_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('topics_id_seq', 32, true);
+SELECT pg_catalog.setval('topics_id_seq', 33, true);
 
 
 --

@@ -44,6 +44,3 @@ Note: when m2e is available, there is an m2 icon in Help -> About dialog. If m2e
 | Service | [Service folder](/src/main/java/com/gutotech/fatecandoapi/service) |
 | Spring Data JPA | [JPA folder](/src/main/java/com/gutotech/fatecandoapi/repository) |
 | Security | [Security folder](/src/main/java/com/gutotech/fatecandoapi/security) |
-| Test Data Source | [LoadDatabase.java](/src/main/java/com/gutotech/fatecandoapi/util/LoadDatabase.java)|
-
-

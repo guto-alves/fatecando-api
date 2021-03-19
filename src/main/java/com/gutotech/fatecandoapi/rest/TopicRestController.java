@@ -64,7 +64,7 @@ public class TopicRestController {
 			return ResponseEntity.badRequest()
 					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid discipline", request.getRequestURI()));
 		}
-		
+
 		topic.setDiscipline(disciplineService.findById(topic.getDiscipline().getId()));
 		topic.setCreatedBy(userService.findCurrentUser());
 		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
@@ -187,6 +187,46 @@ public class TopicRestController {
 		topicUser.setAnnotation(annotation);
 
 		topicService.save(topic);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("drag/{draggedTopicId}/{relatedTopicId}")
+	public ResponseEntity<Void> dragTopic(@PathVariable("draggedTopicId") Long draggedTopicId,
+			@PathVariable("relatedTopicId") Long relatedTopicId) {
+		Topic draggedTopic = topicService.findById(draggedTopicId);
+		Topic relatedTopic = topicService.findById(relatedTopicId);
+
+		List<Topic> topics = draggedTopic.getItemOrder() < relatedTopic.getItemOrder()
+				? topicService.findAllBetween(draggedTopic.getItemOrder(), relatedTopic.getItemOrder(),
+						draggedTopic.getDiscipline().getId())
+				: topicService.findAllBetween(relatedTopic.getItemOrder(), draggedTopic.getItemOrder(),
+						draggedTopic.getDiscipline().getId());
+
+		final int TOTAL_TOPICS = topics.size();
+
+		Topic firstTopic = topics.get(0);
+		Topic lastTopic = topics.get(TOTAL_TOPICS - 1);
+
+		if (TOTAL_TOPICS == 2) {
+			long aux = firstTopic.getItemOrder();
+			firstTopic.setItemOrder(lastTopic.getItemOrder());
+			lastTopic.setItemOrder(aux);
+		} else if (draggedTopic.getItemOrder() < relatedTopic.getItemOrder()) {
+			for (Topic topic : topics) {
+				topic.setItemOrder(topic.getItemOrder() - 1);
+			}
+
+			firstTopic.setItemOrder(firstTopic.getItemOrder() + TOTAL_TOPICS);
+		} else {
+			for (Topic topic : topics) {
+				topic.setItemOrder(topic.getItemOrder() + 1);
+			}
+
+			lastTopic.setItemOrder(lastTopic.getItemOrder() - TOTAL_TOPICS);
+		}
+
+		topicService.saveAll(topics);
 
 		return ResponseEntity.noContent().build();
 	}

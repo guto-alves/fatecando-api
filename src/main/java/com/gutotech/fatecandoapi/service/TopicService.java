@@ -21,11 +21,15 @@ public class TopicService {
 	}
 
 	public List<Topic> findAllByDiscipline(Discipline discipline) {
-		return repository.findAllByDiscipline(discipline);
+		return repository.findAllByDisciplineOrderByItemOrder(discipline);
 	}
 
 	public List<Topic> findAllByCreatedBy(User user) {
 		return repository.findAllByCreatedBy(user);
+	}
+	
+	public List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long disciplineId) {
+		return repository.findAllBetween(itemOrder1, itemOrder2, disciplineId);
 	}
 
 	public Topic findById(Long id) {
@@ -34,6 +38,10 @@ public class TopicService {
 
 	public Topic save(Topic topic) {
 		return repository.save(topic);
+	}
+	
+	public void saveAll(List<Topic> topics) {
+		repository.saveAll(topics);
 	}
 
 	public void deleteById(Long id) {

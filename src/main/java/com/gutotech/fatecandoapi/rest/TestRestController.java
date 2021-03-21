@@ -1,33 +1,33 @@
 package com.gutotech.fatecandoapi.rest;
 
 import java.net.URI;
+import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.gutotech.fatecandoapi.model.Alternative;
-import com.gutotech.fatecandoapi.model.AnswerUtils;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Test;
+import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TestService;
+import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
 @RequestMapping("api/tests")
 public class TestRestController {
+	private static final SecureRandom random = new SecureRandom();
 
 	@Autowired
 	private TestService testService;
@@ -36,27 +36,33 @@ public class TestRestController {
 	private QuestionService questionService;
 
 	@Autowired
-	private AnswerUtils answerUtils;
+	private UserService userService;
 
-	@GetMapping("{id}")
-	public ResponseEntity<Test> getTest(@PathVariable Long id) {
-		return ResponseEntity.ok(testService.findById(id));
+	@GetMapping
+	public ResponseEntity<Test> getTest() {
+		return ResponseEntity.ok(testService.findByUser(userService.findCurrentUser()));
 	}
 
 	@PostMapping
 	public ResponseEntity<Test> startTest(@RequestBody @Valid Test test) {
+		User user = userService.findCurrentUser();
+
+		if (testService.findByUser(user) != null) {
+			throw new IllegalStateException("The user already has a dependent test");
+		}
+
 		List<Question> testQuestions = new ArrayList<>();
 
 		test.getTopics().forEach((topic) -> {
 			List<Question> topicQuestions = questionService.findAllByTopic(topic);
 
 			if (topicQuestions.size() > 0) {
-				testQuestions.add(topicQuestions.get(0));
+				testQuestions.add(topicQuestions.get(random.nextInt(topicQuestions.size())));
 			}
 		});
 
 		test.setQuestions(testQuestions);
-		test.setStartTimestamp(System.currentTimeMillis());
+		test.setUser(userService.findCurrentUser());
 
 		testService.save(test);
 
@@ -69,55 +75,16 @@ public class TestRestController {
 		return ResponseEntity.created(uri).body(test);
 	}
 
-	@PostMapping("{id}")
-	public ResponseEntity<?> finishTest(@RequestBody Map<Long, Long> questionsAndAlternativesMap,
-			@PathVariable("id") Long id) {
-		Test test = testService.findById(id);
+	@DeleteMapping
+	public ResponseEntity<Void> finishTest() {
+		User user = userService.findCurrentUser();
 
-		int validAnswersCount = 0;
-		int totalHits = 0;
-		int totalErrors = 0;
+		testService.deleteByUser(user);
 
-		Map<String, Object> result = new HashMap<>();
+		user.getUserActivity().incrementCompleteTests();
+		userService.save(user);
 
-		for (Question question : test.getQuestions()) {
-			if (questionsAndAlternativesMap.containsKey(question.getId())) {
-				Long chosenAlternativeId = questionsAndAlternativesMap.get(question.getId());
-
-				Alternative chosenAlternative = question.getAlternatives().stream()
-						.filter((alternative) -> alternative.getId() == chosenAlternativeId) //
-						.findFirst() //
-						.orElse(null);
-
-				if (chosenAlternative != null) {
-					answerUtils.saveQuestionAnswer(question, chosenAlternative, test.getUser());
-
-					if (chosenAlternative.isCorrect()) {
-						totalHits++;
-					} else {
-						totalErrors++;
-					}
-
-					validAnswersCount++;
-				} else { // invalid answers
-					break;
-				}
-			} else { // invalid answers
-				break;
-			}
-		}
-
-		if (validAnswersCount != test.getQuestions().size()) {
-			throw new IllegalArgumentException("Invalid answers");
-		}
-
-		testService.deleteById(id);
-
-		result.put("totalHits", totalHits);
-		result.put("totalErros", totalErrors);
-		result.put("hitPercentage", totalHits / test.getQuestions().size() * 100);
-
-		return ResponseEntity.ok(result);
+		return ResponseEntity.noContent().build();
 	}
 
 }

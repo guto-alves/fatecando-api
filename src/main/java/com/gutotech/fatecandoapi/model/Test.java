@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tests")
@@ -25,11 +25,6 @@ public class Test {
 	@NotBlank
 	private String name;
 
-	@Column(length = 500)
-	private String description;
-
-	private long startTimestamp;
-
 	@ManyToOne
 	private User user;
 
@@ -37,18 +32,14 @@ public class Test {
 	@ManyToOne
 	private Discipline discipline;
 
+	@Size(min = 2, message = "Please provide at lest two topics.")
 	@ManyToMany
 	private List<Topic> topics = new ArrayList<>();
 
 	@ManyToMany
 	private List<Question> questions = new ArrayList<>();
 
-	public Test() { 
-	}
-
-	public Test(String name, String description) {
-		this.name = name;
-		this.description = description;
+	public Test() {
 	}
 
 	public Long getId() {
@@ -65,22 +56,6 @@ public class Test {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public long getStartTimestamp() {
-		return startTimestamp;
-	}
-
-	public void setStartTimestamp(long startTimestamp) {
-		this.startTimestamp = startTimestamp;
 	}
 
 	public User getUser() {

@@ -58,6 +58,10 @@ public class UserActivity {
 		wrongAnswers++;
 	}
 
+	public void incrementCompleteTests() {
+		completeTests++;
+	}
+
 	public User getUser() {
 		return user;
 	}

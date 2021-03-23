@@ -1,35 +1,39 @@
 package com.gutotech.fatecandoapi.rest;
 
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.AnswerUtils;
+import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.Game;
 import com.gutotech.fatecandoapi.model.GameStatus;
-import com.gutotech.fatecandoapi.model.GameUserStatus;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Round;
+import com.gutotech.fatecandoapi.model.RoundAnswer;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.GameService;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
-@RequestMapping("games")
+@RequestMapping("api/games")
 public class GameRestController {
+	private static final SecureRandom random = new SecureRandom();
 
 	@Autowired
 	private GameService gameService;
@@ -38,83 +42,146 @@ public class GameRestController {
 	private QuestionService questionService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private AnswerUtils answerUtils;
 
-	private static final SecureRandom random = new SecureRandom();
+	@GetMapping("playing")
+	public ResponseEntity<Game> getGame() {
+		Game game = gameService.findByUser(userService.findCurrentUser());
 
-	// Creates a game
+		if (game != null && game.getStatus() == GameStatus.PLAYING) {
+			Round currentRound = game.getRounds().get(game.getCurrentRound());
+
+			boolean answered = currentRound.getAnswers().size() == game.getPlayers().size();
+			boolean timeIsOver = System.currentTimeMillis() - currentRound.getStartTime() >= game.getAnswerTime() * 1000;
+
+			boolean lastRound = game.getTotalRounds() == game.getCurrentRound() + 1;
+
+			if (answered || timeIsOver) {
+				if (lastRound) {
+					game.setStatus(GameStatus.FINISHED);
+				} else {
+					generateNextRound(game);
+				}
+
+				gameService.save(game);
+			} else {
+				long secondsLeft = game.getAnswerTime()
+						- (System.currentTimeMillis() - currentRound.getStartTime()) / 1000;
+				currentRound.setSecondsLeft(secondsLeft);
+			}
+		}
+
+		return ResponseEntity.ok(game);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<Game>> getGames() {
+		return ResponseEntity.ok(gameService.findAll());
+	}
+
 	@PostMapping
-	public ResponseEntity<Game> create(@RequestBody @Valid Game game) {
+	public ResponseEntity<Game> createGame(@RequestBody @Valid Game game) {
+		Discipline discipline = game.getTopics().get(0).getDiscipline();
+
+		if (game.getTopics().stream().anyMatch(topic -> topic.getDiscipline() != discipline)) {
+			throw new IllegalArgumentException("All Topics must belong to the same Discipline");
+		}
+
 		game.setCurrentRound(-1);
 		game.setStatus(GameStatus.WAITING);
+		game.getPlayers().clear();
+
+		User user = userService.findCurrentUser();
+		game.setCreatedBy(user);
+		game.getPlayers().add(user);
+
 		gameService.save(game);
 
 		return ResponseEntity.ok(game);
 	}
 
-	// Enters the game
-	@PostMapping("{id}")
-	public ResponseEntity<Game> joinGame(@RequestBody User user, @PathVariable Long id) {
+	@PutMapping("{id}")
+	public ResponseEntity<Void> joinGame(@PathVariable Long id) {
 		Game game = gameService.findById(id);
 
-		if (game.getInGameUserStatus().size() >= game.getTotalUsers()) {
-			throw new IllegalStateException("The game is already full");
+		if (game.getStatus() != GameStatus.WAITING) {
+			throw new IllegalStateException("This Game is already underway");
 		}
 
-		game.getInGameUserStatus().add(new GameUserStatus(game, user, true));
+		User user = userService.findCurrentUser();
 
-		if (game.getInGameUserStatus().size() == game.getTotalUsers()) {
+		if (gameService.findByUser(user) != null) {
+			throw new IllegalStateException("The player is already in a Game");
+		}
+
+		game.getPlayers().add(user);
+
+		if (game.getPlayers().size() == game.getTotalPlayers()) {
 			game.setStatus(GameStatus.PLAYING);
-			nextRound(game);
+			generateNextRound(game);
 		}
 
 		gameService.save(game);
 
-		return ResponseEntity.ok(game);
+		return ResponseEntity.noContent().build();
 	}
 
-	// Submits answer for current round question
-	@PostMapping("{id}/answer")
-	public ResponseEntity<?> answerGameQuestion(@RequestBody Alternative chosenAlternative,
-			@PathVariable("id") Long id) {
-		Game game = gameService.findById(id);
+	@DeleteMapping
+	public ResponseEntity<Void> leaveGame() {
+		User user = userService.findCurrentUser();
+		Game game = gameService.findByUser(user);
+
+		game.getPlayers().remove(user);
+
+		if (game.getPlayers().size() == 0) {
+			gameService.deleteById(game.getId());
+		} else {
+			gameService.save(game);
+		}
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@PostMapping("answer/{chosenAlternativeId}")
+	public ResponseEntity<RoundAnswer> answerGameQuestion(@PathVariable Long chosenAlternativeId) {
+		User user = userService.findCurrentUser();
+
+		Game game = gameService.findByUser(user);
+
+		if (game == null || game.getStatus() != GameStatus.PLAYING) {
+			return ResponseEntity.badRequest().build();
+		}
 
 		Round currentRound = game.getRounds().get(game.getCurrentRound());
 
-		User user = null; // TODO fix this
+		Alternative chosenAlternative = currentRound.getQuestion().getAlternatives() //
+				.stream() //
+				.filter(a -> a.getId() == chosenAlternativeId) //
+				.findFirst() //
+				.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + chosenAlternativeId
+						+ " for the question " + currentRound.getQuestion()));
 
-		// Checks if the chosen alternative, time and game status are valid
-		if (currentRound.getQuestion().getAlternatives().contains(chosenAlternative) && //
-				game.getStatus() == GameStatus.PLAYING && //
-				System.currentTimeMillis() - currentRound.getStartTime() <= game.getTimeToAnswer()) {
+		if (currentRound.getAnswers().stream().noneMatch(answer -> answer.getUser() == user)
+				|| System.currentTimeMillis() - currentRound.getStartTime() <= game.getAnswerTime()) {
+			
 			answerUtils.saveQuestionAnswer(currentRound.getQuestion(), chosenAlternative, user);
 
-			currentRound.getUsersWhoAnswered().add(user);
+			RoundAnswer roundAnswer = new RoundAnswer(user, chosenAlternative);
 
-			if (chosenAlternative.isCorrect()) {
-				GameUserStatus gameUserStatus = game.getInGameUserStatus().stream() //
-						.filter(userStatus -> userStatus.getUser() == user) //
-						.findFirst() //
-						.orElse(null); //
+			currentRound.getAnswers().add(roundAnswer);
 
-				gameUserStatus.setHits(gameUserStatus.getHits() + 1);
+			gameService.save(game);
 
-				gameService.save(game);
-			}
-		} else {
-			throw new IllegalStateException(
-					"Error reason: time to answer or game is over or this is a invalid alternative");
+			return ResponseEntity.ok(roundAnswer);
 		}
 
-		Map<String, Object> feedback = new HashMap<>();
-		feedback.put("feedback", chosenAlternative.getFeedback());
-		feedback.put("isCorrect", chosenAlternative.isCorrect());
-
-		return ResponseEntity.ok(feedback);
+		throw new IllegalStateException("Time to answer or game is over or this is a invalid alternative");
 	}
 
-	// Goes to the next round
-	private void nextRound(Game game) {
+	private void generateNextRound(Game game) {
 		int topicIndex = random.nextInt(game.getTopics().size());
 		Topic topic = game.getTopics().get(topicIndex);
 
@@ -123,7 +190,8 @@ public class GameRestController {
 		int questionIndex = random.nextInt(questions.size());
 		Question question = questions.get(questionIndex);
 
-		Round round = new Round(question, game, System.currentTimeMillis());
+		Round round = new Round(question, System.currentTimeMillis());
+		round.setSecondsLeft(game.getAnswerTime());
 
 		game.setCurrentRound(game.getCurrentRound() + 1);
 		game.getRounds().add(round);

@@ -1,19 +1,18 @@
 package com.gutotech.fatecandoapi.model;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "rounds")
@@ -23,26 +22,22 @@ public class Round {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
 	@ManyToOne
 	private Question question;
 
-	@JsonIgnore
-	@NotNull
-	@ManyToOne
-	private Game game;
-
 	private long startTime;
 
-	@ManyToMany
-	private Set<User> usersWhoAnswered = new HashSet<>();
+	@Transient
+	private long secondsLeft;
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RoundAnswer> answers = new ArrayList<>();
 
 	public Round() {
 	}
 
-	public Round(Question question, Game game, long startTime) {
+	public Round(Question question, long startTime) {
 		this.question = question;
-		this.game = game;
 		this.startTime = startTime;
 	}
 
@@ -62,14 +57,6 @@ public class Round {
 		this.question = question;
 	}
 
-	public Game getGame() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
 	public long getStartTime() {
 		return startTime;
 	}
@@ -78,13 +65,20 @@ public class Round {
 		this.startTime = startTime;
 	}
 
-	@JsonIgnore
-	public Set<User> getUsersWhoAnswered() {
-		return usersWhoAnswered;
+	public long getSecondsLeft() {
+		return secondsLeft;
 	}
 
-	public void setUsersWhoAnswered(Set<User> usersWhoAnswered) {
-		this.usersWhoAnswered = usersWhoAnswered;
+	public void setSecondsLeft(long secondsLeft) {
+		this.secondsLeft = secondsLeft;
+	}
+
+	public List<RoundAnswer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<RoundAnswer> answers) {
+		this.answers = answers;
 	}
 
 	@Override

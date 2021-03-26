@@ -14,7 +14,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,8 +81,7 @@ public class QuestionRestController {
 	}
 
 	@PostMapping("upload")
-	public ResponseEntity<?> uploadQuestion(@RequestBody @Valid Question question, @AuthenticationPrincipal User user,
-			HttpServletRequest request) {
+	public ResponseEntity<?> uploadQuestion(@RequestBody @Valid Question question, HttpServletRequest request) {
 		if (question.getTopic() == null || question.getTopic().getId() == null) {
 			return ResponseEntity.badRequest()
 					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid question topic", request.getRequestURI()));
@@ -94,9 +92,9 @@ public class QuestionRestController {
 					"The question must have at lest one correct alternative", request.getRequestURI()));
 		}
 
-		question.setTopic(topicService.findById(question.getTopic().getId()));
-		question.setUser(user);
 		question.setId(null);
+		question.setTopic(topicService.findById(question.getTopic().getId()));
+		question.setUser(userService.findCurrentUser());
 		question.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 
 		EntityModel<Question> entityModel = questionAssembler.toModel(questionService.save(question));
@@ -112,7 +110,7 @@ public class QuestionRestController {
 
 		Collection<? extends GrantedAuthority> authorities = 
 				SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-		
+
 		if (authorities.stream().noneMatch(auth -> auth.getAuthority().equals(Roles.ADMIN))
 				&& currentQuestion.getStatus() != UploadStatus.EDITABLE) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,

@@ -1,5 +1,6 @@
 package com.gutotech.fatecandoapi.rest;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +35,7 @@ import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.QuestionModelAssembler;
+import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.AnswerService;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.RewardService;
@@ -107,7 +110,11 @@ public class QuestionRestController {
 			HttpServletRequest request) {
 		Question currentQuestion = questionService.findById(id);
 
-		if (currentQuestion.getStatus() != UploadStatus.EDITABLE) {
+		Collection<? extends GrantedAuthority> authorities = 
+				SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+		
+		if (authorities.stream().noneMatch(auth -> auth.getAuthority().equals(Roles.ADMIN))
+				&& currentQuestion.getStatus() != UploadStatus.EDITABLE) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"Question is not UploadStatus.EDITABLE", request.getRequestURI()));
 		}
@@ -121,13 +128,8 @@ public class QuestionRestController {
 		currentQuestion.setType(updatedQuestion.getType());
 		currentQuestion.setAlternatives(updatedQuestion.getAlternatives());
 		currentQuestion.setTopic(updatedQuestion.getTopic());
-		currentQuestion.setUser(updatedQuestion.getUser());
 
-		EntityModel<Question> entityModel = questionAssembler.toModel(questionService.save(currentQuestion));
-
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("{id}/change-status")

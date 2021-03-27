@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "alternatives")
@@ -56,27 +55,22 @@ public class Alternative {
 		this.description = description;
 	}
 
-	@JsonIgnore
 	public boolean isCorrect() {
 		return correct;
 	}
 
-	@JsonProperty
 	public void setCorrect(boolean correct) {
 		this.correct = correct;
 	}
 
-	@JsonIgnore
 	public String getFeedback() {
 		return feedback;
 	}
 
-	@JsonProperty
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
 	}
 
-	@JsonIgnore
 	public Question getQuestion() {
 		return question;
 	}

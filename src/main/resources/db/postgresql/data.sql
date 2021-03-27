@@ -762,9 +762,6 @@ INSERT INTO roles (id, name) VALUES (2, 'ROLE_USER');
 -- Data for Name: topic_users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO topic_users (annotation, finish_date, finished, liked, user_id, topic_id) VALUES ('', '2021-03-15 21:37:02.566', true, false, 1, 32);
-INSERT INTO topic_users (annotation, finish_date, finished, liked, user_id, topic_id) VALUES ('', '2021-03-16 13:10:43.547', true, false, 1, 37);
-INSERT INTO topic_users (annotation, finish_date, finished, liked, user_id, topic_id) VALUES ('', '2021-03-16 14:10:17.999', true, false, 1, 15);
 
 
 --

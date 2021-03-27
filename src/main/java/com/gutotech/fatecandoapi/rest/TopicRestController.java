@@ -191,6 +191,19 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@PutMapping("{id}/favorite")
+	public ResponseEntity<Void> toggleFavorite(@PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+
+		TopicUser topicUser = getUserInfo(topic);
+
+		topicUser.setFavorite(!topicUser.isFavorite());
+
+		topicService.save(topic);
+
+		return ResponseEntity.noContent().build();
+	}
+
 	@PutMapping("drag/{draggedTopicId}/{relatedTopicId}")
 	public ResponseEntity<Void> dragTopic(@PathVariable("draggedTopicId") Long draggedTopicId,
 			@PathVariable("relatedTopicId") Long relatedTopicId) {

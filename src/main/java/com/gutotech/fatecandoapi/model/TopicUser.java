@@ -19,6 +19,9 @@ public class TopicUser {
 
 	private boolean liked;
 
+	@Column(nullable = true)
+	private boolean favorite;
+
 	@Column(length = 500)
 	private String annotation = "";
 
@@ -66,6 +69,14 @@ public class TopicUser {
 
 	public void setLiked(boolean liked) {
 		this.liked = liked;
+	}
+
+	public boolean isFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(boolean favorite) {
+		this.favorite = favorite;
 	}
 
 	public String getAnnotation() {

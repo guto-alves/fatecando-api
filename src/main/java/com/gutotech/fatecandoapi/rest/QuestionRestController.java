@@ -134,19 +134,6 @@ public class QuestionRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PutMapping("{id}/change-status")
-	public ResponseEntity<?> changeStatus(@RequestBody Question question, @PathVariable Long id) {
-		Question currentQuestion = questionService.findById(id);
-
-		currentQuestion.setStatus(question.getStatus());
-
-		EntityModel<Question> entityModel = questionAssembler.toModel(questionService.save(currentQuestion));
-
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
-	}
-
 	@PostMapping("{questionId}/answer/{alternativeId}")
 	public ResponseEntity<Map<String, Object>> answerQuestion( //
 			@PathVariable("questionId") Long questionId, //

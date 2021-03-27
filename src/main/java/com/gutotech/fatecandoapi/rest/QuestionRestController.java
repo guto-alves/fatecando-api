@@ -108,8 +108,8 @@ public class QuestionRestController {
 			HttpServletRequest request) {
 		Question currentQuestion = questionService.findById(id);
 
-		Collection<? extends GrantedAuthority> authorities = 
-				SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities();
 
 		if (authorities.stream().noneMatch(auth -> auth.getAuthority().equals(Roles.ADMIN))
 				&& currentQuestion.getStatus() != UploadStatus.EDITABLE) {
@@ -126,6 +126,7 @@ public class QuestionRestController {
 		currentQuestion.setType(updatedQuestion.getType());
 		currentQuestion.setAlternatives(updatedQuestion.getAlternatives());
 		currentQuestion.setTopic(updatedQuestion.getTopic());
+		questionService.save(currentQuestion);
 
 		return ResponseEntity.noContent().build();
 	}

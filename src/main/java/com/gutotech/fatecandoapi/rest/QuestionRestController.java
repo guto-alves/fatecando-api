@@ -1,6 +1,5 @@
 package com.gutotech.fatecandoapi.rest;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,11 +106,11 @@ public class QuestionRestController {
 			HttpServletRequest request) {
 		Question currentQuestion = questionService.findById(id);
 
-		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities();
+		boolean hasAdminRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+				.stream()
+				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(Roles.ADMIN));
 
-		if (authorities.stream().noneMatch(auth -> auth.getAuthority().equals(Roles.ADMIN))
-				&& currentQuestion.getStatus() != UploadStatus.EDITABLE) {
+		if (!hasAdminRole && currentQuestion.getStatus() != UploadStatus.EDITABLE) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"Question is not UploadStatus.EDITABLE", request.getRequestURI()));
 		}
@@ -121,11 +119,16 @@ public class QuestionRestController {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"Question must have at lest one correct alternative", request.getRequestURI()));
 		}
+		
+		if (hasAdminRole) {
+			currentQuestion.setStatus(updatedQuestion.getStatus());
+		}
 
 		currentQuestion.setDescription(updatedQuestion.getDescription());
 		currentQuestion.setType(updatedQuestion.getType());
 		currentQuestion.setAlternatives(updatedQuestion.getAlternatives());
 		currentQuestion.setTopic(updatedQuestion.getTopic());
+	
 		questionService.save(currentQuestion);
 
 		return ResponseEntity.noContent().build();

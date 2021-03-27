@@ -32,6 +32,10 @@ public class DisciplineService {
 	public List<Discipline> findAllByCourse(Course course) {
 		return repository.findAllByCourseOrderByName(course);
 	}
+	
+	public List<Discipline> findAllWithTopics() {
+		return repository.findAllWithTopics();
+	}
 
 	public Discipline save(Discipline discipline) {
 		return repository.save(discipline);

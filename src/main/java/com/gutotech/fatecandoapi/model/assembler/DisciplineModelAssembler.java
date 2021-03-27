@@ -17,7 +17,7 @@ public class DisciplineModelAssembler implements RepresentationModelAssembler<Di
 	public EntityModel<Discipline> toModel(Discipline discipline) {
 		return EntityModel.of(discipline,
 				linkTo(methodOn(DisciplineRestController.class).getDiscipline(discipline.getId())).withSelfRel(),
-				linkTo(methodOn(DisciplineRestController.class).getDisciplines(null, null)).withRel("disciplines"),
+				linkTo(methodOn(DisciplineRestController.class).getDisciplines(null, null, null)).withRel("disciplines"),
 				linkTo(methodOn(DisciplineRestController.class).getDisciplineTopics(discipline.getId()))
 						.withRel("topics"),
 				linkTo(methodOn(DisciplineRestController.class).getForumTopics(discipline.getId()))

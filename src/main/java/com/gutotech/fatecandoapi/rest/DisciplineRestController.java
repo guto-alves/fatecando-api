@@ -59,12 +59,15 @@ public class DisciplineRestController {
 	@GetMapping
 	public ResponseEntity<List<Discipline>> getDisciplines(
 			@RequestParam(value = "semester", required = false) Integer semester,
-			@RequestParam(value = "course", required = false) Long courseId) {
+			@RequestParam(value = "course", required = false) Long courseId,
+			@RequestParam(value = "with-topics", required = false, defaultValue = "false") Boolean withTopics) {
 		if (semester != null) {
 			return ResponseEntity.ok(disciplineService.findAllBySemester(semester));
 		} else if (courseId != null) {
 			Course course = courseService.findById(courseId);
 			return ResponseEntity.ok(disciplineService.findAllByCourse(course));
+		} else if (withTopics) {
+			return ResponseEntity.ok(disciplineService.findAllWithTopics());
 		}
 
 		return ResponseEntity.ok(disciplineService.findAll());

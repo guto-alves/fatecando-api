@@ -47,6 +47,7 @@ public class Question {
 	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Alternative> alternatives = new ArrayList<>();
 
+	@NotNull
 	@ManyToOne
 	private Topic topic;
 

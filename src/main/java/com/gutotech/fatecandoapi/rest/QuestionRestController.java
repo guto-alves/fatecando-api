@@ -80,11 +80,6 @@ public class QuestionRestController {
 
 	@PostMapping("upload")
 	public ResponseEntity<?> uploadQuestion(@RequestBody @Valid Question question, HttpServletRequest request) {
-		if (question.getTopic() == null || question.getTopic().getId() == null) {
-			return ResponseEntity.badRequest()
-					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid question topic", request.getRequestURI()));
-		}
-
 		if (question.getAlternatives().stream().noneMatch(Alternative::isCorrect)) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"The question must have at lest one correct alternative", request.getRequestURI()));

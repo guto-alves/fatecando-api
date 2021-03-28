@@ -31,6 +31,10 @@ public class TopicService {
 	public List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long disciplineId) {
 		return repository.findAllBetween(itemOrder1, itemOrder2, disciplineId);
 	}
+	
+	public List<Topic> findAllFavorites(String email) {
+		return repository.findAllFavorites(email);
+	}
 
 	public Topic findById(Long id) {
 		return repository.findById(id).get();

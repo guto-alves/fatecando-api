@@ -52,12 +52,18 @@ public class TopicRestController {
 	public ResponseEntity<List<Topic>> getAllTopics() {
 		return ResponseEntity.ok(topicService.findAll());
 	}
+	
+	@GetMapping("favorites")
+	public ResponseEntity<List<Topic>> getFavoriteTopics() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return ResponseEntity.ok(topicService.findAllFavorites(email));
+	}
 
 	@GetMapping("{id}")
 	public EntityModel<Topic> getTopic(@PathVariable Long id) {
 		return assembler.toModel(topicService.findById(id));
 	}
-
+	
 	@PostMapping
 	public ResponseEntity<?> addTopic(@RequestBody @Valid Topic topic, HttpServletRequest request) {
 		if (topic.getDiscipline() == null || topic.getDiscipline().getId() == null) {

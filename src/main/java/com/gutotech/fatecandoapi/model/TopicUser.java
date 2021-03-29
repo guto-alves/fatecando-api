@@ -22,7 +22,7 @@ public class TopicUser {
 	@Column(nullable = true)
 	private boolean favorite;
 
-	@Column(length = 500)
+	@Column(columnDefinition = "TEXT")
 	private String annotation = "";
 
 	private boolean finished;

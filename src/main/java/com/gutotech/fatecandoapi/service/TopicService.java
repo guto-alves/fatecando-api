@@ -27,11 +27,11 @@ public class TopicService {
 	public List<Topic> findAllByCreatedBy(User user) {
 		return repository.findAllByCreatedBy(user);
 	}
-	
+
 	public List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long disciplineId) {
 		return repository.findAllBetween(itemOrder1, itemOrder2, disciplineId);
 	}
-	
+
 	public List<Topic> findAllFavorites(String email) {
 		return repository.findAllFavorites(email);
 	}
@@ -40,10 +40,32 @@ public class TopicService {
 		return repository.findById(id).get();
 	}
 
+	public Topic findByIdWithPreviousAndNext(Long id) {
+		Topic topic = findById(id);
+
+		List<Topic> previousAndNext = repository.findPreviousAndNext(topic.getItemOrder(),
+				topic.getDiscipline().getId());
+
+		if (previousAndNext.size() == 1) {
+			Topic foundTopic = previousAndNext.get(0);
+
+			if (foundTopic.getItemOrder() < topic.getItemOrder()) {
+				topic.setPrevious(foundTopic);
+			} else {
+				topic.setNext(foundTopic);
+			}
+		} else if (previousAndNext.size() == 2) {
+			topic.setPrevious(previousAndNext.get(0));
+			topic.setNext(previousAndNext.get(1));
+		}
+
+		return topic;
+	}
+
 	public Topic save(Topic topic) {
 		return repository.save(topic);
 	}
-	
+
 	public void saveAll(List<Topic> topics) {
 		repository.saveAll(topics);
 	}

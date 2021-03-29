@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Topic;
@@ -52,7 +53,7 @@ public class TopicRestController {
 	public ResponseEntity<List<Topic>> getAllTopics() {
 		return ResponseEntity.ok(topicService.findAll());
 	}
-	
+
 	@GetMapping("favorites")
 	public ResponseEntity<List<Topic>> getFavoriteTopics() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -60,10 +61,19 @@ public class TopicRestController {
 	}
 
 	@GetMapping("{id}")
-	public EntityModel<Topic> getTopic(@PathVariable Long id) {
-		return assembler.toModel(topicService.findById(id));
+	public EntityModel<Topic> getTopic(@PathVariable Long id,
+			@RequestParam(name = "previous-next", required = false, defaultValue = "false") boolean withPreviousAndNext) {
+		Topic topic;
+
+		if (withPreviousAndNext) {
+			topic = topicService.findByIdWithPreviousAndNext(id);
+		} else {
+			topic = topicService.findById(id);
+		}
+
+		return assembler.toModel(topic);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<?> addTopic(@RequestBody @Valid Topic topic, HttpServletRequest request) {
 		if (topic.getDiscipline() == null || topic.getDiscipline().getId() == null) {

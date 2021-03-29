@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -76,6 +77,12 @@ public class Topic {
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.topic", cascade = CascadeType.ALL)
 	private List<TopicUser> topicUsers = new ArrayList<>();
+
+	@Transient
+	private Topic previous;
+
+	@Transient
+	private Topic next;
 
 	public Topic() {
 	}
@@ -201,6 +208,22 @@ public class Topic {
 				.filter(info -> info.getUser().getEmail().equals(currentUserEmail)) //
 				.findFirst() //
 				.orElse(new TopicUser());
+	}
+
+	public Topic getPrevious() {
+		return previous;
+	}
+
+	public void setPrevious(Topic previous) {
+		this.previous = previous;
+	}
+
+	public Topic getNext() {
+		return next;
+	}
+
+	public void setNext(Topic next) {
+		this.next = next;
 	}
 
 	@Override

@@ -12,6 +12,11 @@ cd fatecando-api
 ./mvnw spring-boot:run
 ```
 
+You can then access fatecando here: [http://localhost:8081](http://localhost:8081)
+
+## Swagger REST API documentation presented here (after application start):
+[http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
+
 ## Working with Fatecando in Eclipse / Spring Tool Suite (STS)
 
 ### Prerequisites

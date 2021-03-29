@@ -35,6 +35,10 @@ public class TopicService {
 	public List<Topic> findAllFavorites(String email) {
 		return repository.findAllFavorites(email);
 	}
+	
+	public List<Topic> findAllAnnotated(String email) {
+		return repository.findAllAnnotated(email);
+	}
 
 	public Topic findById(Long id) {
 		return repository.findById(id).get();

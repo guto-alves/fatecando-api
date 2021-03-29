@@ -59,6 +59,12 @@ public class TopicRestController {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return ResponseEntity.ok(topicService.findAllFavorites(email));
 	}
+	
+	@GetMapping("annotations")
+	public ResponseEntity<List<Topic>> getAnnotatedTopics() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return ResponseEntity.ok(topicService.findAllAnnotated(email));
+	}
 
 	@GetMapping("{id}")
 	public EntityModel<Topic> getTopic(@PathVariable Long id,

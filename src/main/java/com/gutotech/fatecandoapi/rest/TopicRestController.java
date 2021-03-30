@@ -59,7 +59,7 @@ public class TopicRestController {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return ResponseEntity.ok(topicService.findAllFavorites(email));
 	}
-	
+
 	@GetMapping("annotations")
 	public ResponseEntity<List<Topic>> getAnnotatedTopics() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -97,24 +97,45 @@ public class TopicRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateTopic(@RequestBody @Valid Topic topic, @PathVariable Long id,
+	public ResponseEntity<?> updateTopic(@RequestBody @Valid Topic updatedTopic, @PathVariable Long id,
 			HttpServletRequest request) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String currentUserEmail = authentication.getName();
+
+		boolean hasAdminRole = authentication.getAuthorities() //
+				.stream() //
+				.anyMatch(a -> a.getAuthority().equals(Roles.ADMIN));
+
 		Topic currentTopic = topicService.findById(id);
-		currentTopic.setName(topic.getName());
-		currentTopic.setDescription(topic.getDescription());
-		currentTopic.setHtmlContent(topic.getHtmlContent());
 
-		if (topic.getDiscipline() == null || topic.getDiscipline().getId() == null) {
-			return ResponseEntity.badRequest().body(
-					new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid topic discipline", request.getRequestURI()));
-		}
+		if (hasAdminRole) {
+			if (updatedTopic.getDiscipline() == null || updatedTopic.getDiscipline().getId() == null) {
+				return ResponseEntity.badRequest().body(
+						new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid topic discipline", request.getRequestURI()));
+			}
 
-		currentTopic.setDiscipline(disciplineService.findById(topic.getDiscipline().getId()));
+			currentTopic.setName(updatedTopic.getName());
+			currentTopic.setDescription(updatedTopic.getDescription());
+			currentTopic.setHtmlContent(updatedTopic.getHtmlContent());
+			currentTopic.setRequired(updatedTopic.isRequired());
+			currentTopic.setStatus(updatedTopic.getStatus());
+			currentTopic.setDiscipline(updatedTopic.getDiscipline());
+		} else { // common user
+			if (!currentUserEmail.equals(currentTopic.getCreatedBy().getEmail())) {
+				return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
+						"You are trying to edit a topic that you did not create", request.getRequestURI()));
+			}
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Roles.ADMIN))) {
-			currentTopic.setRequired(topic.isRequired());
-			currentTopic.setStatus(topic.getStatus());
+			if (currentTopic.getStatus() != UploadStatus.EDITABLE) {
+				return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
+						"Topic status does not allow edits", request.getRequestURI()));
+			}
+
+			currentTopic.setName(updatedTopic.getName());
+			currentTopic.setDescription(updatedTopic.getDescription());
+			currentTopic.setHtmlContent(updatedTopic.getHtmlContent());
+			currentTopic.setStatus(UploadStatus.EDITED);
 		}
 
 		topicService.save(currentTopic);

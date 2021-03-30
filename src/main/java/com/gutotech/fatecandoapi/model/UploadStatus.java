@@ -1,5 +1,5 @@
 package com.gutotech.fatecandoapi.model;
 
 public enum UploadStatus {
-	WAITING_FOR_RESPONSE, APPROVED, DISAPPROVED, EDITABLE
+	WAITING_FOR_RESPONSE, EDITABLE, EDITED, APPROVED, DISAPPROVED
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.Topic;
+import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.TopicRepository;
 
@@ -21,7 +22,7 @@ public class TopicService {
 	}
 
 	public List<Topic> findAllByDiscipline(Discipline discipline) {
-		return repository.findAllByDisciplineOrderByItemOrder(discipline);
+		return repository.findAllByDisciplineAndStatusOrderByItemOrder(discipline, UploadStatus.APPROVED);
 	}
 
 	public List<Topic> findAllByCreatedBy(User user) {
@@ -35,7 +36,7 @@ public class TopicService {
 	public List<Topic> findAllFavorites(String email) {
 		return repository.findAllFavorites(email);
 	}
-	
+
 	public List<Topic> findAllAnnotated(String email) {
 		return repository.findAllAnnotated(email);
 	}

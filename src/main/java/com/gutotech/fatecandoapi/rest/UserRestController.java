@@ -80,9 +80,9 @@ public class UserRestController {
 				.body(entityModel);
 	}
 
-	@GetMapping("{id}/topics")
-	public ResponseEntity<List<Topic>> getUserTopics(@PathVariable Long id) {
-		User user = userService.findById(id);
+	@GetMapping("me/topics")
+	public ResponseEntity<List<Topic>> getUserTopics() {
+		User user = userService.findCurrentUser();
 		return ResponseEntity.ok(topicService.findAllByCreatedBy(user));
 	}
 

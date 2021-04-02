@@ -26,12 +26,13 @@ public class ForumTopicComment {
 	private Long id;
 
 	@NotBlank(message = "Please provide a valid content.")
-	@Column(length = 2000)
-	private String content;
+	@Column(name = "body_html", columnDefinition = "TEXT")
+	private String bodyHtml;
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date date;
+	@Column(name = "creation_date")
+	private Date creationDate;
 
 	private int likes;
 
@@ -45,12 +46,6 @@ public class ForumTopicComment {
 	public ForumTopicComment() {
 	}
 
-	public ForumTopicComment(String content, User user, ForumTopic forumTopic) {
-		this.content = content;
-		this.user = user;
-		this.forumTopic = forumTopic;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -59,20 +54,20 @@ public class ForumTopicComment {
 		this.id = id;
 	}
 
-	public String getContent() {
-		return content;
+	public String getBodyHtml() {
+		return bodyHtml;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setBodyHtml(String bodyHtml) {
+		this.bodyHtml = bodyHtml;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public int getLikes() {

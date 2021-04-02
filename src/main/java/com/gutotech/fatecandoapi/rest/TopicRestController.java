@@ -117,7 +117,7 @@ public class TopicRestController {
 
 			currentTopic.setName(updatedTopic.getName());
 			currentTopic.setDescription(updatedTopic.getDescription());
-			currentTopic.setHtmlContent(updatedTopic.getHtmlContent());
+			currentTopic.setBodyHtml(updatedTopic.getBodyHtml());
 			currentTopic.setRequired(updatedTopic.isRequired());
 			currentTopic.setStatus(updatedTopic.getStatus());
 			currentTopic.setDiscipline(updatedTopic.getDiscipline());
@@ -134,7 +134,7 @@ public class TopicRestController {
 
 			currentTopic.setName(updatedTopic.getName());
 			currentTopic.setDescription(updatedTopic.getDescription());
-			currentTopic.setHtmlContent(updatedTopic.getHtmlContent());
+			currentTopic.setBodyHtml(updatedTopic.getBodyHtml());
 			currentTopic.setStatus(UploadStatus.EDITED);
 		}
 

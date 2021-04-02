@@ -33,12 +33,13 @@ public class ForumTopic {
 	private String title;
 
 	@NotBlank(message = "Please provide a description")
-	@Column(length = 2000)
-	private String description;
+	@Column(name = "body_html", columnDefinition = "TEXT")
+	private String bodyHtml;
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date date;
+	@Column(name = "creation_date")
+	private Date creationDate;
 
 	private int likes;
 
@@ -54,13 +55,6 @@ public class ForumTopic {
 	private Set<ForumTopicComment> comments = new HashSet<>();
 
 	public ForumTopic() {
-	}
-
-	public ForumTopic(String title, String description, Discipline discipline, User user) {
-		this.title = title;
-		this.description = description;
-		this.discipline = discipline;
-		this.user = user;
 	}
 
 	public Long getId() {
@@ -79,20 +73,20 @@ public class ForumTopic {
 		this.title = title;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getBodyHtml() {
+		return bodyHtml;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setBodyHtml(String bodyHtml) {
+		this.bodyHtml = bodyHtml;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public int getLikes() {

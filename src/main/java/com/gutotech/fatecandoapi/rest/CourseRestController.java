@@ -57,7 +57,7 @@ public class CourseRestController {
 		currentCourse.setName(course.getName());
 		currentCourse.setCode(course.getCode());
 		currentCourse.setImageUrl(course.getImageUrl());
-		currentCourse.setSemesters(course.getSemesters());
+		currentCourse.setTotalSemesters(course.getTotalSemesters());
 		currentCourse.setDescription(course.getDescription());
 		currentCourse.setInstitution(course.getInstitution());
 

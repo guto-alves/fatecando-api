@@ -44,8 +44,8 @@ public class Topic {
 	private String description;
 
 	@NotBlank
-	@Column(name = "html_content", columnDefinition = "TEXT")
-	private String htmlContent;
+	@Column(name = "body_html", columnDefinition = "TEXT")
+	private String bodyHtml;
 
 	private boolean required;
 
@@ -87,16 +87,6 @@ public class Topic {
 	public Topic() {
 	}
 
-	public Topic(String name, String description, String htmlContent, UploadStatus status, Discipline discipline,
-			User user) {
-		this.name = name;
-		this.description = description;
-		this.htmlContent = htmlContent;
-		this.status = status;
-		this.discipline = discipline;
-		this.createdBy = user;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -121,12 +111,12 @@ public class Topic {
 		this.description = description;
 	}
 
-	public String getHtmlContent() {
-		return htmlContent;
+	public String getBodyHtml() {
+		return bodyHtml;
 	}
 
-	public void setHtmlContent(String htmlContent) {
-		this.htmlContent = htmlContent;
+	public void setBodyHtml(String bodyHtml) {
+		this.bodyHtml = bodyHtml;
 	}
 
 	public long getLikes() {

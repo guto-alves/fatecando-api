@@ -21,7 +21,7 @@ public class Institution {
 	@Column(unique = true)
 	private String name;
 
-	@Column(length = 500)
+	@Column(length = 500, nullable = true)
 	private String description;
 
 	public Institution() {

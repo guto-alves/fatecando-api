@@ -23,30 +23,23 @@ public class Course {
 	private String name;
 
 	@NotEmpty
+	@Column(length = 20)
 	private String code;
 
+	@Column(name = "image_url")
 	private String imageUrl;
 
 	@Column(length = 1000)
 	private String description;
 
-	private int semesters;
+	@Column(name = "total_semesters")
+	private int totalSemesters;
 
 	@NotNull
 	@ManyToOne
 	private Institution institution;
 
 	public Course() {
-	}
-
-	public Course(String name, String code, String imageUrl, String description, int semesters,
-			Institution institution) {
-		this.name = name;
-		this.code = code;
-		this.imageUrl = imageUrl;
-		this.description = description;
-		this.semesters = semesters;
-		this.institution = institution;
 	}
 
 	public Long getId() {
@@ -89,12 +82,12 @@ public class Course {
 		this.description = description;
 	}
 
-	public int getSemesters() {
-		return semesters;
+	public int getTotalSemesters() {
+		return totalSemesters;
 	}
 
-	public void setSemesters(int semesters) {
-		this.semesters = semesters;
+	public void setTotalSemesters(int semesters) {
+		this.totalSemesters = semesters;
 	}
 
 	public Institution getInstitution() {

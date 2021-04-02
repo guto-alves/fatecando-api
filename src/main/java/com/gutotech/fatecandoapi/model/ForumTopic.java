@@ -1,7 +1,9 @@
 package com.gutotech.fatecandoapi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -36,11 +39,6 @@ public class ForumTopic {
 	@Column(name = "body_html", columnDefinition = "TEXT")
 	private String bodyHtml;
 
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "creation_date")
-	private Date creationDate;
-
 	private int likes;
 
 	@JsonIgnore
@@ -50,9 +48,17 @@ public class ForumTopic {
 	@ManyToOne
 	private User user;
 
+	@ManyToMany
+	private List<Topic> tags = new ArrayList<>();
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "forumTopic", cascade = CascadeType.ALL)
 	private Set<ForumTopicComment> comments = new HashSet<>();
+
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "creation_date")
+	private Date creationDate;
 
 	public ForumTopic() {
 	}
@@ -111,6 +117,10 @@ public class ForumTopic {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Topic> getTags() {
+		return tags;
 	}
 
 	public Set<ForumTopicComment> getComments() {

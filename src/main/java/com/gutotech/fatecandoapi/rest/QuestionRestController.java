@@ -27,6 +27,7 @@ import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Answer;
 import com.gutotech.fatecandoapi.model.AnswerId;
 import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Reward;
 import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.UploadStatus;
@@ -164,6 +165,11 @@ public class QuestionRestController {
 		map.put("feedback", chosenAlternative.getFeedback());
 
 		return ResponseEntity.ok(map);
+	}
+
+	@GetMapping("types")
+	public ResponseEntity<QuestionType[]> getQuestionTypes() {
+		return ResponseEntity.ok(QuestionType.values());
 	}
 
 }

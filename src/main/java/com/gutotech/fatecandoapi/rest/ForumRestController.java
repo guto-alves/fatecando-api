@@ -54,12 +54,6 @@ public class ForumRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("{id}/comments")
-	public ResponseEntity<Set<ForumTopicComment>> getComments(@PathVariable("id") Long id) {
-		ForumTopic forumTopic = forumTopicService.findById(id);
-		return ResponseEntity.ok(forumTopic.getComments());
-	}
-
 	@GetMapping("{id}/comments/{commentId}")
 	public EntityModel<ForumTopicComment> getComment(@PathVariable("id") Long id,
 			@PathVariable("commentId") Long commentId) {
@@ -73,11 +67,17 @@ public class ForumRestController {
 		return commentAssembler.toModel(comment);
 	}
 
+	@GetMapping("{id}/comments")
+	public ResponseEntity<Set<ForumTopicComment>> getComments(@PathVariable("id") Long id) {
+		ForumTopic forumTopic = forumTopicService.findById(id);
+		return ResponseEntity.ok(forumTopic.getComments());
+	}
+
 	@PostMapping("{id}/comments")
 	public ResponseEntity<EntityModel<ForumTopicComment>> addComment(@PathVariable("id") Long id,
 			@RequestBody @Valid ForumTopicComment comment) {
 		ForumTopic forumTopic = forumTopicService.findById(id);
-		
+
 		comment.setForumTopic(forumTopic);
 
 		comment.setUser(userService.findCurrentUser());

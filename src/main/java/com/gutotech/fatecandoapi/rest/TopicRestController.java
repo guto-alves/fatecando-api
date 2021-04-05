@@ -51,23 +51,12 @@ public class TopicRestController {
 	@Autowired
 	private DisciplineService disciplineService;
 
+	@Autowired
 	private QuestionService questionService;
 
 	@GetMapping
 	public ResponseEntity<List<Topic>> getAllTopics() {
 		return ResponseEntity.ok(topicService.findAll());
-	}
-
-	@GetMapping("favorites")
-	public ResponseEntity<List<Topic>> getFavoriteTopics() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return ResponseEntity.ok(topicService.findAllFavorites(email));
-	}
-
-	@GetMapping("annotations")
-	public ResponseEntity<List<Topic>> getAnnotatedTopics() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return ResponseEntity.ok(topicService.findAllAnnotated(email));
 	}
 
 	@GetMapping("{id}")
@@ -82,6 +71,12 @@ public class TopicRestController {
 		}
 
 		return assembler.toModel(topic);
+	}
+
+	@GetMapping("{id}/quiz")
+	public ResponseEntity<List<Question>> getQuiz(@PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+		return ResponseEntity.ok(questionService.generateQuiz(topic));
 	}
 
 	@PostMapping
@@ -153,20 +148,6 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PostMapping("upload")
-	public ResponseEntity<EntityModel<Topic>> uploadTopic(@RequestBody @Valid Topic topic) {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		topic.setCreatedBy(userService.findByEmail(email));
-
-		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
-		topic.setRequired(false);
-
-		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
-
-		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
-	}
-
 	@PutMapping("{id}/like")
 	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);
@@ -199,19 +180,6 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PutMapping("{id}/annotation")
-	public ResponseEntity<Void> saveAnnotation(@RequestBody String annotation, @PathVariable Long id) {
-		Topic topic = topicService.findById(id);
-
-		TopicUser topicUser = getUserInfo(topic);
-
-		topicUser.setAnnotation(annotation);
-
-		topicService.save(topic);
-
-		return ResponseEntity.noContent().build();
-	}
-
 	@PutMapping("{id}/favorite")
 	public ResponseEntity<Void> toggleFavorite(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);
@@ -219,6 +187,19 @@ public class TopicRestController {
 		TopicUser topicUser = getUserInfo(topic);
 
 		topicUser.setFavorite(!topicUser.isFavorite());
+
+		topicService.save(topic);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("{id}/annotation")
+	public ResponseEntity<Void> saveAnnotation(@RequestBody String annotation, @PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+
+		TopicUser topicUser = getUserInfo(topic);
+
+		topicUser.setAnnotation(annotation);
 
 		topicService.save(topic);
 
@@ -284,9 +265,4 @@ public class TopicRestController {
 		return topicUser;
 	}
 
-	@GetMapping("{id}/quiz")
-	public ResponseEntity<List<Question>> getQuiz(@PathVariable Long id) {
-		Topic topic = topicService.findById(id);
-		return ResponseEntity.ok(questionService.generateQuiz(topic));
-	}
 }

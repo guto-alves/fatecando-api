@@ -45,6 +45,11 @@ public class GameRestController {
 	@Autowired
 	private AnswerUtils answerUtils;
 
+	@GetMapping
+	public ResponseEntity<List<Game>> getGames() {
+		return ResponseEntity.ok(gameService.findAll());
+	}
+
 	@GetMapping("playing")
 	public ResponseEntity<Game> getGame() {
 		Game game = gameService.findByUser(userService.findCurrentUser());
@@ -74,11 +79,6 @@ public class GameRestController {
 		}
 
 		return ResponseEntity.ok(game);
-	}
-
-	@GetMapping
-	public ResponseEntity<List<Game>> getGames() {
-		return ResponseEntity.ok(gameService.findAll());
 	}
 
 	@PostMapping

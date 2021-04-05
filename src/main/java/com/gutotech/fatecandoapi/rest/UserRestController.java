@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
@@ -37,17 +38,6 @@ public class UserRestController {
 	@Autowired
 	private UserModelAssembler assembler;
 
-	@PostMapping("login")
-	public User login(@RequestParam("email") String email, @RequestParam("password") String password) {
-		return userService.login(email, password);
-	}
-
-	@GetMapping("current")
-	public EntityModel<User> getCurrentUser() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return assembler.toModel(userService.findByEmail(email));
-	}
-
 	@GetMapping
 	public ResponseEntity<List<User>> getUsers() {
 		return ResponseEntity.ok(userService.findAll());
@@ -56,6 +46,39 @@ public class UserRestController {
 	@GetMapping("{id}")
 	public EntityModel<User> getUser(@PathVariable Long id) {
 		return assembler.toModel(userService.findById(id));
+	}
+
+	@GetMapping("me")
+	public EntityModel<User> getCurrentUser() {
+		return assembler.toModel(userService.findCurrentUser());
+	}
+
+	@GetMapping("me/disciplines/last-accessed")
+	public ResponseEntity<List<Discipline>> getDisciplinesByAccessDate() {
+		return ResponseEntity.ok(userService.findCurrentUser().getDisciplines());
+	}
+
+	@GetMapping("me/topics")
+	public ResponseEntity<List<Topic>> getUserTopics() {
+		User user = userService.findCurrentUser();
+		return ResponseEntity.ok(topicService.findAllByCreatedBy(user));
+	}
+
+	@GetMapping("me/topics/favorites")
+	public ResponseEntity<List<Topic>> getFavoriteTopics() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return ResponseEntity.ok(topicService.findAllFavorites(email));
+	}
+
+	@GetMapping("me/topics/annotated")
+	public ResponseEntity<List<Topic>> getAnnotatedTopics() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return ResponseEntity.ok(topicService.findAllAnnotated(email));
+	}
+
+	@PostMapping("login")
+	public User login(@RequestParam("email") String email, @RequestParam("password") String password) {
+		return userService.login(email, password);
 	}
 
 	@PostMapping
@@ -78,12 +101,6 @@ public class UserRestController {
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
-	}
-
-	@GetMapping("me/topics")
-	public ResponseEntity<List<Topic>> getUserTopics() {
-		User user = userService.findCurrentUser();
-		return ResponseEntity.ok(topicService.findAllByCreatedBy(user));
 	}
 
 }

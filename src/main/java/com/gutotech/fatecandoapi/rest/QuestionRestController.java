@@ -73,8 +73,13 @@ public class QuestionRestController {
 		return questionAssembler.toModel(questionService.findById(id));
 	}
 
-	@PostMapping("upload")
-	public ResponseEntity<?> uploadQuestion(@RequestBody @Valid Question question, HttpServletRequest request) {
+	@GetMapping("types")
+	public ResponseEntity<QuestionType[]> getQuestionTypes() {
+		return ResponseEntity.ok(QuestionType.values());
+	}
+
+	@PostMapping
+	public ResponseEntity<?> addQuestion(@RequestBody @Valid Question question, HttpServletRequest request) {
 		if (question.getAlternatives().stream().noneMatch(Alternative::isCorrect)) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"The question must have at lest one correct alternative", request.getRequestURI()));
@@ -165,11 +170,6 @@ public class QuestionRestController {
 		map.put("feedback", chosenAlternative.getFeedback());
 
 		return ResponseEntity.ok(map);
-	}
-
-	@GetMapping("types")
-	public ResponseEntity<QuestionType[]> getQuestionTypes() {
-		return ResponseEntity.ok(QuestionType.values());
 	}
 
 }

@@ -73,4 +73,5 @@ public class CourseRestController {
 		service.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
+
 }

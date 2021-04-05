@@ -46,6 +46,12 @@ public class ForumTopicComment {
 	public ForumTopicComment() {
 	}
 
+	public ForumTopicComment(String bodyHtml, User user, ForumTopic forumTopic) {
+		this.bodyHtml = bodyHtml;
+		this.user = user;
+		this.forumTopic = forumTopic;
+	}
+
 	public Long getId() {
 		return id;
 	}

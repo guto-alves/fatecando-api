@@ -63,6 +63,14 @@ public class ForumTopic {
 	public ForumTopic() {
 	}
 
+	public ForumTopic(String title, String bodyHtml, Discipline discipline, User user, List<Topic> tags) {
+		this.title = title;
+		this.bodyHtml = bodyHtml;
+		this.discipline = discipline;
+		this.user = user;
+		this.tags = tags;
+	}
+
 	public Long getId() {
 		return id;
 	}

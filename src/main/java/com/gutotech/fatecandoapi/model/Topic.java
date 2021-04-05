@@ -49,7 +49,7 @@ public class Topic {
 
 	private boolean required;
 
-	@Column(name = "item_order", columnDefinition = "SERIAL")
+	@Column(name = "item_order", columnDefinition = "SERIAL", insertable = false)
 	private long itemOrder;
 
 	@NotNull
@@ -87,6 +87,17 @@ public class Topic {
 	public Topic() {
 	}
 
+	public Topic(@NotBlank String name, @NotBlank String description, @NotBlank String bodyHtml, boolean required,
+			@NotNull UploadStatus status, Discipline discipline, User createdBy) {
+		this.name = name;
+		this.description = description;
+		this.bodyHtml = bodyHtml;
+		this.required = required;
+		this.status = status;
+		this.discipline = discipline;
+		this.createdBy = createdBy;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -121,10 +132,10 @@ public class Topic {
 
 	public long getLikes() {
 		// @formatter:off
-		return topicUsers.stream()
-				.filter(TopicUser::isLiked)
-				.count();
-		// @formatter:on
+        return topicUsers.stream()
+                .filter(TopicUser::isLiked)
+                .count();
+        // @formatter:on
 	}
 
 	public boolean isRequired() {

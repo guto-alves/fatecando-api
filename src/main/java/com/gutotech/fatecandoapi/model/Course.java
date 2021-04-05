@@ -42,6 +42,16 @@ public class Course {
 	public Course() {
 	}
 
+	public Course(@NotEmpty String name, @NotEmpty String code, String imageUrl, String description, int totalSemesters,
+			@NotNull Institution institution) {
+		this.name = name;
+		this.code = code;
+		this.imageUrl = imageUrl;
+		this.description = description;
+		this.totalSemesters = totalSemesters;
+		this.institution = institution;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -86,8 +96,8 @@ public class Course {
 		return totalSemesters;
 	}
 
-	public void setTotalSemesters(int semesters) {
-		this.totalSemesters = semesters;
+	public void setTotalSemesters(int totalSemesters) {
+		this.totalSemesters = totalSemesters;
 	}
 
 	public Institution getInstitution() {

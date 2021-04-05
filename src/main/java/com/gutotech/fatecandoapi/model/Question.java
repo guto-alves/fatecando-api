@@ -67,24 +67,14 @@ public class Question {
 	public Question() {
 	}
 
-	public Question(String description, QuestionType type, UploadStatus status, List<Alternative> alternatives,
-			Topic topic, User user) {
+	public Question(String description, QuestionType type, UploadStatus status, Topic topic, User user,
+			List<Alternative> alternatives) {
 		this.description = description;
 		this.type = type;
 		this.status = status;
-		setAlternatives(alternatives);
 		this.topic = topic;
 		this.user = user;
-	}
-
-	// utility method that synchronize both ends
-	public void setAlternatives(List<Alternative> newAlternatives) {
-		alternatives.clear();
-
-		newAlternatives.forEach((alternative) -> {
-			alternative.setQuestion(this);
-			alternatives.add(alternative);
-		});
+		setAlternatives(alternatives);
 	}
 
 	public Long getId() {
@@ -137,6 +127,16 @@ public class Question {
 
 	public List<Alternative> getAlternatives() {
 		return alternatives;
+	}
+
+	// utility method that synchronize both ends
+	public void setAlternatives(List<Alternative> newAlternatives) {
+		alternatives.clear();
+
+		newAlternatives.forEach((alternative) -> {
+			alternative.setQuestion(this);
+			alternatives.add(alternative);
+		});
 	}
 
 	public Date getCreationDate() {

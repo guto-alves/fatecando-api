@@ -25,10 +25,6 @@ public class QuestionService {
 		return repository.findAll();
 	}
 
-	public List<Question> findAllByTopic(Topic topic) {
-		return repository.findAllByTopic(topic);
-	}
-
 	public List<Question> generateQuiz(Topic topic) {
 		return getRandomQuestions(QuestionType.QUIZ, Arrays.asList(topic), TOTAL_QUIZ_QUESTIONS);
 	}

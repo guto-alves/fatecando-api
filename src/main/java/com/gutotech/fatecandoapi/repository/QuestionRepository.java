@@ -12,8 +12,6 @@ import com.gutotech.fatecandoapi.model.Topic;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-	List<Question> findAllByTopic(Topic topic);
-
 	List<Question> findByTypeAndTopicIn(QuestionType type, List<Topic> topics);
 
 }

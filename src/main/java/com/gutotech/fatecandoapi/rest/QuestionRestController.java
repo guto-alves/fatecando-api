@@ -28,7 +28,6 @@ import com.gutotech.fatecandoapi.model.AnswerId;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Reward;
 import com.gutotech.fatecandoapi.model.RewardType;
-import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.QuestionModelAssembler;
@@ -70,12 +69,6 @@ public class QuestionRestController {
 	@GetMapping("{id}")
 	public EntityModel<Question> getQuestion(@PathVariable Long id) {
 		return questionAssembler.toModel(questionService.findById(id));
-	}
-
-	@GetMapping("topic/{topicId}")
-	public ResponseEntity<List<Question>> getTopicQuestions(@PathVariable Long topicId) {
-		Topic topic = topicService.findById(topicId);
-		return ResponseEntity.ok(questionService.findAllByTopic(topic));
 	}
 
 	@PostMapping("upload")

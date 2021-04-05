@@ -167,32 +167,6 @@ public class TopicRestController {
 				.body(entityModel);
 	}
 
-	@PostMapping("{id}/toggle-required")
-	public ResponseEntity<?> makeRequired(@PathVariable Long id) {
-		Topic topic = topicService.findById(id);
-
-		topic.setRequired(!topic.isRequired());
-
-		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
-
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
-	}
-
-	@PostMapping("{id}/change-status")
-	public ResponseEntity<?> changeStatus(@RequestBody UploadStatus status, @PathVariable Long id) {
-		Topic topic = topicService.findById(id);
-
-		topic.setStatus(status);
-
-		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
-
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
-	}
-
 	@PutMapping("{id}/like")
 	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);

@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,6 +38,7 @@ public class Test {
 	private List<Topic> topics = new ArrayList<>();
 
 	@ManyToMany
+	@OrderColumn
 	private List<Question> questions = new ArrayList<>();
 
 	public Test() {

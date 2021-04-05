@@ -27,6 +27,10 @@ public class QuestionService {
 		return repository.findAllByTopic(topic);
 	}
 
+	public Question getRandomQuestion(QuestionType type, List<Topic> topics) {
+		return getRandomQuestions(type, topics, 1).get(0);
+	}
+
 	public List<Question> getRandomQuestions(QuestionType type, List<Topic> topics, int quantity) {
 		List<Question> questions = findByTypeAndTopicIn(type, topics);
 

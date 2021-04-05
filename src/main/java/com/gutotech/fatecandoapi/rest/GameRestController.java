@@ -1,6 +1,5 @@
 package com.gutotech.fatecandoapi.rest;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -22,9 +21,9 @@ import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.Game;
 import com.gutotech.fatecandoapi.model.GameStatus;
 import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Round;
 import com.gutotech.fatecandoapi.model.RoundAnswer;
-import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.GameService;
 import com.gutotech.fatecandoapi.service.QuestionService;
@@ -33,7 +32,6 @@ import com.gutotech.fatecandoapi.service.UserService;
 @RestController
 @RequestMapping("api/games")
 public class GameRestController {
-	private static final SecureRandom random = new SecureRandom();
 
 	@Autowired
 	private GameService gameService;
@@ -55,7 +53,8 @@ public class GameRestController {
 			Round currentRound = game.getRounds().get(game.getCurrentRound());
 
 			boolean answered = currentRound.getAnswers().size() == game.getPlayers().size();
-			boolean timeIsOver = System.currentTimeMillis() - currentRound.getStartTime() >= game.getAnswerTime() * 1000;
+			boolean timeIsOver = System.currentTimeMillis() - currentRound.getStartTime() >= game.getAnswerTime()
+					* 1000;
 
 			boolean lastRound = game.getTotalRounds() == game.getCurrentRound() + 1;
 
@@ -86,6 +85,7 @@ public class GameRestController {
 	public ResponseEntity<Game> createGame(@RequestBody @Valid Game game) {
 		Discipline discipline = game.getTopics().get(0).getDiscipline();
 
+		// TODO validate topics: each topic has at least one TEST type question
 		if (game.getTopics().stream().anyMatch(topic -> topic.getDiscipline() != discipline)) {
 			throw new IllegalArgumentException("All Topics must belong to the same Discipline");
 		}
@@ -166,7 +166,7 @@ public class GameRestController {
 
 		if (currentRound.getAnswers().stream().noneMatch(answer -> answer.getUser() == user)
 				|| System.currentTimeMillis() - currentRound.getStartTime() <= game.getAnswerTime()) {
-			
+
 			answerUtils.saveQuestionAnswer(currentRound.getQuestion(), chosenAlternative, user);
 
 			RoundAnswer roundAnswer = new RoundAnswer(user, chosenAlternative);
@@ -182,13 +182,7 @@ public class GameRestController {
 	}
 
 	private void generateNextRound(Game game) {
-		int topicIndex = random.nextInt(game.getTopics().size());
-		Topic topic = game.getTopics().get(topicIndex);
-
-		List<Question> questions = questionService.findAllByTopic(topic);
-
-		int questionIndex = random.nextInt(questions.size());
-		Question question = questions.get(questionIndex);
+		Question question = questionService.getRandomQuestion(QuestionType.GAME, game.getTopics());
 
 		Round round = new Round(question, System.currentTimeMillis());
 		round.setSecondsLeft(game.getAnswerTime());

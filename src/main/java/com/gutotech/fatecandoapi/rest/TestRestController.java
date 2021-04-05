@@ -1,9 +1,6 @@
 package com.gutotech.fatecandoapi.rest;
 
 import java.net.URI;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Test;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.QuestionService;
@@ -27,7 +24,7 @@ import com.gutotech.fatecandoapi.service.UserService;
 @RestController
 @RequestMapping("api/tests")
 public class TestRestController {
-	private static final SecureRandom random = new SecureRandom();
+	private final int TOTAL_QUESTIONS = 10;
 
 	@Autowired
 	private TestService testService;
@@ -50,19 +47,12 @@ public class TestRestController {
 		if (testService.findByUser(user) != null) {
 			throw new IllegalStateException("The user already has a dependent test");
 		}
+		
+		// TODO validate topics: be from the same Discipline and have at least one TEST type question
 
-		List<Question> testQuestions = new ArrayList<>();
+		test.setQuestions(questionService.getRandomQuestions(QuestionType.TEST, test.getTopics(), TOTAL_QUESTIONS));
 
-		test.getTopics().forEach((topic) -> {
-			List<Question> topicQuestions = questionService.findAllByTopic(topic);
-
-			if (topicQuestions.size() > 0) {
-				testQuestions.add(topicQuestions.get(random.nextInt(topicQuestions.size())));
-			}
-		});
-
-		test.setQuestions(testQuestions);
-		test.setUser(userService.findCurrentUser());
+		test.setUser(user);
 
 		testService.save(test);
 

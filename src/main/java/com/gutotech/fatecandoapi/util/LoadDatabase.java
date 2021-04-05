@@ -82,12 +82,12 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// Storing Institutions
+		// Institutions
 		Institution fatecZl = new Institution("Fatec Zona Leste");
 		Institution fatecSp = new Institution("Fatec São Paulo");
 		institutionRepository.saveAll(Arrays.asList(fatecZl, fatecSp));
 
-		// Storing Courses
+		// Courses
 		Course ads = new Course("Análise e Desenvolvimento de Sistemas", "ADS", "http://www.fatecsp.br/img/ti.jpg",
 				"Descrição ...", 6, fatecZl);
 		Course log = new Course("Logística", "LOG", "http://www.fateczl.edu.br/imagens/logistica.png", "Descrição ...",
@@ -104,7 +104,7 @@ public class LoadDatabase implements CommandLineRunner {
 		Role user = new Role(Roles.USER);
 		roleRepository.saveAll(Arrays.asList(admin, user));
 
-		// Storing Users
+		// Users
 		User staff = new User("Staff Staff", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
 				new Date(), null);
 		staff.setRoles(Arrays.asList(user, admin));
@@ -122,14 +122,14 @@ public class LoadDatabase implements CommandLineRunner {
 				new Message("Subject 4", "Text 4", kaizer, maria), new Message("Subject 5", "Text 5", staff, gustavo),
 				new Message("Subject 6", "Text 6", staff, gustavo)));
 
-		// Storing Rewards
+		// Rewards
 		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);
 		Reward reward2 = new Reward(RewardType.GAME, gustavo);
 		Reward reward3 = new Reward(RewardType.RIGHT_ANSWER, alice);
 		Reward reward4 = new Reward(RewardType.TEST_SUCCESS, alice);
 		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4));
 
-		// Storing Disciplines
+		// Disciplines
 		Discipline alp = new Discipline("Algoritmos", "IAL002",
 				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
@@ -171,7 +171,7 @@ public class LoadDatabase implements CommandLineRunner {
 				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 4, ads);
 		disciplineRepository.saveAll(Arrays.asList(alp, ed, ago, irc1, cee, db, ldb, eng1, eng2, eng3));
 
-		// Storing some Topics tests
+		// Topics
 		Topic topic1 = new Topic("Topic 1", "Description 1", "<p><b>Topic 1</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
 		Topic topic2 = new Topic("Topic 2", "Description 2", "<p><b>Topic 2</b></p>", true, UploadStatus.APPROVED, alp,
@@ -182,9 +182,9 @@ public class LoadDatabase implements CommandLineRunner {
 				staff);
 		Topic topic5 = new Topic("Topic 5", "Description 5", "<p><b>Topic 5</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
-		Topic topic6 = new Topic("Topic 5", "Description 5", "<p><b>Topic 6</b></p>", true, UploadStatus.APPROVED, alp,
+		Topic topic6 = new Topic("Topic 6", "Description 6", "<p><b>Topic 6</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
-		Topic topic7 = new Topic("Topic 5", "Description 5", "<p><b>Topic 7</b></p>", true, UploadStatus.APPROVED, alp,
+		Topic topic7 = new Topic("Topic 7", "Description 7", "<p><b>Topic 7</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
 		List<Topic> topics = Arrays.asList(topic1, topic2, topic3, topic4, topic5, topic6, topic7);
 		topicRepository.saveAll(topics);
@@ -205,11 +205,11 @@ public class LoadDatabase implements CommandLineRunner {
 				new ForumTopicComment("Comment 6", alice, forumTopic3),
 				new ForumTopicComment("Comment 7", alice, forumTopic3)));
 
-		// Storing Questions
+		// Questions
 		List<Question> questions = new ArrayList<>();
-		for (int i = 1; i <= 60; i++) {
-			Question question = new Question("Pergunta " + i + "?", QuestionType.values()[i % 3], UploadStatus.APPROVED,
-					topics.get(i % topics.size()), staff,
+		for (int i = 0; i <= 60; i++) {
+			Question question = new Question("Pergunta " + (i + 1) + "?", QuestionType.values()[i % 3],
+					UploadStatus.APPROVED, topics.get(i % (topics.size() - 1)), staff,
 					Arrays.asList(new Alternative("Alternativa 1", "Parabéns! Esta é a resposta certa!", true),
 							new Alternative("Alternativa 2", "Quasee! Estude com mais atenção!", false),
 							new Alternative("Alternativa 3", "Errado! Estude com mais atenção!", false),

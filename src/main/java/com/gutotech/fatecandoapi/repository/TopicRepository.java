@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.gutotech.fatecandoapi.model.Discipline;
+import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
@@ -29,5 +30,8 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 	@Query("select t from Topic t where t.discipline.id = ?2 and (t.itemOrder = ?1 - 1L or t.itemOrder = ?1 + 1L) order by t.itemOrder")
 	List<Topic> findPreviousAndNext(long itemOrder, long disciplineId);
+
+	@Query("select distinct t from Topic t, Question q where t = q.topic and t.discipline = ?1 and q.type = ?2 order by t.itemOrder")
+	List<Topic> findFor(Discipline discipline, QuestionType type);
 
 }

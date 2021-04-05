@@ -23,6 +23,7 @@ import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.DisciplineUser;
 import com.gutotech.fatecandoapi.model.ForumTopic;
+import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.DisciplineModelAssembler;
@@ -94,6 +95,20 @@ public class DisciplineRestController {
 
 		List<Topic> topics = topicService.findAllByDiscipline(discipline);
 
+		return ResponseEntity.ok(topics);
+	}
+
+	@GetMapping("{id}/topics/test")
+	public ResponseEntity<List<Topic>> getTopicsForTest(@PathVariable Long id) {
+		Discipline discipline = disciplineService.findById(id);
+		List<Topic> topics = topicService.findFor(discipline, QuestionType.TEST);
+		return ResponseEntity.ok(topics);
+	}
+
+	@GetMapping("{id}/topics/game")
+	public ResponseEntity<List<Topic>> getTopicsForGame(@PathVariable Long id) {
+		Discipline discipline = disciplineService.findById(id);
+		List<Topic> topics = topicService.findFor(discipline, QuestionType.GAME);
 		return ResponseEntity.ok(topics);
 	}
 

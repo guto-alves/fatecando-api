@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.Discipline;
+import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
@@ -39,6 +40,10 @@ public class TopicService {
 
 	public List<Topic> findAllAnnotated(String email) {
 		return repository.findAllAnnotated(email);
+	}
+
+	public List<Topic> findFor(Discipline discipline, QuestionType type) {
+		return repository.findFor(discipline, type);
 	}
 
 	public Topic findById(Long id) {

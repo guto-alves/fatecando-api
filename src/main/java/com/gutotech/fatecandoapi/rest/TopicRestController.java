@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.TopicUser;
 import com.gutotech.fatecandoapi.model.UploadStatus;
@@ -30,6 +31,7 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.DisciplineService;
+import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -48,6 +50,8 @@ public class TopicRestController {
 
 	@Autowired
 	private DisciplineService disciplineService;
+
+	private QuestionService questionService;
 
 	@GetMapping
 	public ResponseEntity<List<Topic>> getAllTopics() {
@@ -100,7 +104,7 @@ public class TopicRestController {
 	public ResponseEntity<?> updateTopic(@RequestBody @Valid Topic updatedTopic, @PathVariable Long id,
 			HttpServletRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
+
 		String currentUserEmail = authentication.getName();
 
 		boolean hasAdminRole = authentication.getAuthorities() //
@@ -306,4 +310,9 @@ public class TopicRestController {
 		return topicUser;
 	}
 
+	@GetMapping("{id}/quiz")
+	public ResponseEntity<List<Question>> getQuiz(@PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+		return ResponseEntity.ok(questionService.generateQuiz(topic));
+	}
 }

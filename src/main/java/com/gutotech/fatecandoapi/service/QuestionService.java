@@ -1,6 +1,7 @@
 package com.gutotech.fatecandoapi.service;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
 
 @Service
 public class QuestionService {
+	private final int TOTAL_QUIZ_QUESTIONS = 3;
 
 	@Autowired
 	private QuestionRepository repository;
@@ -25,6 +27,10 @@ public class QuestionService {
 
 	public List<Question> findAllByTopic(Topic topic) {
 		return repository.findAllByTopic(topic);
+	}
+
+	public List<Question> generateQuiz(Topic topic) {
+		return getRandomQuestions(QuestionType.QUIZ, Arrays.asList(topic), TOTAL_QUIZ_QUESTIONS);
 	}
 
 	public Question getRandomQuestion(QuestionType type, List<Topic> topics) {

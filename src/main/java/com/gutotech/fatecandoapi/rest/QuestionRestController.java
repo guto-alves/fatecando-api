@@ -3,6 +3,7 @@ package com.gutotech.fatecandoapi.rest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -94,8 +95,7 @@ public class QuestionRestController {
 			HttpServletRequest request) {
 		Question currentQuestion = questionService.findById(id);
 
-		boolean hasAdminRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-				.stream()
+		boolean hasAdminRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
 				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(Roles.ADMIN));
 
 		if (!hasAdminRole && currentQuestion.getStatus() != UploadStatus.EDITABLE) {
@@ -107,7 +107,7 @@ public class QuestionRestController {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"Question must have at lest one correct alternative", request.getRequestURI()));
 		}
-		
+
 		if (hasAdminRole) {
 			currentQuestion.setStatus(updatedQuestion.getStatus());
 		}
@@ -116,7 +116,7 @@ public class QuestionRestController {
 		currentQuestion.setType(updatedQuestion.getType());
 		currentQuestion.setAlternatives(updatedQuestion.getAlternatives());
 		currentQuestion.setTopic(updatedQuestion.getTopic());
-	
+
 		questionService.save(currentQuestion);
 
 		return ResponseEntity.noContent().build();
@@ -131,7 +131,7 @@ public class QuestionRestController {
 		Question question = questionService.findById(questionId);
 
 		Alternative chosenAlternative = question.getAlternatives().stream() //
-				.filter((a) -> a.getId() == alternativeId) //
+				.filter((a) -> Objects.equals(a.getId(), alternativeId)) //
 				.findFirst() //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + alternativeId));
 

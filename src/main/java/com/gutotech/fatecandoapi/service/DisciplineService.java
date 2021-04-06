@@ -17,10 +17,10 @@ public class DisciplineService {
 	private DisciplineRepository repository;
 
 	public Discipline findById(Long id) {
-		return repository.findById(id)//
+		return repository.findById(id) //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find discipline " + id));
 	}
-
+	
 	public List<Discipline> findAll() {
 		return repository.findAllByOrderByName();
 	}
@@ -32,7 +32,7 @@ public class DisciplineService {
 	public List<Discipline> findAllByCourse(Course course) {
 		return repository.findAllByCourseOrderByName(course);
 	}
-	
+
 	public List<Discipline> findAllWithTopics() {
 		return repository.findAllWithTopics();
 	}

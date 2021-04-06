@@ -59,12 +59,12 @@ public class ForumRestController {
 			@PathVariable("commentId") Long commentId) {
 		ForumTopic forumTopic = forumTopicService.findById(id);
 
-		ForumTopicComment comment = forumTopic.getComments().stream() //
+		ForumTopicComment forumTopicComment = forumTopic.getComments().stream() //
 				.filter((c) -> c.getId() == commentId) //
 				.findFirst() //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find comment " + commentId));
 
-		return commentAssembler.toModel(comment);
+		return commentAssembler.toModel(forumTopicComment);
 	}
 
 	@GetMapping("{id}/comments")
@@ -75,14 +75,14 @@ public class ForumRestController {
 
 	@PostMapping("{id}/comments")
 	public ResponseEntity<EntityModel<ForumTopicComment>> addComment(@PathVariable("id") Long id,
-			@RequestBody @Valid ForumTopicComment comment) {
+			@RequestBody @Valid ForumTopicComment forumTopicComment) {
 		ForumTopic forumTopic = forumTopicService.findById(id);
 
-		comment.setForumTopic(forumTopic);
+		forumTopicComment.setForumTopic(forumTopic);
 
-		comment.setUser(userService.findCurrentUser());
+		forumTopicComment.setUser(userService.findCurrentUser());
 
-		EntityModel<ForumTopicComment> entityModel = commentAssembler.toModel(commentService.save(comment));
+		EntityModel<ForumTopicComment> entityModel = commentAssembler.toModel(commentService.save(forumTopicComment));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

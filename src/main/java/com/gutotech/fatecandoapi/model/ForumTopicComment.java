@@ -1,20 +1,25 @@
 package com.gutotech.fatecandoapi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,14 +39,16 @@ public class ForumTopicComment {
 	@Column(name = "creation_date")
 	private Date creationDate;
 
-	private int likes;
-
 	@ManyToOne
 	private User user;
 
 	@JsonIgnore
 	@ManyToOne
 	private ForumTopic forumTopic;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.comment", cascade = CascadeType.ALL)
+	private List<ForumTopicCommentUser> commentUsers = new ArrayList<>();
 
 	public ForumTopicComment() {
 	}
@@ -76,14 +83,6 @@ public class ForumTopicComment {
 		this.creationDate = creationDate;
 	}
 
-	public int getLikes() {
-		return likes;
-	}
-
-	public void setLikes(int likes) {
-		this.likes = likes;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -98,6 +97,27 @@ public class ForumTopicComment {
 
 	public void setForumTopic(ForumTopic forumTopic) {
 		this.forumTopic = forumTopic;
+	}
+
+	public long getVoteCount() {
+		return commentUsers.stream() //
+				.mapToLong(c -> c.isUpvoted() ? 1 : c.isDownvoted() ? -1 : 0) //
+				.sum();
+	}
+
+	public ForumTopicCommentUser getMe() {
+		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		// @formatter:off
+		return commentUsers.stream()
+				.filter((c) -> c.getUser().getEmail().equals(currentUserEmail))
+				.findFirst()
+				.orElseGet(() -> {
+					ForumTopicCommentUser commentUser = new ForumTopicCommentUser(this, null);
+					commentUsers.add(commentUser);
+					return commentUser;
+				});
+		// @formatter:on
 	}
 
 	@Override

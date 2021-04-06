@@ -25,8 +25,8 @@ public class ForumTopicCommentService {
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find forum topic " + id));
 	}
 
-	public ForumTopicComment save(ForumTopicComment comment) {
-		return repository.save(comment);
+	public ForumTopicComment save(ForumTopicComment forumTopicComment) {
+		return repository.save(forumTopicComment);
 	}
 
 	public void deleteById(Long id) {

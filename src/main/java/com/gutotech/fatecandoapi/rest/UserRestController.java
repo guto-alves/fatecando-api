@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gutotech.fatecandoapi.model.Discipline;
+import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
@@ -54,7 +54,7 @@ public class UserRestController {
 	}
 
 	@GetMapping("me/disciplines/last-accessed")
-	public ResponseEntity<List<Discipline>> getDisciplinesByAccessDate() {
+	public ResponseEntity<List<Subject>> getLatestSubjectsAccessed() {
 		return ResponseEntity.ok(userService.findCurrentUser().getDisciplines());
 	}
 

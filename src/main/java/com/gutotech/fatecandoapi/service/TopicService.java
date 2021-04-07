@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gutotech.fatecandoapi.model.Discipline;
+import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
@@ -22,8 +22,8 @@ public class TopicService {
 		return repository.findAll();
 	}
 
-	public List<Topic> findAllByDiscipline(Discipline discipline) {
-		return repository.findAllByDisciplineAndStatusOrderByItemOrder(discipline, UploadStatus.APPROVED);
+	public List<Topic> findAllBySubject(Subject subject) {
+		return repository.findAllBySubjectAndStatusOrderByItemOrder(subject, UploadStatus.APPROVED);
 	}
 
 	public List<Topic> findAllByCreatedBy(User user) {
@@ -42,8 +42,8 @@ public class TopicService {
 		return repository.findAllAnnotated(email);
 	}
 
-	public List<Topic> findFor(Discipline discipline, QuestionType type) {
-		return repository.findFor(discipline, type);
+	public List<Topic> findFor(Subject subject, QuestionType type) {
+		return repository.findFor(subject, type);
 	}
 
 	public Topic findById(Long id) {
@@ -54,7 +54,7 @@ public class TopicService {
 		Topic topic = findById(id);
 
 		List<Topic> previousAndNext = repository.findPreviousAndNext(topic.getItemOrder(),
-				topic.getDiscipline().getId());
+				topic.getSubject().getId());
 
 		if (previousAndNext.size() == 1) {
 			Topic foundTopic = previousAndNext.get(0);

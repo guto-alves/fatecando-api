@@ -7,21 +7,21 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import com.gutotech.fatecandoapi.model.ForumTopicComment;
+import com.gutotech.fatecandoapi.model.Comment;
 import com.gutotech.fatecandoapi.rest.ForumRestController;
 
 @Component
-public class ForumTopicCommentModelAssembler
-		implements RepresentationModelAssembler<ForumTopicComment, EntityModel<ForumTopicComment>> {
+public class CommentModelAssembler
+		implements RepresentationModelAssembler<Comment, EntityModel<Comment>> {
 
 	@Override
-	public EntityModel<ForumTopicComment> toModel(ForumTopicComment comment) {
+	public EntityModel<Comment> toModel(Comment comment) {
 		return EntityModel.of(comment, //
-				linkTo(methodOn(ForumRestController.class).getComment(comment.getForumTopic().getId(), comment.getId()))
+				linkTo(methodOn(ForumRestController.class).getComment(comment.getForumThread().getId(), comment.getId()))
 						.withSelfRel(),
-				linkTo(methodOn(ForumRestController.class).getComments(comment.getForumTopic().getId()))
+				linkTo(methodOn(ForumRestController.class).getComments(comment.getForumThread().getId()))
 						.withRel("comments"),
-				linkTo(methodOn(ForumRestController.class).getForumTopic(comment.getForumTopic().getId()))
+				linkTo(methodOn(ForumRestController.class).getForumThread(comment.getForumThread().getId()))
 						.withRel("forumTopic"));
 	}
 

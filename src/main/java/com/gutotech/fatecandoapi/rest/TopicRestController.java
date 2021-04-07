@@ -30,7 +30,7 @@ import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
-import com.gutotech.fatecandoapi.service.DisciplineService;
+import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
@@ -49,7 +49,7 @@ public class TopicRestController {
 	private UserService userService;
 
 	@Autowired
-	private DisciplineService disciplineService;
+	private SubjectService subjectService;
 
 	@Autowired
 	private QuestionService questionService;
@@ -81,12 +81,12 @@ public class TopicRestController {
 
 	@PostMapping
 	public ResponseEntity<?> addTopic(@RequestBody @Valid Topic topic, HttpServletRequest request) {
-		if (topic.getDiscipline() == null || topic.getDiscipline().getId() == null) {
+		if (topic.getSubject() == null || topic.getSubject().getId() == null) {
 			return ResponseEntity.badRequest()
 					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid discipline", request.getRequestURI()));
 		}
 
-		topic.setDiscipline(disciplineService.findById(topic.getDiscipline().getId()));
+		topic.setSubject(subjectService.findById(topic.getSubject().getId()));
 		topic.setCreatedBy(userService.findCurrentUser());
 		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
@@ -109,7 +109,7 @@ public class TopicRestController {
 		Topic currentTopic = topicService.findById(id);
 
 		if (hasAdminRole) {
-			if (updatedTopic.getDiscipline() == null || updatedTopic.getDiscipline().getId() == null) {
+			if (updatedTopic.getSubject() == null || updatedTopic.getSubject().getId() == null) {
 				return ResponseEntity.badRequest().body(
 						new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid topic discipline", request.getRequestURI()));
 			}
@@ -119,7 +119,7 @@ public class TopicRestController {
 			currentTopic.setBodyHtml(updatedTopic.getBodyHtml());
 			currentTopic.setRequired(updatedTopic.isRequired());
 			currentTopic.setStatus(updatedTopic.getStatus());
-			currentTopic.setDiscipline(updatedTopic.getDiscipline());
+			currentTopic.setSubject(updatedTopic.getSubject());
 		} else { // common user
 			if (!currentUserEmail.equals(currentTopic.getCreatedBy().getEmail())) {
 				return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
@@ -214,9 +214,9 @@ public class TopicRestController {
 
 		List<Topic> topics = draggedTopic.getItemOrder() < relatedTopic.getItemOrder()
 				? topicService.findAllBetween(draggedTopic.getItemOrder(), relatedTopic.getItemOrder(),
-						draggedTopic.getDiscipline().getId())
+						draggedTopic.getSubject().getId())
 				: topicService.findAllBetween(relatedTopic.getItemOrder(), draggedTopic.getItemOrder(),
-						draggedTopic.getDiscipline().getId());
+						draggedTopic.getSubject().getId());
 
 		final int TOTAL_TOPICS = topics.size();
 

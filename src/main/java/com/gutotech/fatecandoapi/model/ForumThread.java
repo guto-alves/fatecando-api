@@ -26,8 +26,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "forum_topics")
-public class ForumTopic {
+@Table(name = "forum_threads")
+public class ForumThread {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -39,11 +39,9 @@ public class ForumTopic {
 	@Column(name = "body_html", columnDefinition = "TEXT")
 	private String bodyHtml;
 
-	private int likes;
-
 	@JsonIgnore
 	@ManyToOne
-	private Discipline discipline;
+	private Subject subject;
 
 	@ManyToOne
 	private User user;
@@ -52,21 +50,21 @@ public class ForumTopic {
 	private List<Topic> tags = new ArrayList<>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "forumTopic", cascade = CascadeType.ALL)
-	private Set<ForumTopicComment> comments = new HashSet<>();
+	@OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL)
+	private Set<Comment> comments = new HashSet<>();
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creation_date")
 	private Date creationDate;
 
-	public ForumTopic() {
+	public ForumThread() {
 	}
 
-	public ForumTopic(String title, String bodyHtml, Discipline discipline, User user, List<Topic> tags) {
+	public ForumThread(String title, String bodyHtml, Subject subject, User user, List<Topic> tags) {
 		this.title = title;
 		this.bodyHtml = bodyHtml;
-		this.discipline = discipline;
+		this.subject = subject;
 		this.user = user;
 		this.tags = tags;
 	}
@@ -103,20 +101,12 @@ public class ForumTopic {
 		this.creationDate = creationDate;
 	}
 
-	public int getLikes() {
-		return likes;
+	public Subject getSubject() {
+		return subject;
 	}
 
-	public void setLikes(int likes) {
-		this.likes = likes;
-	}
-
-	public Discipline getDiscipline() {
-		return discipline;
-	}
-
-	public void setDiscipline(Discipline discipline) {
-		this.discipline = discipline;
+	public void setSubject(Subject subject) {
+		this.subject = subject;
 	}
 
 	public User getUser() {
@@ -131,7 +121,7 @@ public class ForumTopic {
 		return tags;
 	}
 
-	public Set<ForumTopicComment> getComments() {
+	public Set<Comment> getComments() {
 		return comments;
 	}
 
@@ -145,16 +135,11 @@ public class ForumTopic {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof ForumTopic)) {
+		if (!(obj instanceof ForumThread)) {
 			return false;
 		}
-		ForumTopic other = (ForumTopic) obj;
+		ForumThread other = (ForumThread) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "ForumTopic [id=" + id + ", title=" + title + ", likes=" + likes + "]";
 	}
 
 }

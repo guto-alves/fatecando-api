@@ -26,9 +26,9 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             	.antMatchers("/h2-console/*")
             		.permitAll()
-	            .antMatchers(HttpMethod.GET, "/api/courses", "/api/disciplines") 
+	            .antMatchers(HttpMethod.GET, "/api/courses", "/api/subjects") 
 	    			.permitAll()
-            	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login", "/api/users") // for sign up and login
+            	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login")
             		.permitAll()
             	.anyRequest()
  	            	.authenticated()

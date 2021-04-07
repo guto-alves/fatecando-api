@@ -8,30 +8,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gutotech.fatecandoapi.model.ForumTopicComment;
-import com.gutotech.fatecandoapi.model.ForumTopicCommentUser;
-import com.gutotech.fatecandoapi.service.ForumTopicCommentService;
+import com.gutotech.fatecandoapi.model.Comment;
+import com.gutotech.fatecandoapi.model.CommentUser;
+import com.gutotech.fatecandoapi.service.CommentService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
 @RequestMapping("comments")
-public class ForumTopicCommentRestController {
+public class CommentRestController {
 
 	@Autowired
-	private ForumTopicCommentService commentService;
+	private CommentService commentService;
 
 	@Autowired
 	private UserService userService;
 
 	@GetMapping("{id}")
-	public ResponseEntity<ForumTopicComment> getComment(@PathVariable Long id) {
+	public ResponseEntity<Comment> getComment(@PathVariable Long id) {
 		return ResponseEntity.ok(commentService.findById(id));
 	}
 
 	@PostMapping("{id}/upvote")
-	public ResponseEntity<ForumTopicComment> addUpvote(@PathVariable Long id) {
-		ForumTopicComment forumTopicComment = commentService.findById(id);
-		ForumTopicCommentUser commentUser = forumTopicComment.getMe();
+	public ResponseEntity<Comment> addUpvote(@PathVariable Long id) {
+		Comment comment = commentService.findById(id);
+		CommentUser commentUser = comment.getMe();
 
 		if (commentUser.isUpvoted()) {
 			commentUser.setUpvoted(false);
@@ -45,16 +45,16 @@ public class ForumTopicCommentRestController {
 			commentUser.setUser(userService.findCurrentUser());
 		}
 
-		commentService.save(forumTopicComment);
+		commentService.save(comment);
 
-		return ResponseEntity.ok(forumTopicComment);
+		return ResponseEntity.ok(comment);
 	}
 
 	@PostMapping("{id}/downvote")
-	public ResponseEntity<ForumTopicComment> addDownvote(@PathVariable Long id) {
-		ForumTopicComment forumTopicComment = commentService.findById(id);
+	public ResponseEntity<Comment> addDownvote(@PathVariable Long id) {
+		Comment comment = commentService.findById(id);
 
-		ForumTopicCommentUser commentUser = forumTopicComment.getMe();
+		CommentUser commentUser = comment.getMe();
 
 		if (commentUser.isDownvoted()) {
 			commentUser.setDownvoted(false);
@@ -68,9 +68,9 @@ public class ForumTopicCommentRestController {
 			commentUser.setUser(userService.findCurrentUser());
 		}
 
-		commentService.save(forumTopicComment);
+		commentService.save(comment);
 
-		return ResponseEntity.ok(forumTopicComment);
+		return ResponseEntity.ok(comment);
 	}
 
 }

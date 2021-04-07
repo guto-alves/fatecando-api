@@ -76,7 +76,7 @@ public class User {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.user")
-	private List<DisciplineUser> userDisciplines = new ArrayList<>();
+	private List<SubjectUser> userDisciplines = new ArrayList<>();
 
 	public User() {
 	}
@@ -190,7 +190,7 @@ public class User {
 	}
 
 	@JsonIgnore
-	public List<Discipline> getDisciplines() {
+	public List<Subject> getDisciplines() {
 		userDisciplines.sort((discipline1, discipline2) -> {
 			if (discipline1.getAccessDate().before(discipline2.getAccessDate())) {
 				return 1;
@@ -202,7 +202,7 @@ public class User {
 		});
 
 		return userDisciplines.stream() //
-				.map(DisciplineUser::getDiscipline) //
+				.map(SubjectUser::getDiscipline) //
 				.collect(Collectors.toList());
 	}
 

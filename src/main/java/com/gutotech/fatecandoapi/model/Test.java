@@ -31,7 +31,7 @@ public class Test {
 
 	@NotNull(message = "Please provide a Discipline")
 	@ManyToOne
-	private Discipline discipline;
+	private Subject subject;
 
 	@Size(min = 2, message = "Please provide at lest two topics.")
 	@ManyToMany
@@ -68,12 +68,12 @@ public class Test {
 		this.user = user;
 	}
 
-	public Discipline getDiscipline() {
-		return discipline;
+	public Subject getDiscipline() {
+		return subject;
 	}
 
-	public void setDiscipline(Discipline discipline) {
-		this.discipline = discipline;
+	public void setDiscipline(Subject subject) {
+		this.subject = subject;
 	}
 
 	public List<Question> getQuestions() {

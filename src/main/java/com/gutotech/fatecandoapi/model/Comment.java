@@ -24,8 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "forum_topic_comments")
-public class ForumTopicComment {
+@Table(name = "comments")
+public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -44,19 +44,19 @@ public class ForumTopicComment {
 
 	@JsonIgnore
 	@ManyToOne
-	private ForumTopic forumTopic;
+	private ForumThread forumThread;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.comment", cascade = CascadeType.ALL)
-	private List<ForumTopicCommentUser> commentUsers = new ArrayList<>();
+	private List<CommentUser> commentUsers = new ArrayList<>();
 
-	public ForumTopicComment() {
+	public Comment() {
 	}
 
-	public ForumTopicComment(String bodyHtml, User user, ForumTopic forumTopic) {
+	public Comment(String bodyHtml, User user, ForumThread forumThread) {
 		this.bodyHtml = bodyHtml;
 		this.user = user;
-		this.forumTopic = forumTopic;
+		this.forumThread = forumThread;
 	}
 
 	public Long getId() {
@@ -91,12 +91,12 @@ public class ForumTopicComment {
 		this.user = user;
 	}
 
-	public ForumTopic getForumTopic() {
-		return forumTopic;
+	public ForumThread getForumThread() {
+		return forumThread;
 	}
 
-	public void setForumTopic(ForumTopic forumTopic) {
-		this.forumTopic = forumTopic;
+	public void setForumTopic(ForumThread forumThread) {
+		this.forumThread = forumThread;
 	}
 
 	public long getVoteCount() {
@@ -105,7 +105,7 @@ public class ForumTopicComment {
 				.sum();
 	}
 
-	public ForumTopicCommentUser getMe() {
+	public CommentUser getMe() {
 		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		// @formatter:off
@@ -113,7 +113,7 @@ public class ForumTopicComment {
 				.filter((c) -> c.getUser().getEmail().equals(currentUserEmail))
 				.findFirst()
 				.orElseGet(() -> {
-					ForumTopicCommentUser commentUser = new ForumTopicCommentUser(this, null);
+					CommentUser commentUser = new CommentUser(this, null);
 					commentUsers.add(commentUser);
 					return commentUser;
 				});
@@ -130,10 +130,10 @@ public class ForumTopicComment {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof ForumTopicComment)) {
+		if (!(obj instanceof Comment)) {
 			return false;
 		}
-		ForumTopicComment other = (ForumTopicComment) obj;
+		Comment other = (Comment) obj;
 		return Objects.equals(id, other.id);
 	}
 

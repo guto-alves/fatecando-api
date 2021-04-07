@@ -7,28 +7,28 @@ import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 
 @Embeddable
-public class ForumTopicCommentUserId implements Serializable {
+public class CommentUserId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(optional = true)
-	private ForumTopicComment comment;
+	private Comment comment;
 
 	@ManyToOne(optional = true)
 	private User user;
 
-	public ForumTopicCommentUserId() {
+	public CommentUserId() {
 	}
 
-	public ForumTopicCommentUserId(ForumTopicComment forumTopicComment, User user) {
-		this.comment = forumTopicComment;
+	public CommentUserId(Comment comment, User user) {
+		this.comment = comment;
 		this.user = user;
 	}
 
-	public ForumTopicComment getComment() {
+	public Comment getComment() {
 		return comment;
 	}
 
-	public void setComment(ForumTopicComment comment) {
+	public void setComment(Comment comment) {
 		this.comment = comment;
 	}
 
@@ -50,10 +50,10 @@ public class ForumTopicCommentUserId implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof ForumTopicCommentUserId)) {
+		if (!(obj instanceof CommentUserId)) {
 			return false;
 		}
-		ForumTopicCommentUserId other = (ForumTopicCommentUserId) obj;
+		CommentUserId other = (CommentUserId) obj;
 		return Objects.equals(comment, other.comment) && Objects.equals(user, other.user);
 	}
 

@@ -13,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Course;
-import com.gutotech.fatecandoapi.model.Discipline;
-import com.gutotech.fatecandoapi.model.ForumTopic;
-import com.gutotech.fatecandoapi.model.ForumTopicComment;
+import com.gutotech.fatecandoapi.model.Subject;
+import com.gutotech.fatecandoapi.model.ForumThread;
+import com.gutotech.fatecandoapi.model.Comment;
 import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Institution;
 import com.gutotech.fatecandoapi.model.Message;
@@ -28,9 +28,9 @@ import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.CourseRepository;
-import com.gutotech.fatecandoapi.repository.DisciplineRepository;
-import com.gutotech.fatecandoapi.repository.ForumTopicCommentRepository;
-import com.gutotech.fatecandoapi.repository.ForumTopicRepository;
+import com.gutotech.fatecandoapi.repository.SubjectRepository;
+import com.gutotech.fatecandoapi.repository.CommentRepository;
+import com.gutotech.fatecandoapi.repository.ForumThreadRepository;
 import com.gutotech.fatecandoapi.repository.InstitutionRepository;
 import com.gutotech.fatecandoapi.repository.MessageRepository;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
@@ -54,13 +54,13 @@ public class LoadDatabase implements CommandLineRunner {
 	private UserService userService;
 
 	@Autowired
-	private DisciplineRepository disciplineRepository;
+	private SubjectRepository subjectRepository;
 
 	@Autowired
-	private ForumTopicRepository forumTopicRepository;
+	private ForumThreadRepository forumThreadRepository;
 
 	@Autowired
-	private ForumTopicCommentRepository forumTopicCommentRepository;
+	private CommentRepository commentRepository;
 
 	@Autowired
 	private QuestionRepository questionRepository;
@@ -101,7 +101,7 @@ public class LoadDatabase implements CommandLineRunner {
 		courseRepository.saveAll(Arrays.asList(ads, log, comex, rh, gem));
 
 		Role admin = new Role(Roles.ADMIN);
-		Role user = new Role(Roles.USER);
+		Role user = new Role(Roles.STUDENT);
 		roleRepository.saveAll(Arrays.asList(admin, user));
 
 		// Users
@@ -130,35 +130,35 @@ public class LoadDatabase implements CommandLineRunner {
 		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4));
 
 		// Disciplines
-		Discipline alp = new Discipline("Algoritmos", "IAL002",
+		Subject alp = new Subject("Algoritmos", "IAL002",
 				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
 						+ "Implementação de algoritmos usando uma linguagem de programação.",
 				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 1, ads);
-		Discipline ed = new Discipline("Estrutura de Dados", "ED001",
+		Subject ed = new Subject("Estrutura de Dados", "ED001",
 				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
 						+ "Implementação de algoritmos usando uma linguagem de programação.",
 				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 3, ads);
-		Discipline db = new Discipline("Banco de Dados", "IBD002",
+		Subject db = new Subject("Banco de Dados", "IBD002",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
 				"Entender fundamentos, arquitetura e técnicas de projeto e implementação de banco de dados", 4, ads);
-		Discipline ldb = new Discipline("Laboratório de Banco de Dados", "IBD100",
+		Subject ldb = new Subject("Laboratório de Banco de Dados", "IBD100",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
 				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 5, ads);
-		Discipline ago = new Discipline("Gestão de Projetos", "AGO005A",
+		Subject ago = new Subject("Gestão de Projetos", "AGO005A",
 				"Definição de projeto segundo concepção difundida pelas melhores práticas de gestão de projetos. Histórico do desenvolvimento do conjunto de conhecimentos de gestão de projetos. Comparação ente o gerenciamento por projetos com o gerenciamento tradicional. O ciclo de vida de um projeto. Os fatores de sucesso e insucesso de projetos e sua mensuração. As nove de conhecimento para a gestão de projetos e seus processos : Integração, Escopo, Tempo, Custo, Qualidade, Recursos Humanos, Comunicações, Riscos e Aquisições.",
 				"Conhecer e aplicar técnicas, métodos e ferramentas para uma gestão eficaz de projetos.", 6, ads);
-		Discipline irc1 = new Discipline("Laboratório de Redes", "IRC100A",
+		Subject irc1 = new Subject("Laboratório de Redes", "IRC100A",
 				"Prática em laboratório de instalação física de redes e suas diversas topologias, instalação de equipamentos de conectividade, cabeamento estruturado, protocolos TCP/IP, algorítmos e protocolos de roteamento, análise de tráfego, protocolos de transporte TCP e UDP, protocolos de aplicação e instalação de servidores/serviços  de redes.",
 				"Instalar redes", 6, ads);
-		Discipline cee = new Discipline("Empreendedorismo", "CEE002A",
+		Subject cee = new Subject("Empreendedorismo", "CEE002A",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
 				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 6, rh);
-		Discipline eng1 = new Discipline("Engenharia de Software I", "IES100",
+		Subject eng1 = new Subject("Engenharia de Software I", "IES100",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
 				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 2, ads);
-		Discipline eng2 = new Discipline("Engenharia de Software II", "IES200",
+		Subject eng2 = new Subject("Engenharia de Software II", "IES200",
 				"Contexto atual das empresas em relação aos projetos de tecnologia de informação. Modelagem de\r\n"
 						+ "Negócio para o desenvolvimento de software. Conceitos, evolução e importância da Engenharia de\r\n"
 						+ "Requisitos. Entendendo e analisando os problemas e as necessidades dos usuários, clientes e envolvidos no\r\n"
@@ -166,10 +166,10 @@ public class LoadDatabase implements CommandLineRunner {
 						+ "dos requisitos. Gerenciamento de requisitos.",
 				"Aplicar um processo de desenvolvimento de software, ênfase na definição e elicitação dos requisitos.",
 				3, ads);
-		Discipline eng3 = new Discipline("Engenharia de Software III", "IES300",
+		Subject eng3 = new Subject("Engenharia de Software III", "IES300",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
 				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 4, ads);
-		disciplineRepository.saveAll(Arrays.asList(alp, ed, ago, irc1, cee, db, ldb, eng1, eng2, eng3));
+		subjectRepository.saveAll(Arrays.asList(alp, ed, ago, irc1, cee, db, ldb, eng1, eng2, eng3));
 
 		// Topics
 		Topic topic1 = new Topic("Topic 1", "Description 1", "<p><b>Topic 1</b></p>", true, UploadStatus.APPROVED, alp,
@@ -190,27 +190,29 @@ public class LoadDatabase implements CommandLineRunner {
 		topicRepository.saveAll(topics);
 
 		// Forum Topics
-		ForumTopic forumTopic1 = new ForumTopic("Ajuda 1", "questions", irc1, kaizer, Arrays.asList(topic1, topic2));
-		ForumTopic forumTopic2 = new ForumTopic("Alguem me ajuda por favoor!!!",
+		ForumThread forumThread1 = new ForumThread("Ajuda 1", "questions", irc1, kaizer, Arrays.asList(topic1, topic2));
+		ForumThread forumThread2 = new ForumThread("Alguem me ajuda por favoor!!!",
 				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, kaik, Arrays.asList(topic3));
-		ForumTopic forumTopic3 = new ForumTopic("Configurar um Roteador",
+		ForumThread forumThread3 = new ForumThread("Configurar um Roteador",
 				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, alice, Arrays.asList(topic4));
-		forumTopicRepository.saveAll(Arrays.asList(forumTopic1, forumTopic2, forumTopic3));
+		forumThreadRepository.saveAll(Arrays.asList(forumThread1, forumThread2, forumThread3));
 
-		forumTopicCommentRepository.saveAll(Arrays.asList(new ForumTopicComment("Comment 1", gustavo, forumTopic1),
-				new ForumTopicComment("Comment 2", kaik, forumTopic1),
-				new ForumTopicComment("Comment 3", kaizer, forumTopic2),
-				new ForumTopicComment("Comment 4", gustavo, forumTopic2),
-				new ForumTopicComment("Comment 5", maria, forumTopic3),
-				new ForumTopicComment("Comment 6", alice, forumTopic3),
-				new ForumTopicComment("Comment 7", alice, forumTopic3)));
+		commentRepository.saveAll(Arrays.asList(
+				new Comment("Comment 1", gustavo, forumThread1),
+				new Comment("Comment 2", kaik, forumThread1),
+				new Comment("Comment 3", kaizer, forumThread2),
+				new Comment("Comment 4", gustavo, forumThread2),
+				new Comment("Comment 5", maria, forumThread3),
+				new Comment("Comment 6", alice, forumThread3),
+				new Comment("Comment 7", alice, forumThread3)));
 
 		// Questions
 		List<Question> questions = new ArrayList<>();
 		for (int i = 0; i <= 60; i++) {
 			Question question = new Question("Pergunta " + (i + 1) + "?", QuestionType.values()[i % 3],
 					UploadStatus.APPROVED, topics.get(i % (topics.size() - 1)), staff,
-					Arrays.asList(new Alternative("Alternativa 1", "Parabéns! Esta é a resposta certa!", true),
+					Arrays.asList(
+							new Alternative("Alternativa 1", "Parabéns! Esta é a resposta certa!", true),
 							new Alternative("Alternativa 2", "Quasee! Estude com mais atenção!", false),
 							new Alternative("Alternativa 3", "Errado! Estude com mais atenção!", false),
 							new Alternative("Alterantiva 4", "Errado! Estude com mais atenção!", false)));

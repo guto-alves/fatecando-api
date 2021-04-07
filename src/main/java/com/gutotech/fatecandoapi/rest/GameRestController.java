@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Alternative;
-import com.gutotech.fatecandoapi.model.AnswerUtils;
-import com.gutotech.fatecandoapi.model.Discipline;
+import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Game;
 import com.gutotech.fatecandoapi.model.GameStatus;
 import com.gutotech.fatecandoapi.model.Question;
@@ -25,6 +24,7 @@ import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Round;
 import com.gutotech.fatecandoapi.model.RoundAnswer;
 import com.gutotech.fatecandoapi.model.User;
+import com.gutotech.fatecandoapi.service.AnswerUtils;
 import com.gutotech.fatecandoapi.service.GameService;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.UserService;
@@ -83,10 +83,10 @@ public class GameRestController {
 
 	@PostMapping
 	public ResponseEntity<Game> createGame(@RequestBody @Valid Game game) {
-		Discipline discipline = game.getTopics().get(0).getDiscipline();
+		Subject subject = game.getTopics().get(0).getSubject();
 
 		// TODO validate topics: each topic has at least one TEST type question
-		if (game.getTopics().stream().anyMatch(topic -> topic.getDiscipline() != discipline)) {
+		if (game.getTopics().stream().anyMatch(topic -> topic.getSubject() != subject)) {
 			throw new IllegalArgumentException("All Topics must belong to the same Discipline");
 		}
 

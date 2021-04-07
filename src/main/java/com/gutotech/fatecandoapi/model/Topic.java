@@ -57,7 +57,7 @@ public class Topic {
 	private UploadStatus status;
 
 	@ManyToOne
-	private Discipline discipline;
+	private Subject subject;
 
 	@ManyToOne
 	private User createdBy;
@@ -88,13 +88,13 @@ public class Topic {
 	}
 
 	public Topic(@NotBlank String name, @NotBlank String description, @NotBlank String bodyHtml, boolean required,
-			@NotNull UploadStatus status, Discipline discipline, User createdBy) {
+			@NotNull UploadStatus status, Subject subject, User createdBy) {
 		this.name = name;
 		this.description = description;
 		this.bodyHtml = bodyHtml;
 		this.required = required;
 		this.status = status;
-		this.discipline = discipline;
+		this.subject = subject;
 		this.createdBy = createdBy;
 	}
 
@@ -162,12 +162,12 @@ public class Topic {
 		this.status = status;
 	}
 
-	public Discipline getDiscipline() {
-		return discipline;
+	public Subject getSubject() {
+		return subject;
 	}
 
-	public void setDiscipline(Discipline discipline) {
-		this.discipline = discipline;
+	public void setSubject(Subject subject) {
+		this.subject = subject;
 	}
 
 	public User getCreatedBy() {

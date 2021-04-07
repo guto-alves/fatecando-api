@@ -1,5 +1,6 @@
 package com.gutotech.fatecandoapi.rest;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -16,73 +17,72 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gutotech.fatecandoapi.model.ForumTopic;
-import com.gutotech.fatecandoapi.model.ForumTopicComment;
-import com.gutotech.fatecandoapi.model.assembler.ForumTopicCommentModelAssembler;
-import com.gutotech.fatecandoapi.model.assembler.ForumTopicModelAssembler;
-import com.gutotech.fatecandoapi.service.ForumTopicCommentService;
-import com.gutotech.fatecandoapi.service.ForumTopicService;
+import com.gutotech.fatecandoapi.model.Comment;
+import com.gutotech.fatecandoapi.model.ForumThread;
+import com.gutotech.fatecandoapi.model.assembler.CommentModelAssembler;
+import com.gutotech.fatecandoapi.model.assembler.ForumThreadModelAssembler;
+import com.gutotech.fatecandoapi.service.CommentService;
+import com.gutotech.fatecandoapi.service.ForumThreadService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
-@RequestMapping("api/forum-topics")
+@RequestMapping("api/forum-threads")
 public class ForumRestController {
 
 	@Autowired
-	private ForumTopicService forumTopicService;
+	private ForumThreadService forumThreadService;
 
 	@Autowired
-	private ForumTopicModelAssembler forumTopicAssembler;
+	private ForumThreadModelAssembler forumTopicAssembler;
 
 	@Autowired
-	private ForumTopicCommentService commentService;
+	private CommentService commentService;
 
 	@Autowired
-	private ForumTopicCommentModelAssembler commentAssembler;
+	private CommentModelAssembler commentAssembler;
 
 	@Autowired
 	private UserService userService;
 
 	@GetMapping("{id}")
-	public EntityModel<ForumTopic> getForumTopic(@PathVariable Long id) {
-		return forumTopicAssembler.toModel(forumTopicService.findById(id));
+	public EntityModel<ForumThread> getForumThread(@PathVariable Long id) {
+		return forumTopicAssembler.toModel(forumThreadService.findById(id));
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> deleteForumTopic(@PathVariable Long id) {
-		forumTopicService.deleteById(id);
+	public ResponseEntity<?> deleteForumThread(@PathVariable Long id) {
+		forumThreadService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("{id}/comments/{commentId}")
-	public EntityModel<ForumTopicComment> getComment(@PathVariable("id") Long id,
-			@PathVariable("commentId") Long commentId) {
-		ForumTopic forumTopic = forumTopicService.findById(id);
+	public EntityModel<Comment> getComment(@PathVariable("id") Long id, @PathVariable("commentId") Long commentId) {
+		ForumThread forumThread = forumThreadService.findById(id);
 
-		ForumTopicComment forumTopicComment = forumTopic.getComments().stream() //
-				.filter((c) -> c.getId() == commentId) //
+		Comment comment = forumThread.getComments().stream() //
+				.filter((c) -> Objects.equals(c.getId(), commentId)) //
 				.findFirst() //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find comment " + commentId));
 
-		return commentAssembler.toModel(forumTopicComment);
+		return commentAssembler.toModel(comment);
 	}
 
 	@GetMapping("{id}/comments")
-	public ResponseEntity<Set<ForumTopicComment>> getComments(@PathVariable("id") Long id) {
-		ForumTopic forumTopic = forumTopicService.findById(id);
-		return ResponseEntity.ok(forumTopic.getComments());
+	public ResponseEntity<Set<Comment>> getComments(@PathVariable("id") Long id) {
+		ForumThread forumThread = forumThreadService.findById(id);
+		return ResponseEntity.ok(forumThread.getComments());
 	}
 
 	@PostMapping("{id}/comments")
-	public ResponseEntity<EntityModel<ForumTopicComment>> addComment(@PathVariable("id") Long id,
-			@RequestBody @Valid ForumTopicComment forumTopicComment) {
-		ForumTopic forumTopic = forumTopicService.findById(id);
+	public ResponseEntity<EntityModel<Comment>> addComment(@PathVariable("id") Long id,
+			@RequestBody @Valid Comment comment) {
+		ForumThread forumThread = forumThreadService.findById(id);
 
-		forumTopicComment.setForumTopic(forumTopic);
+		comment.setForumTopic(forumThread);
 
-		forumTopicComment.setUser(userService.findCurrentUser());
+		comment.setUser(userService.findCurrentUser());
 
-		EntityModel<ForumTopicComment> entityModel = commentAssembler.toModel(commentService.save(forumTopicComment));
+		EntityModel<Comment> entityModel = commentAssembler.toModel(commentService.save(comment));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

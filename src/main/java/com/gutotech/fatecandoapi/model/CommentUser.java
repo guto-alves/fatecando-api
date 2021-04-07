@@ -9,29 +9,29 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "forum_topic_comment_users")
-public class ForumTopicCommentUser {
+@Table(name = "comment_users")
+public class CommentUser {
 	@EmbeddedId
-	private ForumTopicCommentUserId id = new ForumTopicCommentUserId();
+	private CommentUserId id = new CommentUserId();
 
 	private boolean upvoted;
 	private boolean downvoted;
 
-	public ForumTopicCommentUser() {
+	public CommentUser() {
 	}
 
-	public ForumTopicCommentUser(ForumTopicComment forumTopicComment, User user) {
-		id.setComment(forumTopicComment);
+	public CommentUser(Comment comment, User user) {
+		id.setComment(comment);
 		id.setUser(user);
 	}
 
 	@JsonIgnore
-	public ForumTopicComment getComment() {
+	public Comment getComment() {
 		return id.getComment();
 	}
 
-	public void setComment(ForumTopicComment ForumTopicComment) {
-		id.setComment(ForumTopicComment);
+	public void setComment(Comment Comment) {
+		id.setComment(Comment);
 	}
 
 	@JsonIgnore
@@ -69,10 +69,10 @@ public class ForumTopicCommentUser {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof ForumTopicCommentUser)) {
+		if (!(obj instanceof CommentUser)) {
 			return false;
 		}
-		ForumTopicCommentUser other = (ForumTopicCommentUser) obj;
+		CommentUser other = (CommentUser) obj;
 		return Objects.equals(id, other.id);
 	}
 

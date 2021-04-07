@@ -1,11 +1,15 @@
-package com.gutotech.fatecandoapi.model;
+package com.gutotech.fatecandoapi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gutotech.fatecandoapi.service.AnswerService;
-import com.gutotech.fatecandoapi.service.RewardService;
-import com.gutotech.fatecandoapi.service.UserService;
+import com.gutotech.fatecandoapi.model.Alternative;
+import com.gutotech.fatecandoapi.model.Answer;
+import com.gutotech.fatecandoapi.model.AnswerId;
+import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.Reward;
+import com.gutotech.fatecandoapi.model.RewardType;
+import com.gutotech.fatecandoapi.model.User;
 
 @Component
 public class AnswerUtils {

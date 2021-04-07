@@ -7,29 +7,29 @@ import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 
 @Embeddable
-public class DisciplineUserId implements Serializable {
+public class SubjectUserId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(optional = true)
-	private Discipline discipline;
+	private Subject subject;
 
 	@ManyToOne(optional = true)
 	private User user;
 
-	public DisciplineUserId() {
+	public SubjectUserId() {
 	}
 
-	public DisciplineUserId(Discipline discipline, User user) {
-		this.discipline = discipline;
+	public SubjectUserId(Subject subject, User user) {
+		this.subject = subject;
 		this.user = user;
 	}
 
-	public Discipline getDiscipline() {
-		return discipline;
+	public Subject getSubject() {
+		return subject;
 	}
 
-	public void setDiscipline(Discipline discipline) {
-		this.discipline = discipline;
+	public void setSubject(Subject subject) {
+		this.subject = subject;
 	}
 
 	public User getUser() {
@@ -42,7 +42,7 @@ public class DisciplineUserId implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(discipline, user);
+		return Objects.hash(subject, user);
 	}
 
 	@Override
@@ -50,11 +50,11 @@ public class DisciplineUserId implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof DisciplineUserId)) {
+		if (!(obj instanceof SubjectUserId)) {
 			return false;
 		}
-		DisciplineUserId other = (DisciplineUserId) obj;
-		return Objects.equals(discipline, other.discipline) && Objects.equals(user, other.user);
+		SubjectUserId other = (SubjectUserId) obj;
+		return Objects.equals(subject, other.subject) && Objects.equals(user, other.user);
 	}
 
 }

@@ -22,8 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "disciplines")
-public class Discipline {
+@Table(name = "subjects")
+public class Subject {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -47,24 +47,24 @@ public class Discipline {
 	private int semester;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
 	private Set<Topic> topics = new HashSet<>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
-	private List<ForumTopic> forumTopics = new ArrayList<>();
+	@OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+	private List<ForumThread> forumThreads = new ArrayList<>();
 
 	@ManyToOne
 	private Course course;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "id.discipline")
-	private List<DisciplineUser> disciplineUsers = new ArrayList<>();
+	@OneToMany(mappedBy = "id.subject")
+	private List<SubjectUser> subjectUsers = new ArrayList<>();
 
-	public Discipline() {
+	public Subject() {
 	}
 
-	public Discipline(String name, String code, String description, String objetive, int semester, Course course) {
+	public Subject(String name, String code, String description, String objetive, int semester, Course course) {
 		this.name = name;
 		this.code = code;
 		this.description = description;
@@ -77,12 +77,12 @@ public class Discipline {
 	// or removed.
 	public void addTopic(Topic topic) {
 		topics.add(topic);
-		topic.setDiscipline(this);
+		topic.setSubject(this);
 	}
 
 	public void removeTopic(Topic topic) {
 		topics.remove(topic);
-		topic.setDiscipline(null);
+		topic.setSubject(null);
 	}
 
 	public Long getId() {
@@ -137,8 +137,8 @@ public class Discipline {
 		return topics;
 	}
 
-	public List<ForumTopic> getForumTopics() {
-		return forumTopics;
+	public List<ForumThread> getForumThreads() {
+		return forumThreads;
 	}
 
 	public Course getCourse() {
@@ -149,26 +149,26 @@ public class Discipline {
 		this.course = course;
 	}
 
-	public List<DisciplineUser> getDisciplineUsers() {
-		return disciplineUsers;
+	public List<SubjectUser> getSubjectUsers() {
+		return subjectUsers;
 	}
 
-	public void setDisciplineUsers(List<DisciplineUser> disciplineUsers) {
-		this.disciplineUsers = disciplineUsers;
+	public void setSubjectUsers(List<SubjectUser> subjectUsers) {
+		this.subjectUsers = subjectUsers;
 	}
 
-	public DisciplineUser getUser() {
+	public SubjectUser getUser() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		return disciplineUsers.stream() //
+		return subjectUsers.stream() //
 				.filter(info -> info.getUser().getEmail().equals(email)) //
 				.findFirst() //
-				.orElse(new DisciplineUser(this, null));
+				.orElse(new SubjectUser(this, null));
 	}
 
 	public long getLikes() {
-		return disciplineUsers.stream() //
-				.filter(DisciplineUser::isLiked) //
+		return subjectUsers.stream() //
+				.filter(SubjectUser::isLiked) //
 				.count();
 	}
 
@@ -182,10 +182,10 @@ public class Discipline {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Discipline)) {
+		if (!(obj instanceof Subject)) {
 			return false;
 		}
-		Discipline other = (Discipline) obj;
+		Subject other = (Subject) obj;
 		return Objects.equals(id, other.id);
 	}
 

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.gutotech.fatecandoapi.model.Discipline;
 import com.gutotech.fatecandoapi.model.QuestionType;
+import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
@@ -15,23 +15,23 @@ import com.gutotech.fatecandoapi.model.User;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 
-	List<Topic> findAllByDisciplineAndStatusOrderByItemOrder(Discipline discipline, UploadStatus status);
+	List<Topic> findAllBySubjectAndStatusOrderByItemOrder(Subject subject, UploadStatus status);
 
 	List<Topic> findAllByCreatedBy(User user);
 
-	@Query("select t from Topic t where t.itemOrder >= ?1 and t.itemOrder <= ?2 and t.discipline.id = ?3 order by t.itemOrder")
-	List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long disciplineId);
+	@Query("select t from Topic t where t.itemOrder >= ?1 and t.itemOrder <= ?2 and t.subject.id = ?3 order by t.itemOrder")
+	List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long subjectId);
 
-	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.favorite = true order by t.discipline.name, t.itemOrder")
+	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.favorite = true order by t.subject.name, t.itemOrder")
 	List<Topic> findAllFavorites(String email);
 
-	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.annotation != '' or u.annotation != '<p><br></p>' order by t.discipline.name, t.itemOrder")
+	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.annotation != '' or u.annotation != '<p><br></p>' order by t.subject.name, t.itemOrder")
 	List<Topic> findAllAnnotated(String email);
 
-	@Query("select t from Topic t where t.discipline.id = ?2 and (t.itemOrder = ?1 - 1L or t.itemOrder = ?1 + 1L) order by t.itemOrder")
-	List<Topic> findPreviousAndNext(long itemOrder, long disciplineId);
+	@Query("select t from Topic t where t.subject.id = ?2 and (t.itemOrder = ?1 - 1L or t.itemOrder = ?1 + 1L) order by t.itemOrder")
+	List<Topic> findPreviousAndNext(long itemOrder, long subjectId);
 
-	@Query("select distinct t from Topic t, Question q where t = q.topic and t.discipline = ?1 and q.type = ?2 order by t.itemOrder")
-	List<Topic> findFor(Discipline discipline, QuestionType type);
+	@Query("select distinct t from Topic t, Question q where t = q.topic and t.subject = ?1 and q.type = ?2 order by t.itemOrder")
+	List<Topic> findFor(Subject subject, QuestionType type);
 
 }

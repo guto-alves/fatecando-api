@@ -6,39 +6,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.Course;
-import com.gutotech.fatecandoapi.model.Discipline;
-import com.gutotech.fatecandoapi.repository.DisciplineRepository;
+import com.gutotech.fatecandoapi.model.Subject;
+import com.gutotech.fatecandoapi.repository.SubjectRepository;
 import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
 
 @Service
-public class DisciplineService {
+public class SubjectService {
 
 	@Autowired
-	private DisciplineRepository repository;
+	private SubjectRepository repository;
 
-	public Discipline findById(Long id) {
+	public Subject findById(Long id) {
 		return repository.findById(id) //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find discipline " + id));
 	}
 	
-	public List<Discipline> findAll() {
+	public List<Subject> findAll() {
 		return repository.findAllByOrderByName();
 	}
 
-	public List<Discipline> findAllBySemester(Integer semester) {
+	public List<Subject> findAllBySemester(Integer semester) {
 		return repository.findAllBySemesterOrderByName(semester);
 	}
 
-	public List<Discipline> findAllByCourse(Course course) {
+	public List<Subject> findAllByCourse(Course course) {
 		return repository.findAllByCourseOrderByName(course);
 	}
 
-	public List<Discipline> findAllWithTopics() {
+	public List<Subject> findAllWithTopics() {
 		return repository.findAllWithTopics();
 	}
 
-	public Discipline save(Discipline discipline) {
-		return repository.save(discipline);
+	public Subject save(Subject subject) {
+		return repository.save(subject);
 	}
 
 	public void deleteById(Long id) {

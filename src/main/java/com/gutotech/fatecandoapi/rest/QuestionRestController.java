@@ -132,7 +132,7 @@ public class QuestionRestController {
 	public ResponseEntity<Map<String, Object>> answerQuestion( //
 			@PathVariable("questionId") Long questionId, //
 			@PathVariable("alternativeId") Long alternativeId) {
-		User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+		User user = userService.findCurrentUser();
 
 		Question question = questionService.findById(questionId);
 

@@ -11,37 +11,37 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "discipline_users")
-public class DisciplineUser {
+@Table(name = "subject_users")
+public class SubjectUser {
 
 	@EmbeddedId
-	private DisciplineUserId id = new DisciplineUserId();
+	private SubjectUserId id = new SubjectUserId();
 
 	private Date accessDate;
 
 	private boolean liked;
 
-	public DisciplineUser() {
+	public SubjectUser() {
 	}
 
-	public DisciplineUser(Discipline discipline, User user) {
-		id.setDiscipline(discipline);
+	public SubjectUser(Subject subject, User user) {
+		id.setSubject(subject);
 		id.setUser(user);
 	}
 
-	public DisciplineUser(DisciplineUserId id, Date accessDate, boolean liked) {
+	public SubjectUser(SubjectUserId id, Date accessDate, boolean liked) {
 		this.id = id;
 		this.accessDate = accessDate;
 		this.liked = liked;
 	}
 
 	@JsonIgnore
-	public Discipline getDiscipline() {
-		return id.getDiscipline();
+	public Subject getDiscipline() {
+		return id.getSubject();
 	}
 
-	public void setDiscipline(Discipline discipline) {
-		id.setDiscipline(discipline);
+	public void setDiscipline(Subject subject) {
+		id.setSubject(subject);
 	}
 
 	@JsonIgnore
@@ -70,7 +70,7 @@ public class DisciplineUser {
 	}
 
 	public int getProgress() {
-		Set<Topic> topics = id.getDiscipline().getTopics();
+		Set<Topic> topics = id.getSubject().getTopics();
 
 		long totalFinished = topics.stream().filter(topic -> topic.getUser().isFinished()).count();
 
@@ -87,10 +87,10 @@ public class DisciplineUser {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof DisciplineUser)) {
+		if (!(obj instanceof SubjectUser)) {
 			return false;
 		}
-		DisciplineUser other = (DisciplineUser) obj;
+		SubjectUser other = (SubjectUser) obj;
 		return Objects.equals(id, other.id);
 	}
 

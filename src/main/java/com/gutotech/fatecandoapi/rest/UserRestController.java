@@ -53,7 +53,7 @@ public class UserRestController {
 		return assembler.toModel(userService.findCurrentUser());
 	}
 
-	@GetMapping("me/disciplines/last-accessed")
+	@GetMapping("me/subjects/last-accessed")
 	public ResponseEntity<List<Subject>> getLatestSubjectsAccessed() {
 		return ResponseEntity.ok(userService.findCurrentUser().getDisciplines());
 	}

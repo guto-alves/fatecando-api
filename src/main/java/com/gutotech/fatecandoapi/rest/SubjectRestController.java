@@ -92,9 +92,7 @@ public class SubjectRestController {
 	@GetMapping("{id}/topics")
 	public ResponseEntity<List<Topic>> getSubjectTopics(@PathVariable Long id) {
 		Subject subject = subjectService.findById(id);
-
 		List<Topic> topics = topicService.findAllBySubject(subject);
-
 		return ResponseEntity.ok(topics);
 	}
 

@@ -1,6 +1,6 @@
 package com.gutotech.fatecandoapi.security;
 
-public class Roles {
-	public static final String ADMIN = "ROLE_ADMIN";
-	public static final String STUDENT = "ROLE_STUDENT";
+public interface Roles {
+	String ADMIN = "ROLE_ADMIN";
+	String STUDENT = "ROLE_STUDENT";
 }

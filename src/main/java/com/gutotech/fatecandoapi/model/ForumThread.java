@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -57,6 +58,9 @@ public class ForumThread {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creation_date")
 	private Date creationDate;
+
+	@OneToMany(mappedBy = "id.forumThread", cascade = CascadeType.ALL)
+	private List<ForumThreadUser> threadUsers = new ArrayList<>();
 
 	public ForumThread() {
 	}
@@ -123,6 +127,31 @@ public class ForumThread {
 
 	public Set<Comment> getComments() {
 		return comments;
+	}
+
+	public List<ForumThreadUser> getThreadUsers() {
+		return threadUsers;
+	}
+
+	public Long getVoteCount() {
+		return threadUsers.stream()
+				.mapToLong((x) -> x.isUpvoted() ? 1 : x.isDownvoted() ? -1 : 0)
+				.sum();
+	}
+
+	public ForumThreadUser getMe() {
+		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		// @formatter:off
+		return threadUsers.stream()
+				.filter((c) -> c.getUser().getEmail().equals(currentUserEmail))
+				.findFirst()
+				.orElseGet(() -> {
+					ForumThreadUser threadUser = new ForumThreadUser(this, null);
+					threadUsers.add(threadUser);
+					return threadUser;
+				});
+		// @formatter:on
 	}
 
 	@Override

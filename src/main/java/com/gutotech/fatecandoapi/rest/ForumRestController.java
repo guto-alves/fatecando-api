@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Comment;
 import com.gutotech.fatecandoapi.model.ForumThread;
+import com.gutotech.fatecandoapi.model.ForumThreadUser;
 import com.gutotech.fatecandoapi.model.assembler.CommentModelAssembler;
 import com.gutotech.fatecandoapi.model.assembler.ForumThreadModelAssembler;
 import com.gutotech.fatecandoapi.service.CommentService;
@@ -87,6 +88,51 @@ public class ForumRestController {
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
+	}
+
+	@PostMapping("{id}/upvote")
+	public ResponseEntity<ForumThread> addUpvote(@PathVariable Long id) {
+		ForumThread thread = forumThreadService.findById(id);
+		ForumThreadUser threadUser = thread.getMe();
+
+		if (threadUser.isUpvoted()) {
+			threadUser.setUpvoted(false);
+			threadUser.setDownvoted(false);
+		} else {
+			threadUser.setUpvoted(true);
+			threadUser.setDownvoted(false);
+		}
+
+		if (threadUser.getUser() == null) {
+			threadUser.setUser(userService.findCurrentUser());
+		}
+
+		forumThreadService.save(thread);
+
+		return ResponseEntity.ok(thread);
+	}
+
+	@PostMapping("{id}/downvote")
+	public ResponseEntity<ForumThread> addDownvote(@PathVariable Long id) {
+		ForumThread thread = forumThreadService.findById(id);
+
+		ForumThreadUser threadUser = thread.getMe();
+
+		if (threadUser.isDownvoted()) {
+			threadUser.setDownvoted(false);
+			threadUser.setUpvoted(false);
+		} else {
+			threadUser.setDownvoted(true);
+			threadUser.setUpvoted(false);
+		}
+
+		if (threadUser.getUser() == null) {
+			threadUser.setUser(userService.findCurrentUser());
+		}
+
+		forumThreadService.save(thread);
+
+		return ResponseEntity.ok(thread);
 	}
 
 }

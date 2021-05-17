@@ -26,8 +26,7 @@ public class JacksonCustomMessageSerializer extends StdSerializer<Message> {
 		jgen.writeStartObject();
 
 		jgen.writeNumberField("id", message.getId());
-		jgen.writeStringField("subject", message.getSubject());
-		jgen.writeStringField("text", message.getText());
+		jgen.writeStringField("body", message.getBody());
 		jgen.writeBooleanField("newMessage", message.isNewMessage());
 
 		jgen.writeObjectFieldStart("from"); // start from

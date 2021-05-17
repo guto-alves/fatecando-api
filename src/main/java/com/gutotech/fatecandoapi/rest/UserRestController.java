@@ -48,6 +48,13 @@ public class UserRestController {
 		return assembler.toModel(userService.findById(id));
 	}
 
+	@GetMapping("search")
+	public ResponseEntity<List<User>> searchUsers(@RequestParam String filter) {
+		List<User> users = userService.findByNameOrEmail(filter);
+		users.remove(userService.findCurrentUser());
+		return ResponseEntity.ok(users);
+	}
+
 	@GetMapping("me")
 	public EntityModel<User> getCurrentUser() {
 		return assembler.toModel(userService.findCurrentUser());

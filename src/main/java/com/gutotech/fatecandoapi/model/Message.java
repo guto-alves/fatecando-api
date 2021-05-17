@@ -17,23 +17,21 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gutotech.fatecandoapi.rest.JacksonCustomMessageSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "messages")
-@JsonSerialize(using = JacksonCustomMessageSerializer.class)
+// @JsonSerialize(using = JacksonCustomMessageSerializer.class)
 public class Message {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "Please provide a valid subject.")
-	private String subject;
-
 	@NotBlank(message = "Please provide a valid message text.")
-	private String text;
+	@Column(columnDefinition = "TEXT")
+	private String body;
 
 	@Column(name = "new_message")
 	private boolean newMessage;
@@ -50,14 +48,10 @@ public class Message {
 	@JoinColumn(name = "recipient_id")
 	private User to;
 
-	public Message() {
-	}
+	@ManyToOne
+	private Chat chat;
 
-	public Message(String subject, String text, User from, User to) {
-		this.subject = subject;
-		this.text = text;
-		this.from = from;
-		this.to = to;
+	public Message() {
 	}
 
 	public Long getId() {
@@ -68,20 +62,12 @@ public class Message {
 		this.id = id;
 	}
 
-	public String getSubject() {
-		return subject;
+	public String getBody() {
+		return body;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
+	public void setBody(String text) {
+		this.body = text;
 	}
 
 	public boolean isNewMessage() {
@@ -114,6 +100,16 @@ public class Message {
 
 	public void setTo(User to) {
 		this.to = to;
+	}
+
+	@JsonIgnore
+	public Chat getChat() {
+		return chat;
+	}
+
+	@JsonProperty
+	public void setChat(Chat chat) {
+		this.chat = chat;
 	}
 
 	@Override

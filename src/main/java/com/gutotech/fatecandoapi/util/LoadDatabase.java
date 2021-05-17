@@ -12,30 +12,28 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gutotech.fatecandoapi.model.Alternative;
-import com.gutotech.fatecandoapi.model.Course;
-import com.gutotech.fatecandoapi.model.Subject;
-import com.gutotech.fatecandoapi.model.ForumThread;
 import com.gutotech.fatecandoapi.model.Comment;
+import com.gutotech.fatecandoapi.model.Course;
+import com.gutotech.fatecandoapi.model.ForumThread;
 import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Institution;
-import com.gutotech.fatecandoapi.model.Message;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Reward;
 import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.Role;
+import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
-import com.gutotech.fatecandoapi.repository.CourseRepository;
-import com.gutotech.fatecandoapi.repository.SubjectRepository;
 import com.gutotech.fatecandoapi.repository.CommentRepository;
+import com.gutotech.fatecandoapi.repository.CourseRepository;
 import com.gutotech.fatecandoapi.repository.ForumThreadRepository;
 import com.gutotech.fatecandoapi.repository.InstitutionRepository;
-import com.gutotech.fatecandoapi.repository.MessageRepository;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
 import com.gutotech.fatecandoapi.repository.RewardRepository;
 import com.gutotech.fatecandoapi.repository.RoleRepository;
+import com.gutotech.fatecandoapi.repository.SubjectRepository;
 import com.gutotech.fatecandoapi.repository.TopicRepository;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.UserService;
@@ -77,9 +75,6 @@ public class LoadDatabase implements CommandLineRunner {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private MessageRepository messageRepository;
-
 	@Override
 	public void run(String... args) throws Exception {
 		// Institutions
@@ -116,11 +111,6 @@ public class LoadDatabase implements CommandLineRunner {
 		User maria = new User("Maria Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date(), rh);
 		User alice = new User("Alice Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date(), null);
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
-
-		messageRepository.saveAll(Arrays.asList(new Message("Subject 1", "Text 1", maria, gustavo),
-				new Message("Subject 2", "Text 2", gustavo, maria), new Message("Subject 3", "Text 3", kaik, gustavo),
-				new Message("Subject 4", "Text 4", kaizer, maria), new Message("Subject 5", "Text 5", staff, gustavo),
-				new Message("Subject 6", "Text 6", staff, gustavo)));
 
 		// Rewards
 		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);
@@ -197,22 +187,17 @@ public class LoadDatabase implements CommandLineRunner {
 				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, alice, Arrays.asList(topic4));
 		forumThreadRepository.saveAll(Arrays.asList(forumThread1, forumThread2, forumThread3));
 
-		commentRepository.saveAll(Arrays.asList(
-				new Comment("Comment 1", gustavo, forumThread1),
-				new Comment("Comment 2", kaik, forumThread1),
-				new Comment("Comment 3", kaizer, forumThread2),
-				new Comment("Comment 4", gustavo, forumThread2),
-				new Comment("Comment 5", maria, forumThread3),
-				new Comment("Comment 6", alice, forumThread3),
-				new Comment("Comment 7", alice, forumThread3)));
+		commentRepository.saveAll(Arrays.asList(new Comment("Comment 1", gustavo, forumThread1),
+				new Comment("Comment 2", kaik, forumThread1), new Comment("Comment 3", kaizer, forumThread2),
+				new Comment("Comment 4", gustavo, forumThread2), new Comment("Comment 5", maria, forumThread3),
+				new Comment("Comment 6", alice, forumThread3), new Comment("Comment 7", alice, forumThread3)));
 
 		// Questions
 		List<Question> questions = new ArrayList<>();
 		for (int i = 0; i <= 60; i++) {
 			Question question = new Question("Pergunta " + (i + 1) + "?", QuestionType.values()[i % 3],
 					UploadStatus.APPROVED, topics.get(i % (topics.size() - 1)), staff,
-					Arrays.asList(
-							new Alternative("Alternativa 1", "Parabéns! Esta é a resposta certa!", true),
+					Arrays.asList(new Alternative("Alternativa 1", "Parabéns! Esta é a resposta certa!", true),
 							new Alternative("Alternativa 2", "Quasee! Estude com mais atenção!", false),
 							new Alternative("Alternativa 3", "Errado! Estude com mais atenção!", false),
 							new Alternative("Alterantiva 4", "Errado! Estude com mais atenção!", false)));

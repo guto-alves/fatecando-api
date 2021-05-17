@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gutotech.fatecandoapi.model.Chat;
 import com.gutotech.fatecandoapi.model.Message;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.MessageRepository;
@@ -23,10 +24,6 @@ public class MessageService {
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find message " + id));
 	}
 
-	public List<Message> findAllByRecipient(User user) {
-		return messageRepository.findAllByToOrderByDateDesc(user);
-	}
-
 	public Message save(Message message) {
 		return messageRepository.save(message);
 	}
@@ -38,6 +35,10 @@ public class MessageService {
 	@Transactional
 	public void deleteAll(User user) {
 		messageRepository.deleteByTo(user);
+	}
+
+	public List<Message> findByChat(Chat chat) {
+		return messageRepository.findByChatOrderByDate(chat);
 	}
 
 }

@@ -14,7 +14,7 @@ import com.gutotech.fatecandoapi.service.CommentService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
-@RequestMapping("comments")
+@RequestMapping("api/comments")
 public class CommentRestController {
 
 	@Autowired

@@ -133,10 +133,20 @@ public class ForumThread {
 		return threadUsers;
 	}
 
-	public Long getVoteCount() {
+	public long getVoteCount() {
 		return threadUsers.stream()
-				.mapToLong((x) -> x.isUpvoted() ? 1 : x.isDownvoted() ? -1 : 0)
+				.mapToLong((threadUser) -> threadUser.isUpvoted() ? 1 : threadUser.isDownvoted() ? -1 : 0)
 				.sum();
+	}
+	
+	public long getViewCount() {
+		return threadUsers.stream()
+					.mapToLong(threadUser ->  threadUser.isViewed() ? 1 : 0)
+					.sum();
+	}
+	
+	public long getTotalComments() {
+		return comments.size();
 	}
 
 	public ForumThreadUser getMe() {

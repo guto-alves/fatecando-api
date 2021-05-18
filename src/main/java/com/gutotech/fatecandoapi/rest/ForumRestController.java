@@ -47,7 +47,14 @@ public class ForumRestController {
 
 	@GetMapping("{id}")
 	public EntityModel<ForumThread> getForumThread(@PathVariable Long id) {
-		return forumTopicAssembler.toModel(forumThreadService.findById(id));
+		ForumThread thread = forumThreadService.findById(id);
+		ForumThreadUser me = thread.getMe();
+		me.setViewed(true);
+		if (me.getUser() == null) {
+			me.setUser(userService.findCurrentUser());
+		}
+		forumThreadService.save(thread);
+		return forumTopicAssembler.toModel(thread);
 	}
 
 	@DeleteMapping("{id}")

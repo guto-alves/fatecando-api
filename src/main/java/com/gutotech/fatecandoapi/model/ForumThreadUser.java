@@ -16,7 +16,11 @@ public class ForumThreadUser {
 	private ForumThreadUserId id = new ForumThreadUserId();
 
 	private boolean upvoted;
+
 	private boolean downvoted;
+
+	@JsonIgnore
+	private boolean viewed;
 
 	public ForumThreadUser() {
 	}
@@ -58,6 +62,14 @@ public class ForumThreadUser {
 
 	public void setDownvoted(boolean downvoted) {
 		this.downvoted = downvoted;
+	}
+
+	public boolean isViewed() {
+		return viewed;
+	}
+
+	public void setViewed(boolean viewed) {
+		this.viewed = viewed;
 	}
 
 	@Override

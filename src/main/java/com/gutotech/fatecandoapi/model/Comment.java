@@ -50,6 +50,8 @@ public class Comment {
 	@OneToMany(mappedBy = "id.comment", cascade = CascadeType.ALL)
 	private List<CommentUser> commentUsers = new ArrayList<>();
 
+	private boolean accepted;
+
 	public Comment() {
 	}
 
@@ -118,6 +120,14 @@ public class Comment {
 					return commentUser;
 				});
 		// @formatter:on
+	}
+
+	public boolean isAccepted() {
+		return accepted;
+	}
+
+	public void setAccepted(boolean accepted) {
+		this.accepted = accepted;
 	}
 
 	@Override

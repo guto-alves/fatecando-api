@@ -39,7 +39,7 @@ public class ForumThread {
 	@NotBlank(message = "Please provide a description")
 	@Column(name = "body_html", columnDefinition = "TEXT")
 	private String bodyHtml;
-
+	
 	@JsonIgnore
 	@ManyToOne
 	private Subject subject;
@@ -162,6 +162,13 @@ public class ForumThread {
 					return threadUser;
 				});
 		// @formatter:on
+	}
+	
+	public boolean isAnswered() {
+		return comments.stream()
+				.filter(Comment::isAccepted)
+				.findFirst()
+				.isPresent();
 	}
 
 	@Override

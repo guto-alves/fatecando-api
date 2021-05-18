@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -52,6 +53,7 @@ public class Subject {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+	@OrderBy("creationDate DESC")
 	private List<ForumThread> forumThreads = new ArrayList<>();
 
 	@ManyToOne

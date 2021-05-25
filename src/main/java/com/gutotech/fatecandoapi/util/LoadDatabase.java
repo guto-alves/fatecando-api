@@ -180,17 +180,21 @@ public class LoadDatabase implements CommandLineRunner {
 		topicRepository.saveAll(topics);
 
 		// Forum Topics
-		ForumThread forumThread1 = new ForumThread("Ajuda 1", "questions", irc1, kaizer, Arrays.asList(topic1, topic2));
+		ForumThread forumThread1 = new ForumThread("Ajuda 1", "questions", alp, kaizer, Arrays.asList(topic1, topic2));
 		ForumThread forumThread2 = new ForumThread("Alguem me ajuda por favoor!!!",
-				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, kaik, Arrays.asList(topic3));
+				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", alp, kaik, Arrays.asList(topic3));
 		ForumThread forumThread3 = new ForumThread("Configurar um Roteador",
-				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", irc1, alice, Arrays.asList(topic4));
+				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", alp, alice, Arrays.asList(topic4));
 		forumThreadRepository.saveAll(Arrays.asList(forumThread1, forumThread2, forumThread3));
 
-		commentRepository.saveAll(Arrays.asList(new Comment("Comment 1", gustavo, forumThread1),
-				new Comment("Comment 2", kaik, forumThread1), new Comment("Comment 3", kaizer, forumThread2),
-				new Comment("Comment 4", gustavo, forumThread2), new Comment("Comment 5", maria, forumThread3),
-				new Comment("Comment 6", alice, forumThread3), new Comment("Comment 7", alice, forumThread3)));
+		commentRepository.saveAll(Arrays.asList(
+				new Comment("Comment 1", gustavo, forumThread1),
+				new Comment("Comment 2", kaik, forumThread1), 
+				new Comment("Comment 3", kaizer, forumThread1),
+				new Comment("Comment 4", gustavo, forumThread2), 
+				new Comment("Comment 5", maria, forumThread2),
+				new Comment("Comment 6", alice, forumThread2), 
+				new Comment("Comment 7", alice, forumThread1)));
 
 		// Questions
 		List<Question> questions = new ArrayList<>();

@@ -1,7 +1,10 @@
 package com.gutotech.fatecandoapi.rest;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -15,15 +18,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Comment;
 import com.gutotech.fatecandoapi.model.ForumThread;
 import com.gutotech.fatecandoapi.model.ForumThreadUser;
+import com.gutotech.fatecandoapi.model.Subject;
+import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.assembler.CommentModelAssembler;
 import com.gutotech.fatecandoapi.model.assembler.ForumThreadModelAssembler;
 import com.gutotech.fatecandoapi.service.CommentService;
 import com.gutotech.fatecandoapi.service.ForumThreadService;
+import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
@@ -44,6 +51,64 @@ public class ForumRestController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private SubjectService subjectService;
+
+	// filters: NoAnswer, NoAcceptedAnswer
+	// sort: Newest, Votes, Visits
+	@GetMapping
+	public ResponseEntity<List<ForumThread>> search(@RequestParam("subject") Long subjectId,
+			@RequestParam(required = false, defaultValue = "Newest") String sort,
+			@RequestParam(name = "filter", required = false, defaultValue = "") List<String> filters,
+			@RequestParam(name = "topic", required = false, defaultValue = "") List<Long> topics) {
+		Subject subject = subjectService.findById(subjectId);
+
+		List<ForumThread> forumThreads = subject.getForumThreads();
+
+		Comparator<ForumThread> comparator = null;
+
+		if (sort.equals("Votes")) {
+			comparator = Comparator.comparing(ForumThread::getVoteCount).reversed();
+		} else if (sort.equals("Visits")) {
+			comparator = Comparator.comparing(ForumThread::getViewCount).reversed();
+		} else {
+			comparator = Comparator.comparing(ForumThread::getCreationDate).reversed();
+		}
+
+		// @formatter:off
+			List<Topic> taggedWith = topics.stream()
+					.map(t -> new Topic(t))
+					.collect(Collectors.toList());
+			
+			List<ForumThread> result = forumThreads.stream()
+				.filter(thread -> {
+					if (filters.contains("NoAnswer") ) {
+						if (thread.getComments().size() > 0) {
+							return false;
+						}
+					}
+					
+					if (filters.contains("NoAcceptedAnswer") ) {
+						if (thread.isAnswered()) {
+							return false;
+						}
+					}
+					
+					if (taggedWith.size() > 0) {
+						if (taggedWith.stream().anyMatch(taggedTopic -> !thread.getTags().contains(taggedTopic))) {
+							return false;
+						}
+					}
+					
+					return true;
+				})
+				.sorted(comparator)
+				.collect(Collectors.toList());
+			// @formatter:on
+
+		return ResponseEntity.ok(result);
+	}
 
 	@GetMapping("{id}")
 	public EntityModel<ForumThread> getForumThread(@PathVariable Long id) {

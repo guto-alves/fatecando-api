@@ -87,6 +87,10 @@ public class Topic {
 	public Topic() {
 	}
 
+	public Topic(Long id) {
+		this.id = id;
+	}
+
 	public Topic(@NotBlank String name, @NotBlank String description, @NotBlank String bodyHtml, boolean required,
 			@NotNull UploadStatus status, Subject subject, User createdBy) {
 		this.name = name;

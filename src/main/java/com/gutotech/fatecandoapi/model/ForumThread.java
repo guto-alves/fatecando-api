@@ -64,6 +64,10 @@ public class ForumThread {
 
 	public ForumThread() {
 	}
+	
+	public ForumThread(Long id) {
+		this.id = id;
+	}
 
 	public ForumThread(String title, String bodyHtml, Subject subject, User user, List<Topic> tags) {
 		this.title = title;

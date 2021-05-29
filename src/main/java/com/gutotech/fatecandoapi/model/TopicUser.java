@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -29,6 +30,9 @@ public class TopicUser {
 
 	@Column(name = "finish_date")
 	private Date finishDate;
+
+	@Embedded
+	private Review review;
 
 	public TopicUser() {
 	}
@@ -101,6 +105,14 @@ public class TopicUser {
 
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
+	}
+
+	public Review getReview() {
+		return review;
+	}
+
+	public void setReview(Review review) {
+		this.review = review;
 	}
 
 	@Override

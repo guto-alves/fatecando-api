@@ -24,14 +24,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.Review;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.TopicUser;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
-import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -200,6 +201,19 @@ public class TopicRestController {
 		TopicUser topicUser = getUserInfo(topic);
 
 		topicUser.setAnnotation(annotation);
+
+		topicService.save(topic);
+
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("{id}/review")
+	public ResponseEntity<Void> saveReview(@RequestBody Review review, @PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+
+		TopicUser topicUser = getUserInfo(topic);
+
+		topicUser.setReview(review);
 
 		topicService.save(topic);
 

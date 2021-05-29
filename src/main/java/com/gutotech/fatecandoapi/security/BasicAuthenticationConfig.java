@@ -25,7 +25,7 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
 		// @formatter:off
         http
             .authorizeRequests()
-            	.antMatchers("/h2-console/*")
+            	.antMatchers("/swagger-ui/**", "/**")
             		.permitAll()
 	            .antMatchers(HttpMethod.GET, "/api/courses", "/api/subjects") 
 	    			.permitAll()

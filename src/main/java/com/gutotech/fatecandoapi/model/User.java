@@ -70,6 +70,9 @@ public class User {
 	@Column(name = "creation_date")
 	private Date creationDate;
 
+	@Column(name = "last_login")
+	private Date lastLogin;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles = new ArrayList<>();
@@ -179,6 +182,18 @@ public class User {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+
+	public List<SubjectUser> getUserDisciplines() {
+		return userDisciplines;
 	}
 
 	public List<Role> getRoles() {

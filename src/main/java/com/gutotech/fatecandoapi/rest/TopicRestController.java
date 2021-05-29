@@ -149,19 +149,6 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PutMapping("{id}/like")
-	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
-		Topic topic = topicService.findById(id);
-
-		TopicUser topicUser = getUserInfo(topic);
-
-		topicUser.setLiked(!topicUser.isLiked());
-
-		topicService.save(topic);
-
-		return ResponseEntity.noContent().build();
-	}
-
 	@PutMapping("{id}/finished")
 	public ResponseEntity<Void> toggleFinished(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);
@@ -218,6 +205,13 @@ public class TopicRestController {
 		topicService.save(topic);
 
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("{id}/reviews")
+	public ResponseEntity<List<Review>> getReviews(@PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+		
+		return ResponseEntity.ok(topic.getReviews());
 	}
 
 	@PutMapping("drag/{draggedTopicId}/{relatedTopicId}")

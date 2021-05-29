@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -134,14 +135,6 @@ public class Topic {
 		this.bodyHtml = bodyHtml;
 	}
 
-	public long getLikes() {
-		// @formatter:off
-        return topicUsers.stream()
-                .filter(TopicUser::isLiked)
-                .count();
-        // @formatter:on
-	}
-
 	public boolean isRequired() {
 		return required;
 	}
@@ -214,6 +207,31 @@ public class Topic {
 				.findFirst() //
 				.orElse(new TopicUser());
 	}
+	
+	@JsonIgnore
+	public List<Review> getReviews() {
+		return topicUsers.stream()
+					.filter(topicUser -> topicUser.getReview() != null && topicUser.getReview().getStars() != null)
+					.map(TopicUser::getReview)
+					.collect(Collectors.toList());
+	}
+	
+	public long getTotalReviews() {
+		return topicUsers.stream()
+					.count();
+	}
+	
+	public Double getStars() {
+		double average = getReviews()
+					.stream()
+					.mapToInt(Review::getStars)
+					.average()
+					.orElse(0.0);
+	
+		return average > 0 ? average : null;
+	}
+	
+	
 
 	public Topic getPrevious() {
 		return previous;

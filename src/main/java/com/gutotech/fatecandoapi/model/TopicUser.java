@@ -18,8 +18,6 @@ public class TopicUser {
 	@EmbeddedId
 	private TopicUserId id = new TopicUserId();
 
-	private boolean liked;
-
 	@Column(nullable = true)
 	private boolean favorite;
 
@@ -38,12 +36,11 @@ public class TopicUser {
 	}
 
 	public TopicUser(User user, Topic topic) {
-		this(new TopicUserId(user, topic), false, "", false, null);
+		this(new TopicUserId(user, topic), "", false, null);
 	}
 
-	public TopicUser(TopicUserId id, boolean liked, String annotation, boolean finished, Date finishDate) {
+	public TopicUser(TopicUserId id, String annotation, boolean finished, Date finishDate) {
 		this.id = id;
-		this.liked = liked;
 		this.annotation = annotation;
 		this.finished = finished;
 		this.finishDate = finishDate;
@@ -65,14 +62,6 @@ public class TopicUser {
 
 	public void setTopic(Topic topic) {
 		id.setTopic(topic);
-	}
-
-	public boolean isLiked() {
-		return liked;
-	}
-
-	public void setLiked(boolean liked) {
-		this.liked = liked;
 	}
 
 	public boolean isFavorite() {

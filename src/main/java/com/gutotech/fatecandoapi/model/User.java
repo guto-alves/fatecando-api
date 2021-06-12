@@ -74,8 +74,16 @@ public class User {
 	private Date lastLogin;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(
+			name = "user_role", 
+			joinColumns = @JoinColumn(name = "user_id"), 
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+	)
 	private List<Role> roles = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	private List<Reward> rewards = new ArrayList<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.user")
@@ -219,6 +227,16 @@ public class User {
 		return userDisciplines.stream() //
 				.map(SubjectUser::getDiscipline) //
 				.collect(Collectors.toList());
+	}
+
+	public List<Reward> getRewards() {
+		return rewards;
+	}
+
+	public Long getScore() {
+		return rewards.stream() //
+				.mapToLong((r) -> r.getType().getScore()) //
+				.sum();
 	}
 
 	@Override

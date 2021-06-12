@@ -1,6 +1,8 @@
 package com.gutotech.fatecandoapi.rest;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -108,6 +110,18 @@ public class UserRestController {
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
+	}
+
+	@GetMapping("ranking")
+	public ResponseEntity<List<User>> getRanking() {
+		// @formatter:off
+		List<User> users = userService.findAll()
+				.stream()
+				.filter(user -> user.getScore() > 0)
+				.sorted(Comparator.comparing(User::getScore).reversed())
+				.collect(Collectors.toList());
+		// @formatter:on
+		return ResponseEntity.ok(users);
 	}
 
 }

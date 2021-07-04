@@ -119,7 +119,7 @@ public class LoadDatabase implements CommandLineRunner {
 		Reward reward4 = new Reward(RewardType.TEST_SUCCESS, alice);
 		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4));
 
-		// Disciplines
+		// Subjects
 		Subject alp = new Subject("Algoritmos", "IAL002",
 				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"

@@ -64,7 +64,7 @@ public class UserRestController {
 
 	@GetMapping("me/subjects/last-accessed")
 	public ResponseEntity<List<Subject>> getLatestSubjectsAccessed() {
-		return ResponseEntity.ok(userService.findCurrentUser().getDisciplines());
+		return ResponseEntity.ok(userService.findCurrentUser().getSubjects());
 	}
 
 	@GetMapping("me/topics")

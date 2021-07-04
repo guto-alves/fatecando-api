@@ -84,7 +84,7 @@ public class TopicRestController {
 	public ResponseEntity<?> addTopic(@RequestBody @Valid Topic topic, HttpServletRequest request) {
 		if (topic.getSubject() == null || topic.getSubject().getId() == null) {
 			return ResponseEntity.badRequest()
-					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid discipline", request.getRequestURI()));
+					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid subject", request.getRequestURI()));
 		}
 
 		topic.setSubject(subjectService.findById(topic.getSubject().getId()));
@@ -112,7 +112,7 @@ public class TopicRestController {
 		if (hasAdminRole) {
 			if (updatedTopic.getSubject() == null || updatedTopic.getSubject().getId() == null) {
 				return ResponseEntity.badRequest().body(
-						new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid topic discipline", request.getRequestURI()));
+						new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid topic subject", request.getRequestURI()));
 			}
 
 			currentTopic.setName(updatedTopic.getName());

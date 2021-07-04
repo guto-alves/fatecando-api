@@ -30,8 +30,8 @@ public class TopicService {
 		return repository.findAllByCreatedBy(user);
 	}
 
-	public List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long disciplineId) {
-		return repository.findAllBetween(itemOrder1, itemOrder2, disciplineId);
+	public List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long subjectId) {
+		return repository.findAllBetween(itemOrder1, itemOrder2, subjectId);
 	}
 
 	public List<Topic> findAllFavorites(String email) {

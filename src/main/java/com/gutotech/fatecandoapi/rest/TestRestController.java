@@ -48,7 +48,7 @@ public class TestRestController {
 			throw new IllegalStateException("The user already has a dependent test");
 		}
 		
-		// TODO validate topics: be from the same Discipline and have at least one TEST type question
+		// TODO validate topics: be from the same Subject and have at least one TEST type question
 
 		test.setQuestions(questionService.getRandomQuestions(QuestionType.TEST, test.getTopics(), TOTAL_QUESTIONS));
 

@@ -36,11 +36,11 @@ public class SubjectUser {
 	}
 
 	@JsonIgnore
-	public Subject getDiscipline() {
+	public Subject getSubject() {
 		return id.getSubject();
 	}
 
-	public void setDiscipline(Subject subject) {
+	public void setSubject(Subject subject) {
 		id.setSubject(subject);
 	}
 

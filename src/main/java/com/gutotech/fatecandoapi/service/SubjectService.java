@@ -18,7 +18,7 @@ public class SubjectService {
 
 	public Subject findById(Long id) {
 		return repository.findById(id) //
-				.orElseThrow(() -> new ResourceNotFoundException("Could not find discipline " + id));
+				.orElseThrow(() -> new ResourceNotFoundException("Could not find subject " + id));
 	}
 	
 	public List<Subject> findAll() {

@@ -87,7 +87,7 @@ public class GameRestController {
 
 		// TODO validate topics: each topic has at least one TEST type question
 		if (game.getTopics().stream().anyMatch(topic -> topic.getSubject() != subject)) {
-			throw new IllegalArgumentException("All Topics must belong to the same Discipline");
+			throw new IllegalArgumentException("All Topics must belong to the same Subject");
 		}
 
 		game.setCurrentRound(-1);

@@ -29,7 +29,7 @@ public class Test {
 	@ManyToOne
 	private User user;
 
-	@NotNull(message = "Please provide a Discipline")
+	@NotNull(message = "Please provide a valid subject")
 	@ManyToOne
 	private Subject subject;
 
@@ -68,11 +68,11 @@ public class Test {
 		this.user = user;
 	}
 
-	public Subject getDiscipline() {
+	public Subject getSubject() {
 		return subject;
 	}
 
-	public void setDiscipline(Subject subject) {
+	public void setSubject(Subject subject) {
 		this.subject = subject;
 	}
 

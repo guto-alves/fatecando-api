@@ -24,7 +24,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -39,10 +41,11 @@ public class User {
 	private Long id;
 
 	@NotBlank
+	@Size(min = 2)
 	@Column(name = "full_name")
 	private String fullName;
 
-	@NotBlank
+	@Email
 	@Column(unique = true)
 	private String email;
 
@@ -125,7 +128,7 @@ public class User {
 	}
 
 	public void setFullName(String fullName) {
-		this.fullName = fullName;
+		this.fullName = fullName.trim();
 	}
 
 	public String getEmail() {

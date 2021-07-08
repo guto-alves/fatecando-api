@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.assembler.CourseModelAssembler;
+import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.CourseService;
 
 @RestController
+@Secured(Roles.ADMIN)
 @RequestMapping("api/courses")
 public class CourseRestController {
 

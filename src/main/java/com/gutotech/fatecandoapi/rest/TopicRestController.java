@@ -11,6 +11,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -143,6 +144,7 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@Secured(Roles.ADMIN)
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteTopic(@PathVariable Long id) {
 		topicService.deleteById(id);
@@ -207,6 +209,7 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@Secured(Roles.ADMIN)
 	@GetMapping("{id}/reviews")
 	public ResponseEntity<List<Review>> getReviews(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);
@@ -214,6 +217,7 @@ public class TopicRestController {
 		return ResponseEntity.ok(topic.getReviews());
 	}
 
+	@Secured(Roles.ADMIN)
 	@PutMapping("drag/{draggedTopicId}/{relatedTopicId}")
 	public ResponseEntity<Void> dragTopic(@PathVariable("draggedTopicId") Long draggedTopicId,
 			@PathVariable("relatedTopicId") Long relatedTopicId) {

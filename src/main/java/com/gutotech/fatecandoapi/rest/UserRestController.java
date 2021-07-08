@@ -100,6 +100,7 @@ public class UserRestController {
 
 	@PutMapping("{id}")
 	public ResponseEntity<EntityModel<User>> updateUser(@RequestBody @Valid User user, @PathVariable Long id) {
+		// TODO validation - check current user
 		User currentUser = userService.findById(id);
 		currentUser.setFullName(user.getFullName());
 		currentUser.setGender(user.getGender());

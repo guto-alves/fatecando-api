@@ -13,6 +13,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,6 +64,7 @@ public class QuestionRestController {
 	@Autowired
 	private RewardService rewardService;
 
+	@Secured(Roles.ADMIN)
 	@GetMapping
 	public ResponseEntity<List<Question>> getQuestions() {
 		return ResponseEntity.ok(questionService.findAll());

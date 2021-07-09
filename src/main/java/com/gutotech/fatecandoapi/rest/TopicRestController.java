@@ -57,7 +57,13 @@ public class TopicRestController {
 	private QuestionService questionService;
 
 	@GetMapping
-	public ResponseEntity<List<Topic>> getAllTopics() {
+	public ResponseEntity<List<Topic>> getApprovedTopics() {
+		return ResponseEntity.ok(topicService.findAllApproved());
+	}
+	
+	@Secured(Roles.ADMIN)
+	@GetMapping("admin")
+	public ResponseEntity<List<Topic>> getTopics() {
 		return ResponseEntity.ok(topicService.findAll());
 	}
 
@@ -73,12 +79,6 @@ public class TopicRestController {
 		}
 
 		return assembler.toModel(topic);
-	}
-
-	@GetMapping("{id}/quiz")
-	public ResponseEntity<List<Question>> getQuiz(@PathVariable Long id) {
-		Topic topic = topicService.findById(id);
-		return ResponseEntity.ok(questionService.generateQuiz(topic));
 	}
 
 	@PostMapping
@@ -195,7 +195,7 @@ public class TopicRestController {
 
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@PutMapping("{id}/review")
 	public ResponseEntity<Void> saveReview(@RequestBody Review review, @PathVariable Long id) {
 		Topic topic = topicService.findById(id);
@@ -208,12 +208,12 @@ public class TopicRestController {
 
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@Secured(Roles.ADMIN)
 	@GetMapping("{id}/reviews")
 	public ResponseEntity<List<Review>> getReviews(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);
-		
+
 		return ResponseEntity.ok(topic.getReviews());
 	}
 
@@ -256,6 +256,12 @@ public class TopicRestController {
 		topicService.saveAll(topics);
 
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("{id}/quiz")
+	public ResponseEntity<List<Question>> getQuiz(@PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+		return ResponseEntity.ok(questionService.generateQuiz(topic));
 	}
 
 	private TopicUser getUserInfo(Topic topic) {

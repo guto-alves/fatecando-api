@@ -34,7 +34,7 @@ public class QuestionService {
 	}
 
 	public List<Question> getRandomQuestions(QuestionType type, List<Topic> topics, int quantity) {
-		List<Question> questions = findByTypeAndTopicIn(type, topics);
+		List<Question> questions = repository.findByTypeAndTopicIn(type, topics);
 
 		Collections.shuffle(questions, new SecureRandom());
 
@@ -43,10 +43,6 @@ public class QuestionService {
 		}
 
 		return questions;
-	}
-
-	public List<Question> findByTypeAndTopicIn(QuestionType type, List<Topic> topics) {
-		return repository.findByTypeAndTopicIn(type, topics);
 	}
 
 	public Question findById(Long id) {

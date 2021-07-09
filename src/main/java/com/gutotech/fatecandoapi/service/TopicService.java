@@ -21,6 +21,10 @@ public class TopicService {
 	public List<Topic> findAll() {
 		return repository.findAll();
 	}
+	
+	public List<Topic> findAllApproved() {
+		return repository.findByStatus(UploadStatus.APPROVED);
+	}
 
 	public List<Topic> findAllBySubject(Subject subject) {
 		return repository.findAllBySubjectAndStatusOrderByItemOrder(subject, UploadStatus.APPROVED);

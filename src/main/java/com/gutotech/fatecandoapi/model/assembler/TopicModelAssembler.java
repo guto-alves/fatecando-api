@@ -17,7 +17,7 @@ public class TopicModelAssembler implements RepresentationModelAssembler<Topic, 
 	public EntityModel<Topic> toModel(Topic topic) {
 		return EntityModel.of(topic,
 				linkTo(methodOn(TopicRestController.class).getTopic(topic.getId(), false)).withSelfRel(),
-				linkTo(methodOn(TopicRestController.class).getAllTopics()).withRel("topics"));
+				linkTo(methodOn(TopicRestController.class).getTopics()).withRel("topics"));
 	}
 
 }

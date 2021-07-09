@@ -17,6 +17,9 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 	List<Topic> findAllBySubjectAndStatusOrderByItemOrder(Subject subject, UploadStatus status);
 
+	@Query("select t from Topic t where t.status = ?1 order by t.subject.semester, t.itemOrder")
+	List<Topic> findByStatus(UploadStatus status);
+
 	List<Topic> findAllByCreatedBy(User user);
 
 	@Query("select t from Topic t where t.itemOrder >= ?1 and t.itemOrder <= ?2 and t.subject.id = ?3 order by t.itemOrder")

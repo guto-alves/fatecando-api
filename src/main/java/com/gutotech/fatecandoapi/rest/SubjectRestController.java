@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gutotech.fatecandoapi.model.Course;
 import com.gutotech.fatecandoapi.model.ForumThread;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Subject;
@@ -30,7 +29,6 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.ForumThreadModelAssembler;
 import com.gutotech.fatecandoapi.model.assembler.SubjectModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
-import com.gutotech.fatecandoapi.service.CourseService;
 import com.gutotech.fatecandoapi.service.ForumThreadService;
 import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.SubjectUserService;
@@ -51,9 +49,6 @@ public class SubjectRestController {
 	private TopicService topicService;
 
 	@Autowired
-	private CourseService courseService;
-
-	@Autowired
 	private UserService userService;
 
 	@Autowired
@@ -62,13 +57,9 @@ public class SubjectRestController {
 	@GetMapping
 	public ResponseEntity<List<Subject>> getSubjects(
 			@RequestParam(value = "semester", required = false) Integer semester,
-			@RequestParam(value = "course", required = false) Long courseId,
 			@RequestParam(value = "with-topics", required = false, defaultValue = "false") Boolean withTopics) {
 		if (semester != null) {
 			return ResponseEntity.ok(subjectService.findAllBySemester(semester));
-		} else if (courseId != null) {
-			Course course = courseService.findById(courseId);
-			return ResponseEntity.ok(subjectService.findAllByCourse(course));
 		} else if (withTopics) {
 			return ResponseEntity.ok(subjectService.findAllWithTopics());
 		}
@@ -130,11 +121,6 @@ public class SubjectRestController {
 		currentSubject.setSemester(subject.getSemester());
 		currentSubject.setDescription(subject.getDescription());
 		currentSubject.setObjective(subject.getObjective());
-
-		if (subject.getCourse() != null) {
-			Course course = courseService.findById(subject.getCourse().getId());
-			currentSubject.setCourse(course);
-		}
 
 		EntityModel<Subject> entityModel = subjectAssembler.toModel(subjectService.save(currentSubject));
 

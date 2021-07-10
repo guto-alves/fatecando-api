@@ -18,7 +18,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -49,7 +48,6 @@ public class User {
 	@Column(unique = true)
 	private String email;
 
-	@NotBlank
 	private String password;
 
 	private boolean enabled;
@@ -65,10 +63,6 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private UserActivity userActivity = new UserActivity(this);
 
-	@ManyToOne
-	@JoinColumn(name = "course_id")
-	private Course course;
-
 	@CreationTimestamp
 	@Column(name = "creation_date")
 	private Date creationDate;
@@ -77,11 +71,7 @@ public class User {
 	private Date lastLogin;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "user_role", 
-			joinColumns = @JoinColumn(name = "user_id"), 
-			inverseJoinColumns = @JoinColumn(name = "role_id")
-	)
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles = new ArrayList<>();
 
 	@JsonIgnore
@@ -95,24 +85,42 @@ public class User {
 	public User() {
 	}
 
-	public User(String fullName, String email, String password, Gender gender, Date birthDate, Course course) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
 		this.birthDate = birthDate;
-		this.course = course;
 	}
 
-	public User(String fullName, String email, String password, Gender gender, Date birthDate, Course course,
-			List<Role> roles) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate, List<Role> roles) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
 		this.birthDate = birthDate;
-		this.course = course;
 		this.roles = roles;
+	}
+
+	public User(Long id, @NotBlank @Size(min = 2) String fullName, @Email String email, String password,
+			boolean enabled, Gender gender, Date birthDate, UserActivity userActivity, Date creationDate,
+			Date lastLogin, List<Role> roles) {
+		this.id = id;
+		this.fullName = fullName;
+		this.email = email;
+		this.password = password;
+		this.enabled = enabled;
+		this.gender = gender;
+		this.birthDate = birthDate;
+		this.userActivity = userActivity;
+		this.creationDate = creationDate;
+		this.lastLogin = lastLogin;
+		this.roles = roles;
+	}
+
+	public static User fromDTO(UserDTO userDTO) {
+		return new User(userDTO.getFullName(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getGender(),
+				userDTO.getBirthDate());
 	}
 
 	public Long getId() {
@@ -139,6 +147,7 @@ public class User {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -177,14 +186,6 @@ public class User {
 
 	public void setUserActivity(UserActivity userActivity) {
 		this.userActivity = userActivity;
-	}
-
-	public Course getCourse() {
-		return course;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
 	}
 
 	public Date getCreationDate() {

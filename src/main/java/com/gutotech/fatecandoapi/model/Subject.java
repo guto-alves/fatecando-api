@@ -12,7 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -56,9 +55,6 @@ public class Subject {
 	@OrderBy("creationDate DESC")
 	private List<ForumThread> forumThreads = new ArrayList<>();
 
-	@ManyToOne
-	private Course course;
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.subject")
 	private List<SubjectUser> subjectUsers = new ArrayList<>();
@@ -66,13 +62,12 @@ public class Subject {
 	public Subject() {
 	}
 
-	public Subject(String name, String code, String description, String objetive, int semester, Course course) {
+	public Subject(String name, String code, String description, String objetive, int semester) {
 		this.name = name;
 		this.code = code;
 		this.description = description;
 		this.objective = objetive;
 		this.semester = semester;
-		this.course = course;
 	}
 
 	// Utility methods that synchronize both ends whenever a child element is added
@@ -141,14 +136,6 @@ public class Subject {
 
 	public List<ForumThread> getForumThreads() {
 		return forumThreads;
-	}
-
-	public Course getCourse() {
-		return course;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
 	}
 
 	public List<SubjectUser> getSubjectUsers() {

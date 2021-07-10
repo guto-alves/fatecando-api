@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Alternative;
-import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Game;
 import com.gutotech.fatecandoapi.model.GameStatus;
 import com.gutotech.fatecandoapi.model.Question;
@@ -83,12 +82,7 @@ public class GameRestController {
 
 	@PostMapping
 	public ResponseEntity<Game> createGame(@RequestBody @Valid Game game) {
-		Subject subject = game.getTopics().get(0).getSubject();
-
 		// TODO validate topics: each topic has at least one TEST type question
-		if (game.getTopics().stream().anyMatch(topic -> topic.getSubject() != subject)) {
-			throw new IllegalArgumentException("All Topics must belong to the same Subject");
-		}
 
 		game.setCurrentRound(-1);
 		game.setStatus(GameStatus.WAITING);
@@ -157,15 +151,14 @@ public class GameRestController {
 
 		Round currentRound = game.getRounds().get(game.getCurrentRound());
 
-		Alternative chosenAlternative = currentRound.getQuestion().getAlternatives() //
-				.stream() //
-				.filter(a -> a.getId() == chosenAlternativeId) //
-				.findFirst() //
-				.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + chosenAlternativeId
-						+ " for the question " + currentRound.getQuestion()));
-
 		if (currentRound.getAnswers().stream().noneMatch(answer -> answer.getUser() == user)
 				|| System.currentTimeMillis() - currentRound.getStartTime() <= game.getAnswerTime()) {
+			Alternative chosenAlternative = currentRound.getQuestion().getAlternatives() //
+					.stream() //
+					.filter(a -> a.getId() == chosenAlternativeId) //
+					.findFirst() //
+					.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + chosenAlternativeId
+							+ " for the question " + currentRound.getQuestion()));
 
 			answerUtils.saveQuestionAnswer(currentRound.getQuestion(), chosenAlternative, user);
 

@@ -137,19 +137,21 @@ public class LoadDatabase implements CommandLineRunner {
 		// Topics
 		Topic topic1 = new Topic("Topic 1", "Description 1", "<p><b>Topic 1</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
-		Topic topic2 = new Topic("Topic 2", "Description 2", "<p><b>Topic 2</b></p>", true, UploadStatus.APPROVED, alp,
+		Topic topic2 = new Topic("Topic 2", "Description 2", "<p><b>Topic 2</b></p>", true, UploadStatus.APPROVED, ed,
 				staff);
 		Topic topic3 = new Topic("Topic 3", "Description 3", "<p><b>Topic 3</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
 		Topic topic4 = new Topic("Topic 4", "Description 4", "<p><b>Topic 4</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
-		Topic topic5 = new Topic("Topic 5", "Description 5", "<p><b>Topic 5</b></p>", true, UploadStatus.APPROVED, alp,
+		Topic topic5 = new Topic("Topic 5", "Description 5", "<p><b>Topic 5</b></p>", true, UploadStatus.APPROVED, eng3,
 				staff);
 		Topic topic6 = new Topic("Topic 6", "Description 6", "<p><b>Topic 6</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
 		Topic topic7 = new Topic("Topic 7", "Description 7", "<p><b>Topic 7</b></p>", true, UploadStatus.APPROVED, alp,
 				staff);
-		List<Topic> topics = Arrays.asList(topic1, topic2, topic3, topic4, topic5, topic6, topic7);
+		Topic topic8 = new Topic("Topic 8", "Description 8", "<p><b>Topic 8</b></p>", true, UploadStatus.APPROVED, ed,
+				staff);
+		List<Topic> topics = Arrays.asList(topic1, topic2, topic3, topic4, topic5, topic6, topic7, topic8);
 		topicRepository.saveAll(topics);
 
 		// Forum Topics
@@ -160,18 +162,14 @@ public class LoadDatabase implements CommandLineRunner {
 				"alfajdf jadlfa sasd fjaçsd pogijaefk ajsfpasdfi", alp, alice, Arrays.asList(topic4));
 		forumThreadRepository.saveAll(Arrays.asList(forumThread1, forumThread2, forumThread3));
 
-		commentRepository.saveAll(Arrays.asList(
-				new Comment("Comment 1", gustavo, forumThread1),
-				new Comment("Comment 2", kaik, forumThread1), 
-				new Comment("Comment 3", kaizer, forumThread1),
-				new Comment("Comment 4", gustavo, forumThread2), 
-				new Comment("Comment 5", maria, forumThread2),
-				new Comment("Comment 6", alice, forumThread2), 
-				new Comment("Comment 7", alice, forumThread1)));
+		commentRepository.saveAll(Arrays.asList(new Comment("Comment 1", gustavo, forumThread1),
+				new Comment("Comment 2", kaik, forumThread1), new Comment("Comment 3", kaizer, forumThread1),
+				new Comment("Comment 4", gustavo, forumThread2), new Comment("Comment 5", maria, forumThread2),
+				new Comment("Comment 6", alice, forumThread2), new Comment("Comment 7", alice, forumThread1)));
 
 		// Questions
 		List<Question> questions = new ArrayList<>();
-		for (int i = 0; i <= 60; i++) {
+		for (int i = 0; i <= 100; i++) {
 			Question question = new Question("Pergunta " + (i + 1) + "?", QuestionType.values()[i % 3],
 					UploadStatus.APPROVED, topics.get(i % (topics.size() - 1)), staff,
 					Arrays.asList(new Alternative("Alternativa 1", "Parabéns! Esta é a resposta certa!", true),

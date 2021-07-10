@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +46,8 @@ public class Subject {
 	@Column(length = 500)
 	private String objective;
 
+	@Min(1)
+	@Max(12)
 	private int semester;
 
 	@JsonIgnore

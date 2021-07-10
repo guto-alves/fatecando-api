@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
+import com.gutotech.fatecandoapi.model.UserDTO;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
@@ -91,7 +92,9 @@ public class UserRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<User>> registerUser(@RequestBody @Valid User user) {
+	public ResponseEntity<EntityModel<User>> registerUser(@RequestBody @Valid UserDTO userDto) {
+		User user = new User(userDto.getFullName(), userDto.getEmail(), userDto.getPassword(), userDto.getGender(),
+				userDto.getBirthDate());
 		EntityModel<User> entityModel = assembler.toModel(userService.register(user));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -105,7 +108,6 @@ public class UserRestController {
 		currentUser.setFullName(user.getFullName());
 		currentUser.setGender(user.getGender());
 		currentUser.setBirthDate(user.getBirthDate());
-		currentUser.setCourse(user.getCourse());
 
 		EntityModel<User> entityModel = assembler.toModel(userService.save(currentUser));
 

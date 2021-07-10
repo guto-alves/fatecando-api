@@ -34,7 +34,9 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 	@Query("select t from Topic t where t.subject.id = ?2 and (t.itemOrder = ?1 - 1L or t.itemOrder = ?1 + 1L) order by t.itemOrder")
 	List<Topic> findPreviousAndNext(long itemOrder, long subjectId);
 
-	@Query("select distinct t from Topic t, Question q where t = q.topic and t.subject = ?1 and q.type = ?2 order by t.itemOrder")
+	@Query("select distinct t, s from Subject s, Topic t, Question q "
+			+ "where s = t.subject and t = q.topic and t.status = 'APPROVED' and q.status = 'APPROVED' and q.type = ?2 and (s = ?1 or ?1 is null) "
+			+ "order by s.semester, s.name, t.itemOrder")
 	List<Topic> findFor(Subject subject, QuestionType type);
 
 }

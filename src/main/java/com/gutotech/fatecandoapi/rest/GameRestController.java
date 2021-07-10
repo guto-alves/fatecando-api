@@ -22,10 +22,12 @@ import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Round;
 import com.gutotech.fatecandoapi.model.RoundAnswer;
+import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.AnswerUtils;
 import com.gutotech.fatecandoapi.service.GameService;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @RestController
@@ -44,9 +46,65 @@ public class GameRestController {
 	@Autowired
 	private AnswerUtils answerUtils;
 
+	@Autowired
+	private TopicService topicService;
+
 	@GetMapping
 	public ResponseEntity<List<Game>> getGames() {
 		return ResponseEntity.ok(gameService.findAll());
+	}
+
+	@PostMapping
+	public ResponseEntity<Game> createGame(@RequestBody @Valid Game game) {
+		List<Topic> validGameTopics = topicService.findFor(null, QuestionType.GAME);
+
+		if (game.getTopics().stream().anyMatch(topic -> !validGameTopics.contains(topic))) {
+			throw new IllegalArgumentException("All topics must be approved and must have at lest one GAME question");
+		}
+
+		game.setCurrentRound(-1);
+		game.setStatus(GameStatus.WAITING);
+		game.getPlayers().clear();
+
+		User user = userService.findCurrentUser();
+		game.setCreatedBy(user);
+		game.getPlayers().add(user);
+
+		gameService.save(game);
+
+		return ResponseEntity.ok(game);
+	}
+
+	@GetMapping("topics")
+	public ResponseEntity<List<Topic>> getTopicsForGame() {
+		List<Topic> validGameTopics = topicService.findFor(null /* all subjects */, QuestionType.GAME);
+		return ResponseEntity.ok(validGameTopics);
+	}
+
+	@PutMapping("{id}")
+	public ResponseEntity<Void> joinGame(@PathVariable Long id) {
+		Game game = gameService.findById(id);
+
+		if (game.getStatus() != GameStatus.WAITING) {
+			throw new IllegalStateException("This Game is already underway");
+		}
+
+		User user = userService.findCurrentUser();
+
+		if (gameService.findByUser(user) != null) {
+			throw new IllegalStateException("The player is already in a Game");
+		}
+
+		game.getPlayers().add(user);
+
+		if (game.getPlayers().size() == game.getTotalPlayers()) {
+			game.setStatus(GameStatus.PLAYING);
+			generateNextRound(game);
+		}
+
+		gameService.save(game);
+
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("playing")
@@ -78,49 +136,6 @@ public class GameRestController {
 		}
 
 		return ResponseEntity.ok(game);
-	}
-
-	@PostMapping
-	public ResponseEntity<Game> createGame(@RequestBody @Valid Game game) {
-		// TODO validate topics: each topic has at least one TEST type question
-
-		game.setCurrentRound(-1);
-		game.setStatus(GameStatus.WAITING);
-		game.getPlayers().clear();
-
-		User user = userService.findCurrentUser();
-		game.setCreatedBy(user);
-		game.getPlayers().add(user);
-
-		gameService.save(game);
-
-		return ResponseEntity.ok(game);
-	}
-
-	@PutMapping("{id}")
-	public ResponseEntity<Void> joinGame(@PathVariable Long id) {
-		Game game = gameService.findById(id);
-
-		if (game.getStatus() != GameStatus.WAITING) {
-			throw new IllegalStateException("This Game is already underway");
-		}
-
-		User user = userService.findCurrentUser();
-
-		if (gameService.findByUser(user) != null) {
-			throw new IllegalStateException("The player is already in a Game");
-		}
-
-		game.getPlayers().add(user);
-
-		if (game.getPlayers().size() == game.getTotalPlayers()) {
-			game.setStatus(GameStatus.PLAYING);
-			generateNextRound(game);
-		}
-
-		gameService.save(game);
-
-		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping

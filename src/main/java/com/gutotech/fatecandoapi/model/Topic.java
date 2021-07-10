@@ -230,8 +230,6 @@ public class Topic {
 	
 		return average > 0 ? average : null;
 	}
-	
-	
 
 	public Topic getPrevious() {
 		return previous;

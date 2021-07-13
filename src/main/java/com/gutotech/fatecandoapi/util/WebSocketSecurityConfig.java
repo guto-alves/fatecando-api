@@ -15,7 +15,7 @@ import org.springframework.security.config.annotation.web.messaging.MessageSecur
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 
 import com.gutotech.fatecandoapi.model.Chat;
-import com.gutotech.fatecandoapi.rest.ChatService;
+import com.gutotech.fatecandoapi.service.ChatService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @Configuration

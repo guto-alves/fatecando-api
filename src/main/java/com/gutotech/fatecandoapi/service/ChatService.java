@@ -1,4 +1,4 @@
-package com.gutotech.fatecandoapi.rest;
+package com.gutotech.fatecandoapi.service;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.gutotech.fatecandoapi.model.Chat;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.ChatRepository;
+import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
 
 @Service
 public class ChatService {

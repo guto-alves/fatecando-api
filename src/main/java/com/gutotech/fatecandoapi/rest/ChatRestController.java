@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gutotech.fatecandoapi.model.Chat;
 import com.gutotech.fatecandoapi.model.Message;
 import com.gutotech.fatecandoapi.model.User;
+import com.gutotech.fatecandoapi.service.ChatService;
 import com.gutotech.fatecandoapi.service.MessageService;
 import com.gutotech.fatecandoapi.service.UserService;
 

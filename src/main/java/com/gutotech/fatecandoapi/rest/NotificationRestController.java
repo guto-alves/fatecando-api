@@ -3,6 +3,7 @@ package com.gutotech.fatecandoapi.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,7 +39,7 @@ public class NotificationRestController {
 	}
 
 	@PutMapping("{id}/read")
-	public Notification checkAsRead(@PathVariable Long id) throws IllegalAccessException {
+	public Notification markAsRead(@PathVariable Long id) throws IllegalAccessException {
 		Notification notification = notificationService.findById(id);
 		if (notification.getUser() != userService.findCurrentUser()) {
 			throw new IllegalAccessException("Você não tem permissão para acessar esta notificação");
@@ -46,6 +47,14 @@ public class NotificationRestController {
 		notification.setRead(!notification.isRead());
 		notificationService.save(notification);
 		return notification;
+	}
+
+	@PutMapping("readall")
+	public ResponseEntity<Void> readAll() {
+		List<Notification> notifications = notificationService.findByUser(userService.findCurrentUser());
+		notifications.stream().forEach(n -> n.setRead(true));
+		notificationService.saveAll(notifications);
+		return ResponseEntity.noContent().build();
 	}
 
 }

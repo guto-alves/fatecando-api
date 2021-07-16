@@ -42,9 +42,9 @@ public class NotificationRestController {
 	public Notification markAsRead(@PathVariable Long id) throws IllegalAccessException {
 		Notification notification = notificationService.findById(id);
 		if (notification.getUser() != userService.findCurrentUser()) {
-			throw new IllegalAccessException("Você não tem permissão para acessar esta notificação");
+			throw new IllegalAccessException("Você não tem permissão para modificar esta notificação");
 		}
-		notification.setRead(!notification.isRead());
+		notification.setRead(true);
 		notificationService.save(notification);
 		return notification;
 	}

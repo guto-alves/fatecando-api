@@ -32,6 +32,7 @@ import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
+import com.gutotech.fatecandoapi.service.NotificationService;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.TopicService;
@@ -56,11 +57,14 @@ public class TopicRestController {
 	@Autowired
 	private QuestionService questionService;
 
+	@Autowired
+	private NotificationService notificationService;
+
 	@GetMapping
 	public ResponseEntity<List<Topic>> getApprovedTopics() {
 		return ResponseEntity.ok(topicService.findAllApproved());
 	}
-	
+
 	@Secured(Roles.ADMIN)
 	@GetMapping("admin")
 	public ResponseEntity<List<Topic>> getTopics() {
@@ -122,6 +126,8 @@ public class TopicRestController {
 			currentTopic.setRequired(updatedTopic.isRequired());
 			currentTopic.setStatus(updatedTopic.getStatus());
 			currentTopic.setSubject(updatedTopic.getSubject());
+
+			notificationService.save(currentTopic);
 		} else { // common user
 			if (!currentUserEmail.equals(currentTopic.getCreatedBy().getEmail())) {
 				return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,

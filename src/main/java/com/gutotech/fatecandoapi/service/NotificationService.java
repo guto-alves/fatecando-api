@@ -36,4 +36,22 @@ public class NotificationService {
 		repository.saveAll(notifications);
 	}
 
+	public Notification save(Topic topic) {
+		Notification notification = null;
+
+		if (topic.getStatus() == UploadStatus.APPROVED) {
+			notification = new Notification(
+					"Seu tópico " + topic.getName() + " foi aprovado e em breve estará disponível aos Fatecandos!",
+					"/topic/" + topic.getId(), userService.findCurrentUser());
+		} else if (topic.getStatus() == UploadStatus.DISAPPROVED) {
+			notification = new Notification("Seu tópico " + topic.getName() + " foi considerado spam!", "/users/topics",
+					userService.findCurrentUser());
+		} else if (topic.getStatus() == UploadStatus.EDITABLE) {
+			notification = new Notification(
+					"Revisamos seu tópico " + topic.getName() + " e vimos que pode ser melhorado!", "users/topics",
+					userService.findCurrentUser());
+		}
+
+		return save(notification);
+	}
 }

@@ -38,6 +38,12 @@ public class Notification {
 	public Notification() {
 	}
 
+	public Notification(String text, String link, User user) {
+		this.text = text;
+		this.link = link;
+		this.user = user;
+	}
+
 	public Notification(Long id, String text, String link, boolean isRead, User user) {
 		this.id = id;
 		this.text = text;

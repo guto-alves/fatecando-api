@@ -15,7 +15,6 @@ import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Comment;
 import com.gutotech.fatecandoapi.model.ForumThread;
 import com.gutotech.fatecandoapi.model.Gender;
-import com.gutotech.fatecandoapi.model.Notification;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Reward;
@@ -89,17 +88,6 @@ public class LoadDatabase implements CommandLineRunner {
 		User maria = new User("Maria Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date());
 		User alice = new User("Alice Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date());
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
-
-		// Notifications
-		Notification n1 = new Notification(null, "Você recebeu uma mensagem", "https://fatecando.com.br",
-				false, gustavo);
-		Notification n2 = new Notification(null, "Contribuição: Seu tópico foi aceito", "https://fatecando.com.br",
-				false, gustavo);
-		Notification n3 = new Notification(null, "Você recebeu uma mensagem", "https://fatecando.com.br",
-				false, staff);
-		notificationService.save(n1);
-		notificationService.save(n2);
-		notificationService.save(n3);
 
 		// Rewards
 		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);

@@ -1,6 +1,7 @@
 package com.gutotech.fatecandoapi.rest;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -170,12 +171,12 @@ public class GameRestController {
 				|| System.currentTimeMillis() - currentRound.getStartTime() <= game.getAnswerTime()) {
 			Alternative chosenAlternative = currentRound.getQuestion().getAlternatives() //
 					.stream() //
-					.filter(a -> a.getId() == chosenAlternativeId) //
+					.filter(a -> Objects.equals(a.getId(), chosenAlternativeId)) //
 					.findFirst() //
 					.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + chosenAlternativeId
 							+ " for the question " + currentRound.getQuestion()));
 
-			answerUtils.saveQuestionAnswer(currentRound.getQuestion(), chosenAlternative, user);
+			answerUtils.saveAnswer(currentRound.getQuestion(), chosenAlternative, user);
 
 			RoundAnswer roundAnswer = new RoundAnswer(user, chosenAlternative);
 

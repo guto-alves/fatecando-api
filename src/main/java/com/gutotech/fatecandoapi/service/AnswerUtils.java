@@ -23,7 +23,7 @@ public class AnswerUtils {
 	@Autowired
 	private RewardService rewardService;
 
-	public void saveQuestionAnswer(Question question, Alternative chosenAlternative, User user) {
+	public void saveAnswer(Question question, Alternative chosenAlternative, User user) {
 		Answer lastAnswer = answerService.findById(new AnswerId(user, question));
 
 		if (lastAnswer == null) {

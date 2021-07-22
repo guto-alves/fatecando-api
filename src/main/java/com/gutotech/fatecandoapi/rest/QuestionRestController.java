@@ -25,19 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Alternative;
-import com.gutotech.fatecandoapi.model.Answer;
-import com.gutotech.fatecandoapi.model.AnswerId;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
-import com.gutotech.fatecandoapi.model.Reward;
-import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.QuestionModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
-import com.gutotech.fatecandoapi.service.AnswerService;
+import com.gutotech.fatecandoapi.service.AnswerUtils;
 import com.gutotech.fatecandoapi.service.QuestionService;
-import com.gutotech.fatecandoapi.service.RewardService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -59,10 +54,7 @@ public class QuestionRestController {
 	private TopicService topicService;
 
 	@Autowired
-	private AnswerService answerService;
-
-	@Autowired
-	private RewardService rewardService;
+	private AnswerUtils answerUtils;
 
 	@Secured(Roles.ADMIN)
 	@GetMapping
@@ -131,8 +123,7 @@ public class QuestionRestController {
 	}
 
 	@PostMapping("{questionId}/answer/{alternativeId}")
-	public ResponseEntity<Map<String, Object>> answerQuestion( //
-			@PathVariable("questionId") Long questionId, //
+	public ResponseEntity<Map<String, Object>> answerQuestion(@PathVariable("questionId") Long questionId,
 			@PathVariable("alternativeId") Long alternativeId) {
 		User user = userService.findCurrentUser();
 
@@ -143,29 +134,7 @@ public class QuestionRestController {
 				.findFirst() //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + alternativeId));
 
-		Answer lastAnswer = answerService.findById(new AnswerId(user, question));
-
-		if (lastAnswer == null) {
-			lastAnswer = new Answer(user, question, false);
-		}
-
-		if (!lastAnswer.isCorrect()) {
-			Reward reward;
-
-			if (chosenAlternative.isCorrect()) {
-				reward = new Reward(RewardType.RIGHT_ANSWER, user);
-				user.getUserActivity().incrementRightAnswers();
-			} else {
-				reward = new Reward(RewardType.WRONG_ANSWER, user);
-				user.getUserActivity().incrementWrongAnswers();
-			}
-
-			rewardService.save(reward);
-			userService.save(user);
-
-			lastAnswer.setCorrect(chosenAlternative.isCorrect());
-			answerService.save(lastAnswer);
-		}
+		answerUtils.saveAnswer(question, chosenAlternative, user);
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("correct", chosenAlternative.isCorrect());

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Test;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.QuestionService;
@@ -24,7 +23,6 @@ import com.gutotech.fatecandoapi.service.UserService;
 @RestController
 @RequestMapping("api/tests")
 public class TestRestController {
-	private final int TOTAL_QUESTIONS = 10;
 
 	@Autowired
 	private TestService testService;
@@ -50,7 +48,7 @@ public class TestRestController {
 		
 		// TODO validate topics: be from the same Subject and have at least one TEST type question
 
-		test.setQuestions(questionService.getRandomQuestions(QuestionType.TEST, test.getTopics(), TOTAL_QUESTIONS));
+		test.setQuestions(questionService.generateTest(test.getTopics()));
 
 		test.setUser(user);
 

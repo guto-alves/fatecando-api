@@ -18,6 +18,8 @@ import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
 public class QuestionService {
 	private final int TOTAL_QUIZ_QUESTIONS = 3;
 
+	private final int TOTAL_TEST_QUESTIONS = 10;
+
 	@Autowired
 	private QuestionRepository repository;
 
@@ -27,6 +29,10 @@ public class QuestionService {
 
 	public List<Question> generateQuiz(Topic topic) {
 		return getRandomQuestions(QuestionType.QUIZ, Arrays.asList(topic), TOTAL_QUIZ_QUESTIONS);
+	}
+
+	public List<Question> generateTest(List<Topic> topics) {
+		return getRandomQuestions(QuestionType.TEST, topics, TOTAL_TEST_QUESTIONS);
 	}
 
 	public Question getRandomQuestion(QuestionType type, List<Topic> topics) {

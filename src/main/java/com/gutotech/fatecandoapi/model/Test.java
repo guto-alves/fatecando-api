@@ -3,14 +3,16 @@ package com.gutotech.fatecandoapi.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,9 +39,8 @@ public class Test {
 	@ManyToMany
 	private List<Topic> topics = new ArrayList<>();
 
-	@ManyToMany
-	@OrderColumn
-	private List<Question> questions = new ArrayList<>();
+	@OneToMany(mappedBy = "id.test", cascade = CascadeType.ALL)
+	private List<TestQuestion> testQuestions = new ArrayList<>();
 
 	public Test() {
 	}
@@ -76,8 +77,18 @@ public class Test {
 		this.subject = subject;
 	}
 
+	public List<TestQuestion> getTestQuestions() {
+		return testQuestions;
+	}
+
+	public void setTestQuestions(List<TestQuestion> testQuestions) {
+		this.testQuestions = testQuestions;
+	}
+	
 	public List<Question> getQuestions() {
-		return questions;
+		return testQuestions.stream()
+				.map(TestQuestion::getQuestion)
+				.collect(Collectors.toList());
 	}
 
 	public List<Topic> getTopics() {
@@ -86,10 +97,6 @@ public class Test {
 
 	public void setTopics(List<Topic> topics) {
 		this.topics = topics;
-	}
-
-	public void setQuestions(List<Question> questions) {
-		this.questions = questions;
 	}
 
 	@Override

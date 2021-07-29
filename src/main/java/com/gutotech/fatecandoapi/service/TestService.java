@@ -1,7 +1,5 @@
 package com.gutotech.fatecandoapi.service;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +29,9 @@ public class TestService {
 	public void deleteById(Long id) {
 		repository.deleteById(id);
 	}
-
-	@Transactional
-	public void deleteByUser(User user) {
-		repository.deleteByUser(user);
+	
+	public void delete(Test test) {
+		repository.delete(test);
 	}
 
 }

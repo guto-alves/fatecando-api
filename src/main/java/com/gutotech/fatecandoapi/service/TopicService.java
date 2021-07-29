@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.QuestionType;
+import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
@@ -21,7 +21,7 @@ public class TopicService {
 	public List<Topic> findAll() {
 		return repository.findAll();
 	}
-	
+
 	public List<Topic> findAllApproved() {
 		return repository.findByStatus(UploadStatus.APPROVED);
 	}
@@ -46,8 +46,16 @@ public class TopicService {
 		return repository.findAllAnnotated(email);
 	}
 
-	public List<Topic> findFor(Subject subject, QuestionType type) {
-		return repository.findFor(subject, type);
+	public List<Topic> findGameTopics(Subject subject) {
+		return repository.findFor(subject, QuestionType.GAME);
+	}
+	
+	public List<Topic> findGameTopics() {
+		return findGameTopics(null /* all subjects */);
+	}
+
+	public List<Topic> findTestTopics(Subject subject) {
+		return repository.findFor(subject, QuestionType.TEST);
 	}
 
 	public Topic findById(Long id) {
@@ -57,8 +65,7 @@ public class TopicService {
 	public Topic findByIdWithPreviousAndNext(Long id) {
 		Topic topic = findById(id);
 
-		List<Topic> previousAndNext = repository.findPreviousAndNext(topic.getItemOrder(),
-				topic.getSubject().getId());
+		List<Topic> previousAndNext = repository.findPreviousAndNext(topic.getItemOrder(), topic.getSubject().getId());
 
 		if (previousAndNext.size() == 1) {
 			Topic foundTopic = previousAndNext.get(0);

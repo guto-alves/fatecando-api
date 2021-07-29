@@ -29,9 +29,8 @@ public class Answer {
 	public Answer() {
 	}
 
-	public Answer(User user, Question question, boolean correct) {
-		id.setUser(user);
-		id.setQuestion(question);
+	public Answer(AnswerId id, boolean correct) {
+		this.id = id;
 		this.correct = correct;
 	}
 

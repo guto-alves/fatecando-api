@@ -1,8 +1,6 @@
 package com.gutotech.fatecandoapi.rest;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Alternative;
+import com.gutotech.fatecandoapi.model.Feedback;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.UploadStatus;
@@ -74,7 +73,7 @@ public class QuestionRestController {
 
 	@PostMapping
 	public ResponseEntity<?> addQuestion(@RequestBody @Valid Question question, HttpServletRequest request) {
-		if (question.getAlternatives().stream().noneMatch(Alternative::isCorrect)) {
+		if (question.getAlternatives().stream().noneMatch(alternative -> alternative.getFeedback().isCorrect())) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"The question must have at lest one correct alternative", request.getRequestURI()));
 		}
@@ -103,7 +102,7 @@ public class QuestionRestController {
 					"Question is not UploadStatus.EDITABLE", request.getRequestURI()));
 		}
 
-		if (updatedQuestion.getAlternatives().stream().noneMatch(Alternative::isCorrect)) {
+		if (updatedQuestion.getAlternatives().stream().noneMatch(alternative -> alternative.getFeedback().isCorrect())) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"Question must have at lest one correct alternative", request.getRequestURI()));
 		}
@@ -123,7 +122,7 @@ public class QuestionRestController {
 	}
 
 	@PostMapping("{questionId}/answer/{alternativeId}")
-	public ResponseEntity<Map<String, Object>> answerQuestion(@PathVariable("questionId") Long questionId,
+	public ResponseEntity<Feedback> answerQuestion(@PathVariable("questionId") Long questionId,
 			@PathVariable("alternativeId") Long alternativeId) {
 		User user = userService.findCurrentUser();
 
@@ -134,13 +133,9 @@ public class QuestionRestController {
 				.findFirst() //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + alternativeId));
 
-		answerUtils.saveAnswer(question, chosenAlternative, user);
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("correct", chosenAlternative.isCorrect());
-		map.put("feedback", chosenAlternative.getFeedback());
-
-		return ResponseEntity.ok(map);
+		answerUtils.saveAnswer(chosenAlternative, user);
+		
+		return ResponseEntity.ok(chosenAlternative.getFeedback());
 	}
 
 }

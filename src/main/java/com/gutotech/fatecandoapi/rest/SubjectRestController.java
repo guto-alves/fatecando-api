@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.ForumThread;
-import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.SubjectUser;
 import com.gutotech.fatecandoapi.model.Topic;
@@ -92,14 +91,14 @@ public class SubjectRestController {
 	@GetMapping("{id}/topics/test")
 	public ResponseEntity<List<Topic>> getTopicsForTest(@PathVariable Long id) {
 		Subject subject = subjectService.findById(id);
-		List<Topic> topics = topicService.findFor(subject, QuestionType.TEST);
+		List<Topic> topics = topicService.findTestTopics(subject);
 		return ResponseEntity.ok(topics);
 	}
 
 	@GetMapping("{id}/topics/game")
 	public ResponseEntity<List<Topic>> getTopicsForGame(@PathVariable Long id) {
 		Subject subject = subjectService.findById(id);
-		List<Topic> topics = topicService.findFor(subject, QuestionType.GAME);
+		List<Topic> topics = topicService.findGameTopics(subject);
 		return ResponseEntity.ok(topics);
 	}
 

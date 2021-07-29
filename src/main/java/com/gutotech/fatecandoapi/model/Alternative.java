@@ -2,11 +2,13 @@ package com.gutotech.fatecandoapi.model;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -22,9 +24,8 @@ public class Alternative {
 	@NotBlank
 	private String description;
 
-	private boolean correct;
-
-	private String feedback;
+	@OneToOne(mappedBy = "alternative", cascade = CascadeType.ALL)
+	private Feedback feedback = new Feedback();
 
 	@JsonIgnore
 	@ManyToOne
@@ -33,10 +34,10 @@ public class Alternative {
 	public Alternative() {
 	}
 
-	public Alternative(String description, String feedback, boolean correct) {
+	public Alternative(String description, Feedback feedback) {
 		this.description = description;
 		this.feedback = feedback;
-		this.correct = correct;
+		this.feedback.setAlternative(this);
 	}
 
 	public Long getId() {
@@ -55,19 +56,12 @@ public class Alternative {
 		this.description = description;
 	}
 
-	public boolean isCorrect() {
-		return correct;
-	}
-
-	public void setCorrect(boolean correct) {
-		this.correct = correct;
-	}
-
-	public String getFeedback() {
+	@JsonIgnore
+	public Feedback getFeedback() {
 		return feedback;
 	}
 
-	public void setFeedback(String feedback) {
+	public void setFeedback(Feedback feedback) {
 		this.feedback = feedback;
 	}
 
@@ -94,11 +88,6 @@ public class Alternative {
 		}
 		Alternative other = (Alternative) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "Alternative [id=" + id + ", description=" + description + "]";
 	}
 
 }

@@ -2,7 +2,6 @@ package com.gutotech.fatecandoapi.model;
 
 import java.util.Objects;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "round_answer")
+@Table(name = "round_answers")
 public class RoundAnswer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,17 +19,15 @@ public class RoundAnswer {
 	@ManyToOne
 	private User user;
 
-	@Embedded
-	private Feedback feedback = new Feedback();
+	@ManyToOne
+	private Feedback feedback;
 
 	public RoundAnswer() {
 	}
 
-	public RoundAnswer(User user, Alternative alternative) {
+	public RoundAnswer(User user, Feedback feedback) {
 		this.user = user;
-		this.feedback.setAlternative(alternative.getId());
-		this.feedback.setCorrect(alternative.isCorrect());
-		this.feedback.setText(alternative.getFeedback());
+		this.feedback = feedback;
 	}
 
 	public Long getId() {

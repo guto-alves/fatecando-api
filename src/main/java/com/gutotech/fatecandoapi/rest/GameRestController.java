@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Alternative;
+import com.gutotech.fatecandoapi.model.Feedback;
 import com.gutotech.fatecandoapi.model.Game;
 import com.gutotech.fatecandoapi.model.GameStatus;
 import com.gutotech.fatecandoapi.model.Question;
@@ -57,7 +58,7 @@ public class GameRestController {
 
 	@PostMapping
 	public ResponseEntity<Game> createGame(@RequestBody @Valid Game game) {
-		List<Topic> validGameTopics = topicService.findFor(null, QuestionType.GAME);
+		List<Topic> validGameTopics = topicService.findGameTopics();
 
 		if (game.getTopics().stream().anyMatch(topic -> !validGameTopics.contains(topic))) {
 			throw new IllegalArgumentException("All topics must be approved and must have at lest one GAME question");
@@ -78,7 +79,7 @@ public class GameRestController {
 
 	@GetMapping("topics")
 	public ResponseEntity<List<Topic>> getTopicsForGame() {
-		List<Topic> validGameTopics = topicService.findFor(null /* all subjects */, QuestionType.GAME);
+		List<Topic> validGameTopics = topicService.findGameTopics();
 		return ResponseEntity.ok(validGameTopics);
 	}
 
@@ -156,7 +157,7 @@ public class GameRestController {
 	}
 
 	@PostMapping("answer/{chosenAlternativeId}")
-	public ResponseEntity<RoundAnswer> answerGameQuestion(@PathVariable Long chosenAlternativeId) {
+	public ResponseEntity<Feedback> answerGameQuestion(@PathVariable Long chosenAlternativeId) {
 		User user = userService.findCurrentUser();
 
 		Game game = gameService.findByUser(user);
@@ -174,17 +175,15 @@ public class GameRestController {
 					.filter(a -> Objects.equals(a.getId(), chosenAlternativeId)) //
 					.findFirst() //
 					.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + chosenAlternativeId
-							+ " for the question " + currentRound.getQuestion()));
+							+ " for the question " + currentRound.getQuestion().getId()));
 
-			answerUtils.saveAnswer(currentRound.getQuestion(), chosenAlternative, user);
+			answerUtils.saveAnswer(chosenAlternative, user);
 
-			RoundAnswer roundAnswer = new RoundAnswer(user, chosenAlternative);
-
-			currentRound.getAnswers().add(roundAnswer);
+			currentRound.getAnswers().add(new RoundAnswer(user, chosenAlternative.getFeedback()));
 
 			gameService.save(game);
 
-			return ResponseEntity.ok(roundAnswer);
+			return ResponseEntity.ok(chosenAlternative.getFeedback());
 		}
 
 		throw new IllegalStateException("Time to answer or game is over or this is a invalid alternative");

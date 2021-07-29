@@ -1,28 +1,45 @@
 package com.gutotech.fatecandoapi.model;
 
-import javax.persistence.Embeddable;
+import java.util.Objects;
 
-@Embeddable
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "feedbacks")
 public class Feedback {
-	private Long alternative;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String title;
+
+	private String description;
+
 	private boolean correct;
-	private String text;
+
+	@OneToOne
+	private Alternative alternative;
 
 	public Feedback() {
 	}
 
-	public Feedback(Long alternative, boolean correct, String text) {
-		this.alternative = alternative;
+	public Feedback(String title, String description, boolean correct) {
+		this.title = title;
+		this.description = description;
 		this.correct = correct;
-		this.text = text;
 	}
 
-	public Long getAlternative() {
-		return alternative;
+	public Long getId() {
+		return id;
 	}
 
-	public void setAlternative(Long alternative) {
-		this.alternative = alternative;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public boolean isCorrect() {
@@ -33,12 +50,45 @@ public class Feedback {
 		this.correct = correct;
 	}
 
-	public String getText() {
-		return text;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Alternative getAlternative() {
+		return alternative;
+	}
+
+	public void setAlternative(Alternative alternative) {
+		this.alternative = alternative;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Feedback)) {
+			return false;
+		}
+		Feedback other = (Feedback) obj;
+		return Objects.equals(id, other.id);
 	}
 
 }

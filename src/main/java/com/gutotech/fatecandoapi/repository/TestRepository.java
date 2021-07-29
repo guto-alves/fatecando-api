@@ -13,5 +13,4 @@ public interface TestRepository extends JpaRepository<Test, Long> {
 
 	Optional<Test> findByUser(User user);
 
-	void deleteByUser(User user);
 }

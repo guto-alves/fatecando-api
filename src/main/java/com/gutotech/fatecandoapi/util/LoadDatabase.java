@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Comment;
+import com.gutotech.fatecandoapi.model.Feedback;
 import com.gutotech.fatecandoapi.model.ForumThread;
 import com.gutotech.fatecandoapi.model.Gender;
 import com.gutotech.fatecandoapi.model.Question;
@@ -32,7 +33,6 @@ import com.gutotech.fatecandoapi.repository.RoleRepository;
 import com.gutotech.fatecandoapi.repository.SubjectRepository;
 import com.gutotech.fatecandoapi.repository.TopicRepository;
 import com.gutotech.fatecandoapi.security.Roles;
-import com.gutotech.fatecandoapi.service.NotificationService;
 import com.gutotech.fatecandoapi.service.UserService;
 
 @Profile("dev")
@@ -41,9 +41,6 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private NotificationService notificationService;
 
 	@Autowired
 	private SubjectRepository subjectRepository;
@@ -176,10 +173,15 @@ public class LoadDatabase implements CommandLineRunner {
 		for (int i = 0; i <= 100; i++) {
 			Question question = new Question("Pergunta " + (i + 1) + "?", QuestionType.values()[i % 3],
 					UploadStatus.APPROVED, topics.get(i % (topics.size() - 1)), staff,
-					Arrays.asList(new Alternative("Alternativa 1", "Parabéns! Esta é a resposta certa!", true),
-							new Alternative("Alternativa 2", "Quasee! Estude com mais atenção!", false),
-							new Alternative("Alternativa 3", "Errado! Estude com mais atenção!", false),
-							new Alternative("Alterantiva 4", "Errado! Estude com mais atenção!", false)));
+					Arrays.asList(
+							new Alternative("Alternativa 1",
+									new Feedback("Parabéns! Esta é a resposta certa!", null, true)),
+							new Alternative("Alternativa 2",
+									new Feedback("Quasee! Estude com mais atenção!", null, false)),
+							new Alternative("Alternativa 3",
+									new Feedback("Errado! Estude com mais atenção!", null, false)),
+							new Alternative("Alterantiva 4",
+									new Feedback("Errado! Estude com mais atenção!", null, false))));
 			questions.add(question);
 		}
 		questionRepository.saveAll(questions);

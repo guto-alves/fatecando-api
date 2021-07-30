@@ -66,6 +66,11 @@ public class SubjectRestController {
 		return ResponseEntity.ok(subjectService.findAll());
 	}
 
+	@GetMapping("search")
+	public ResponseEntity<List<Subject>> search(@RequestParam String text) {
+		return ResponseEntity.ok(subjectService.findBy(text));
+	}
+
 	@GetMapping("{id}")
 	public EntityModel<Subject> getSubject(@PathVariable Long id) {
 		Subject subject = subjectService.findById(id);

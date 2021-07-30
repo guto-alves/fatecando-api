@@ -31,6 +31,10 @@ public class SubjectService {
 	public List<Subject> findAllWithTopics() {
 		return repository.findAllWithTopics();
 	}
+	
+	public List<Subject> findBy(String text) {
+		return repository.findBy(text);
+	}
 
 	public Subject save(Subject subject) {
 		return repository.save(subject);

@@ -2,45 +2,29 @@ package com.gutotech.fatecandoapi.model;
 
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gutotech.fatecandoapi.rest.JacksonCustomAlternativeSerializer;
 
-@Entity
-@Table(name = "alternatives")
-@JsonSerialize(using = JacksonCustomAlternativeSerializer.class)
-public class Alternative {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AlternativeDTO {
 	private Long id;
 
 	@NotBlank
 	private String description;
 
-	@OneToOne(mappedBy = "alternative", cascade = CascadeType.ALL)
 	private Feedback feedback = new Feedback();
 
 	@JsonIgnore
-	@ManyToOne
 	private Question question;
 
-	public Alternative() {
+	public AlternativeDTO() {
 	}
-
-	public Alternative(String description, Feedback feedback) {
-		this.description = description;
-		this.feedback = feedback;
-		this.feedback.setAlternative(this);
+	
+	public AlternativeDTO(Alternative alternative) {
+		this.id = alternative.getId();
+		this.description = alternative.getDescription();
+		this.feedback = alternative.getFeedback();
+		this.feedback.setAlternative(alternative);
 	}
 
 	public Long getId() {
@@ -85,10 +69,10 @@ public class Alternative {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Alternative)) {
+		if (!(obj instanceof AlternativeDTO)) {
 			return false;
 		}
-		Alternative other = (Alternative) obj;
+		AlternativeDTO other = (AlternativeDTO) obj;
 		return Objects.equals(id, other.id);
 	}
 

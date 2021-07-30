@@ -12,7 +12,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Feedback;
 import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.QuestionDTO;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
@@ -62,8 +62,14 @@ public class QuestionRestController {
 	}
 
 	@GetMapping("{id}")
-	public EntityModel<Question> getQuestion(@PathVariable Long id) {
-		return questionAssembler.toModel(questionService.findById(id));
+	public ResponseEntity<?> getQuestion(@PathVariable Long id) {
+		Question question = questionService.findById(id);
+		
+		if (question.getUser() == userService.findCurrentUser() || userService.isCurrentUserAdmin()) {
+			return ResponseEntity.ok(new QuestionDTO(question));
+		}
+		
+		return ResponseEntity.ok(question);
 	}
 
 	@GetMapping("types")
@@ -82,6 +88,8 @@ public class QuestionRestController {
 		question.setTopic(topicService.findById(question.getTopic().getId()));
 		question.setUser(userService.findCurrentUser());
 		question.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
+		question.getAlternatives().stream()
+				.forEach(alternative -> alternative.getFeedback().setAlternative(alternative));
 
 		EntityModel<Question> entityModel = questionAssembler.toModel(questionService.save(question));
 
@@ -94,15 +102,15 @@ public class QuestionRestController {
 			HttpServletRequest request) {
 		Question currentQuestion = questionService.findById(id);
 
-		boolean hasAdminRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(Roles.ADMIN));
+		boolean hasAdminRole = userService.isCurrentUserAdmin();
 
 		if (!hasAdminRole && currentQuestion.getStatus() != UploadStatus.EDITABLE) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"Question is not UploadStatus.EDITABLE", request.getRequestURI()));
 		}
 
-		if (updatedQuestion.getAlternatives().stream().noneMatch(alternative -> alternative.getFeedback().isCorrect())) {
+		if (updatedQuestion.getAlternatives().stream()
+				.noneMatch(alternative -> alternative.getFeedback().isCorrect())) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 					"Question must have at lest one correct alternative", request.getRequestURI()));
 		}
@@ -134,7 +142,7 @@ public class QuestionRestController {
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find alternative " + alternativeId));
 
 		answerUtils.saveAnswer(chosenAlternative, user);
-		
+
 		return ResponseEntity.ok(chosenAlternative.getFeedback());
 	}
 

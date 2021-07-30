@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
 import com.gutotech.fatecandoapi.model.Topic;
+import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
 import com.gutotech.fatecandoapi.rest.ResourceNotFoundException;
 
@@ -25,6 +26,10 @@ public class QuestionService {
 
 	public List<Question> findAll() {
 		return repository.findAll();
+	}
+	
+	public List<Question> findByUser(User user) {
+		return repository.findByUser(user);
 	}
 
 	public List<Question> generateQuiz(Topic topic) {

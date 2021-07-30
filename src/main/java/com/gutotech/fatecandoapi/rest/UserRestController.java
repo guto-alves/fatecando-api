@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.UserDTO;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
+import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -34,12 +36,15 @@ public class UserRestController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private UserModelAssembler assembler;
 
 	@Autowired
 	private TopicService topicService;
-
+	
 	@Autowired
-	private UserModelAssembler assembler;
+	private QuestionService questionService;
 
 	@GetMapping
 	public ResponseEntity<List<User>> getUsers() {
@@ -84,6 +89,12 @@ public class UserRestController {
 	public ResponseEntity<List<Topic>> getAnnotatedTopics() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return ResponseEntity.ok(topicService.findAllAnnotated(email));
+	}
+	
+	@GetMapping("me/questions")
+	public ResponseEntity<List<Question>> getUserQuestions() {
+		User user = userService.findCurrentUser();
+		return ResponseEntity.ok(questionService.findByUser(user));
 	}
 
 	@PostMapping("login")

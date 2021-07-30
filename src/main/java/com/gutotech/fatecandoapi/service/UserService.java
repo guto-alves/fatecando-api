@@ -78,4 +78,10 @@ public class UserService {
 	public User findCurrentUser() {
 		return findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 	}
+	
+	public boolean isCurrentUserAdmin() {
+		return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(Roles.ADMIN));
+	}
+	
 }

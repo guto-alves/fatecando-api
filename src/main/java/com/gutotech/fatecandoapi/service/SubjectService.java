@@ -21,15 +21,15 @@ public class SubjectService {
 	}
 	
 	public List<Subject> findAll() {
-		return repository.findAllByOrderByName();
+		return repository.findByOrderByName();
 	}
 
-	public List<Subject> findAllBySemester(Integer semester) {
-		return repository.findAllBySemesterOrderByName(semester);
+	public List<Subject> findBySemester(Integer semester) {
+		return repository.findBySemesterOrderByName(semester);
 	}
 
-	public List<Subject> findAllWithTopics() {
-		return repository.findAllWithTopics();
+	public List<Subject> findWithTopics() {
+		return repository.findWithTopics();
 	}
 	
 	public List<Subject> findBy(String text) {

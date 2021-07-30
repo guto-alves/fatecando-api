@@ -11,7 +11,7 @@ import com.gutotech.fatecandoapi.model.GameStatus;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-	List<Game> findAllByStatus(GameStatus status);
+	List<Game> findByStatus(GameStatus status);
 
 	Game findByPlayers_Email(String email);
 

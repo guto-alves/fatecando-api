@@ -16,8 +16,8 @@ public class CommentService {
 	@Autowired
 	private CommentRepository repository;
 
-	public List<Comment> findAllByForumThread(ForumThread forumThread) {
-		return repository.findAllByForumThread(forumThread);
+	public List<Comment> findByForumThread(ForumThread forumThread) {
+		return repository.findByForumThread(forumThread);
 	}
 
 	public Comment findById(Long id) {

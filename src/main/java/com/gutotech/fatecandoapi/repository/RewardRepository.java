@@ -11,6 +11,6 @@ import com.gutotech.fatecandoapi.model.User;
 @Repository
 public interface RewardRepository extends JpaRepository<Reward, Long> {
 
-	List<Reward> findAllByUserOrderByDateDesc(User user);
+	List<Reward> findByUserOrderByDateDesc(User user);
 
 }

@@ -11,6 +11,6 @@ import com.gutotech.fatecandoapi.model.Subject;
 @Repository
 public interface ForumThreadRepository extends JpaRepository<ForumThread, Long> {
 
-	List<ForumThread> findAllBySubject(Subject subject);
+	List<ForumThread> findBySubject(Subject subject);
 
 }

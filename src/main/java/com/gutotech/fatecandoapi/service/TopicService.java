@@ -22,28 +22,28 @@ public class TopicService {
 		return repository.findAll();
 	}
 
-	public List<Topic> findAllApproved() {
+	public List<Topic> findApproved() {
 		return repository.findByStatus(UploadStatus.APPROVED);
 	}
 
-	public List<Topic> findAllBySubject(Subject subject) {
-		return repository.findAllBySubjectAndStatusOrderByItemOrder(subject, UploadStatus.APPROVED);
+	public List<Topic> findBySubject(Subject subject) {
+		return repository.findBySubjectAndStatusOrderByItemOrder(subject, UploadStatus.APPROVED);
 	}
 
-	public List<Topic> findAllByCreatedBy(User user) {
-		return repository.findAllByCreatedBy(user);
+	public List<Topic> findByCreatedBy(User user) {
+		return repository.findByCreatedBy(user);
 	}
 
-	public List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long subjectId) {
-		return repository.findAllBetween(itemOrder1, itemOrder2, subjectId);
+	public List<Topic> findBetween(long itemOrder1, long itemOrder2, long subjectId) {
+		return repository.findBetween(itemOrder1, itemOrder2, subjectId);
 	}
 
-	public List<Topic> findAllFavorites(String email) {
-		return repository.findAllFavorites(email);
+	public List<Topic> findFavorites(String email) {
+		return repository.findFavorites(email);
 	}
 
-	public List<Topic> findAllAnnotated(String email) {
-		return repository.findAllAnnotated(email);
+	public List<Topic> findAnnotated(String email) {
+		return repository.findAnnotated(email);
 	}
 
 	public List<Topic> findGameTopics(Subject subject) {

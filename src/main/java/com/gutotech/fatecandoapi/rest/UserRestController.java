@@ -36,13 +36,13 @@ public class UserRestController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private UserModelAssembler assembler;
 
 	@Autowired
 	private TopicService topicService;
-	
+
 	@Autowired
 	private QuestionService questionService;
 
@@ -63,42 +63,8 @@ public class UserRestController {
 		return ResponseEntity.ok(users);
 	}
 
-	@GetMapping("me")
-	public EntityModel<User> getCurrentUser() {
-		return assembler.toModel(userService.findCurrentUser());
-	}
-
-	@GetMapping("me/subjects/last-accessed")
-	public ResponseEntity<List<Subject>> getLatestSubjectsAccessed() {
-		return ResponseEntity.ok(userService.findCurrentUser().getSubjects());
-	}
-
-	@GetMapping("me/topics")
-	public ResponseEntity<List<Topic>> getUserTopics() {
-		User user = userService.findCurrentUser();
-		return ResponseEntity.ok(topicService.findAllByCreatedBy(user));
-	}
-
-	@GetMapping("me/topics/favorites")
-	public ResponseEntity<List<Topic>> getFavoriteTopics() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return ResponseEntity.ok(topicService.findAllFavorites(email));
-	}
-
-	@GetMapping("me/topics/annotated")
-	public ResponseEntity<List<Topic>> getAnnotatedTopics() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return ResponseEntity.ok(topicService.findAllAnnotated(email));
-	}
-	
-	@GetMapping("me/questions")
-	public ResponseEntity<List<Question>> getUserQuestions() {
-		User user = userService.findCurrentUser();
-		return ResponseEntity.ok(questionService.findByUser(user));
-	}
-
 	@PostMapping("login")
-	public User login(@RequestParam("email") String email, @RequestParam("password") String password) {
+	public User login(@RequestParam String email, @RequestParam String password) {
 		return userService.login(email, password);
 	}
 
@@ -124,6 +90,40 @@ public class UserRestController {
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
+	}
+
+	@GetMapping("me")
+	public EntityModel<User> getCurrentUser() {
+		return assembler.toModel(userService.findCurrentUser());
+	}
+
+	@GetMapping("me/subjects/last-accessed")
+	public ResponseEntity<List<Subject>> getLatestSubjectsAccessed() {
+		return ResponseEntity.ok(userService.findCurrentUser().getSubjects());
+	}
+
+	@GetMapping("me/topics")
+	public ResponseEntity<List<Topic>> getUserTopics() {
+		User user = userService.findCurrentUser();
+		return ResponseEntity.ok(topicService.findByCreatedBy(user));
+	}
+
+	@GetMapping("me/topics/favorites")
+	public ResponseEntity<List<Topic>> getFavoriteTopics() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return ResponseEntity.ok(topicService.findFavorites(email));
+	}
+
+	@GetMapping("me/topics/annotated")
+	public ResponseEntity<List<Topic>> getAnnotatedTopics() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return ResponseEntity.ok(topicService.findAnnotated(email));
+	}
+
+	@GetMapping("me/questions")
+	public ResponseEntity<List<Question>> getUserQuestions() {
+		User user = userService.findCurrentUser();
+		return ResponseEntity.ok(questionService.findByUser(user));
 	}
 
 	@GetMapping("ranking")

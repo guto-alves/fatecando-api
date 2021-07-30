@@ -26,7 +26,7 @@ public class RewardsRestController {
 	@GetMapping
 	public ResponseEntity<List<Reward>> geUserRewards() {
 		User user = userService.findCurrentUser();
-		return ResponseEntity.ok(rewardService.findAllByUser(user));
+		return ResponseEntity.ok(rewardService.findByUser(user));
 	}
 
 }

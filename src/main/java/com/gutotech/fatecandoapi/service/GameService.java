@@ -18,7 +18,7 @@ public class GameService {
 	private GameRepository repository;
 
 	public List<Game> findAll() {
-		return repository.findAllByStatus(GameStatus.WAITING);
+		return repository.findByStatus(GameStatus.WAITING);
 	}
 
 	public Game findById(Long id) {

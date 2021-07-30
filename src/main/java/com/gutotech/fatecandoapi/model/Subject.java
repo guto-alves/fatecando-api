@@ -74,8 +74,7 @@ public class Subject {
 		this.semester = semester;
 	}
 
-	// Utility methods that synchronize both ends whenever a child element is added
-	// or removed.
+	// Utility methods that synchronize both ends whenever a child element is added or removed.
 	public void addTopic(Topic topic) {
 		topics.add(topic);
 		topic.setSubject(this);

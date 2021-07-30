@@ -23,7 +23,12 @@ public class SubjectUserService {
 
 	public SubjectUser findById(Subject subject, User user) {
 		SubjectUserId id = new SubjectUserId(subject, user);
-		return repository.findById(id).orElse(new SubjectUser(id, null, false));
+		
+		return repository.findById(id).orElseGet(() -> {
+			SubjectUser subjectUser = new SubjectUser(id, null, false);
+			subject.getSubjectUsers().add(subjectUser);
+			return subjectUser;
+		});
 	}
 
 	public SubjectUser save(SubjectUser subjectUser) {

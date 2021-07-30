@@ -62,7 +62,7 @@ public class TopicRestController {
 
 	@GetMapping
 	public ResponseEntity<List<Topic>> getApprovedTopics() {
-		return ResponseEntity.ok(topicService.findAllApproved());
+		return ResponseEntity.ok(topicService.findApproved());
 	}
 
 	@Secured(Roles.ADMIN)
@@ -231,9 +231,9 @@ public class TopicRestController {
 		Topic relatedTopic = topicService.findById(relatedTopicId);
 
 		List<Topic> topics = draggedTopic.getItemOrder() < relatedTopic.getItemOrder()
-				? topicService.findAllBetween(draggedTopic.getItemOrder(), relatedTopic.getItemOrder(),
+				? topicService.findBetween(draggedTopic.getItemOrder(), relatedTopic.getItemOrder(),
 						draggedTopic.getSubject().getId())
-				: topicService.findAllBetween(relatedTopic.getItemOrder(), draggedTopic.getItemOrder(),
+				: topicService.findBetween(relatedTopic.getItemOrder(), draggedTopic.getItemOrder(),
 						draggedTopic.getSubject().getId());
 
 		final int TOTAL_TOPICS = topics.size();

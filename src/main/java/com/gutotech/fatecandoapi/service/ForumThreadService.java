@@ -16,8 +16,8 @@ public class ForumThreadService {
 	@Autowired
 	private ForumThreadRepository repository;
 
-	public List<ForumThread> findAllBySubject(Subject subject) {
-		return repository.findAllBySubject(subject);
+	public List<ForumThread> findBySubject(Subject subject) {
+		return repository.findBySubject(subject);
 	}
 
 	public ForumThread findById(Long id) {

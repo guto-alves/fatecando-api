@@ -24,7 +24,6 @@ import com.gutotech.fatecandoapi.model.ForumThread;
 import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.SubjectUser;
 import com.gutotech.fatecandoapi.model.Topic;
-import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.ForumThreadModelAssembler;
 import com.gutotech.fatecandoapi.model.assembler.SubjectModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
@@ -58,9 +57,9 @@ public class SubjectRestController {
 			@RequestParam(value = "semester", required = false) Integer semester,
 			@RequestParam(value = "with-topics", required = false, defaultValue = "false") Boolean withTopics) {
 		if (semester != null) {
-			return ResponseEntity.ok(subjectService.findAllBySemester(semester));
+			return ResponseEntity.ok(subjectService.findBySemester(semester));
 		} else if (withTopics) {
-			return ResponseEntity.ok(subjectService.findAllWithTopics());
+			return ResponseEntity.ok(subjectService.findWithTopics());
 		}
 
 		return ResponseEntity.ok(subjectService.findAll());
@@ -75,36 +74,11 @@ public class SubjectRestController {
 	public EntityModel<Subject> getSubject(@PathVariable Long id) {
 		Subject subject = subjectService.findById(id);
 
-		SubjectUser subjectUser = getSubjectUser(subject);
+		SubjectUser subjectUser = subjectUserService.findById(subject, userService.findCurrentUser());
 		subjectUser.setAccessDate(new Date());
 		subjectUserService.save(subjectUser);
 
-		if (!subject.getSubjectUsers().contains(subjectUser)) {
-			subject.getSubjectUsers().add(subjectUser);
-		}
-
 		return subjectAssembler.toModel(subject);
-	}
-
-	@GetMapping("{id}/topics")
-	public ResponseEntity<List<Topic>> getSubjectTopics(@PathVariable Long id) {
-		Subject subject = subjectService.findById(id);
-		List<Topic> topics = topicService.findAllBySubject(subject);
-		return ResponseEntity.ok(topics);
-	}
-
-	@GetMapping("{id}/topics/test")
-	public ResponseEntity<List<Topic>> getTopicsForTest(@PathVariable Long id) {
-		Subject subject = subjectService.findById(id);
-		List<Topic> topics = topicService.findTestTopics(subject);
-		return ResponseEntity.ok(topics);
-	}
-
-	@GetMapping("{id}/topics/game")
-	public ResponseEntity<List<Topic>> getTopicsForGame(@PathVariable Long id) {
-		Subject subject = subjectService.findById(id);
-		List<Topic> topics = topicService.findGameTopics(subject);
-		return ResponseEntity.ok(topics);
 	}
 
 	@Secured(Roles.ADMIN)
@@ -144,22 +118,32 @@ public class SubjectRestController {
 	public ResponseEntity<Void> toggleLike(@PathVariable Long id) {
 		Subject subject = subjectService.findById(id);
 
-		SubjectUser subjectUser = getSubjectUser(subject);
+		SubjectUser subjectUser = subjectUserService.findById(subject, userService.findCurrentUser());
 		subjectUser.setLiked(!subjectUser.isLiked());
 		subjectUserService.save(subjectUser);
 
 		return ResponseEntity.noContent().build();
 	}
 
-	private SubjectUser getSubjectUser(Subject subject) {
-		SubjectUser subjectUser = subject.getUser();
+	@GetMapping("{id}/topics")
+	public ResponseEntity<List<Topic>> getSubjectTopics(@PathVariable Long id) {
+		Subject subject = subjectService.findById(id);
+		List<Topic> topics = topicService.findBySubject(subject);
+		return ResponseEntity.ok(topics);
+	}
 
-		if (subjectUser.getUser() == null) {
-			User user = userService.findCurrentUser();
-			subjectUser.setUser(user);
-		}
+	@GetMapping("{id}/topics/test")
+	public ResponseEntity<List<Topic>> getTopicsForTest(@PathVariable Long id) {
+		Subject subject = subjectService.findById(id);
+		List<Topic> topics = topicService.findTestTopics(subject);
+		return ResponseEntity.ok(topics);
+	}
 
-		return subjectUser;
+	@GetMapping("{id}/topics/game")
+	public ResponseEntity<List<Topic>> getTopicsForGame(@PathVariable Long id) {
+		Subject subject = subjectService.findById(id);
+		List<Topic> topics = topicService.findGameTopics(subject);
+		return ResponseEntity.ok(topics);
 	}
 
 	// Forum Topics

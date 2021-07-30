@@ -11,6 +11,6 @@ import com.gutotech.fatecandoapi.model.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 	
-	List<Comment> findAllByForumThread(ForumThread forumThread);
+	List<Comment> findByForumThread(ForumThread forumThread);
 
 }

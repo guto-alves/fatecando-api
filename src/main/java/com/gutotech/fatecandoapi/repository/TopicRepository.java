@@ -15,21 +15,21 @@ import com.gutotech.fatecandoapi.model.User;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 
-	List<Topic> findAllBySubjectAndStatusOrderByItemOrder(Subject subject, UploadStatus status);
+	List<Topic> findBySubjectAndStatusOrderByItemOrder(Subject subject, UploadStatus status);
 
 	@Query("select t from Topic t where t.status = ?1 order by t.subject.semester, t.itemOrder")
 	List<Topic> findByStatus(UploadStatus status);
 
-	List<Topic> findAllByCreatedBy(User user);
+	List<Topic> findByCreatedBy(User user);
 
 	@Query("select t from Topic t where t.itemOrder >= ?1 and t.itemOrder <= ?2 and t.subject.id = ?3 order by t.itemOrder")
-	List<Topic> findAllBetween(long itemOrder1, long itemOrder2, long subjectId);
+	List<Topic> findBetween(long itemOrder1, long itemOrder2, long subjectId);
 
 	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.favorite = true order by t.subject.name, t.itemOrder")
-	List<Topic> findAllFavorites(String email);
+	List<Topic> findFavorites(String email);
 
 	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.annotation != '' or u.annotation != '<p><br></p>' order by t.subject.name, t.itemOrder")
-	List<Topic> findAllAnnotated(String email);
+	List<Topic> findAnnotated(String email);
 
 	@Query("select t from Topic t where t.subject.id = ?2 and (t.itemOrder = ?1 - 1L or t.itemOrder = ?1 + 1L) order by t.itemOrder")
 	List<Topic> findPreviousAndNext(long itemOrder, long subjectId);

@@ -11,12 +11,12 @@ import com.gutotech.fatecandoapi.model.Subject;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
-	List<Subject> findAllByOrderByName();
+	List<Subject> findByOrderByName();
 
-	List<Subject> findAllBySemesterOrderByName(Integer semester);
+	List<Subject> findBySemesterOrderByName(Integer semester);
 
 	@Query("select distinct s from Subject s join s.topics t order by s.name")
-	List<Subject> findAllWithTopics();
+	List<Subject> findWithTopics();
 
 	@Query("select s from Subject s "
 			+ "where upper(s.name) like upper(concat('%', ?1, '%')) "

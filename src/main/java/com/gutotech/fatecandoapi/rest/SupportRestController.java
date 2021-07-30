@@ -57,7 +57,7 @@ public class SupportRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<Ticket>> saveTicket(@RequestBody @Valid Ticket ticket,
+	public ResponseEntity<EntityModel<Ticket>> addTicket(@RequestBody @Valid Ticket ticket,
 			BindingResult bindingResult) {
 		ticket.setUser(userService.findCurrentUser());
 		ticket.setStatus(Status.WAITING);

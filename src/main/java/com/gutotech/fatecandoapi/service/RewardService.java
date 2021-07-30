@@ -15,8 +15,8 @@ public class RewardService {
 	@Autowired
 	private RewardRepository repository;
 
-	public List<Reward> findAllByUser(User user) {
-		return repository.findAllByUserOrderByDateDesc(user);
+	public List<Reward> findByUser(User user) {
+		return repository.findByUserOrderByDateDesc(user);
 	}
 
 	public Reward save(Reward reward) {

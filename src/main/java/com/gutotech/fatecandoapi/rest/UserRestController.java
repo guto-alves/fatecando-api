@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Question;
+import com.gutotech.fatecandoapi.model.RewardDTO;
 import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
@@ -124,6 +125,15 @@ public class UserRestController {
 	public ResponseEntity<List<Question>> getUserQuestions() {
 		User user = userService.findCurrentUser();
 		return ResponseEntity.ok(questionService.findByUser(user));
+	}
+	
+	@GetMapping("me/rewards")
+	public ResponseEntity<List<RewardDTO>> geUserRewards() {
+		User user = userService.findCurrentUser();
+		List<RewardDTO> rewards = user.getUserRewards().stream() //
+				.map(RewardDTO::new) //
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(rewards);
 	}
 
 	@GetMapping("ranking")

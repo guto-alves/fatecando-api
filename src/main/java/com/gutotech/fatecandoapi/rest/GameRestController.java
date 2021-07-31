@@ -22,6 +22,7 @@ import com.gutotech.fatecandoapi.model.Game;
 import com.gutotech.fatecandoapi.model.GameStatus;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
+import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.Round;
 import com.gutotech.fatecandoapi.model.RoundAnswer;
 import com.gutotech.fatecandoapi.model.Topic;
@@ -29,6 +30,7 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.AnswerUtils;
 import com.gutotech.fatecandoapi.service.GameService;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.RewardService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -50,6 +52,9 @@ public class GameRestController {
 
 	@Autowired
 	private TopicService topicService;
+
+	@Autowired
+	private RewardService rewardService;
 
 	@GetMapping
 	public ResponseEntity<List<Game>> getGames() {
@@ -152,6 +157,10 @@ public class GameRestController {
 		} else {
 			gameService.save(game);
 		}
+		
+		rewardService.add(RewardType.GAME, user);
+		user.getUserActivity().incrementGamesCompleted();
+		userService.save(user);
 
 		return ResponseEntity.noContent().build();
 	}

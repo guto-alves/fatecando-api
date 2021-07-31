@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.gutotech.fatecandoapi.model.Alternative;
 import com.gutotech.fatecandoapi.model.Feedback;
+import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Test;
 import com.gutotech.fatecandoapi.model.TestQuestion;
@@ -27,6 +29,7 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.service.AlternativeService;
 import com.gutotech.fatecandoapi.service.AnswerUtils;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.RewardService;
 import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.TestQuestionService;
 import com.gutotech.fatecandoapi.service.TestService;
@@ -57,6 +60,9 @@ public class TestRestController {
 	
 	@Autowired
 	private TopicService topicService;
+	
+	@Autowired
+	private RewardService rewardService;
 	
 	@GetMapping
 	public ResponseEntity<Test> getTest() {
@@ -133,12 +139,14 @@ public class TestRestController {
 	}
 
 	@DeleteMapping
+	@Transactional
 	public ResponseEntity<Void> finishTest() {
 		User user = userService.findCurrentUser();
 
 		testService.delete(testService.findByUser(user));
 
-		user.getUserActivity().incrementCompleteTests();
+		rewardService.add(RewardType.TEST_COMPLETED, user);
+		user.getUserActivity().incrementTestsCompleted();
 		userService.save(user);
 
 		return ResponseEntity.noContent().build();

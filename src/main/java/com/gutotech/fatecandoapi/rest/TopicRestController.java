@@ -92,8 +92,10 @@ public class TopicRestController {
 					.body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid subject", request.getRequestURI()));
 		}
 
+		User user = userService.findCurrentUser();
+		
 		topic.setSubject(subjectService.findById(topic.getSubject().getId()));
-		topic.setCreatedBy(userService.findCurrentUser());
+		topic.setCreatedBy(user);
 		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
 

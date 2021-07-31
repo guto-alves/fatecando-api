@@ -31,14 +31,17 @@ public class UserActivity {
 	@Column(name = "wrong_answers")
 	private int wrongAnswers;
 
-	@Column(name = "game_wins")
+	@Column(name = "games")
 	private int gameWins;
 
 	@Column(name = "game_losses")
 	private int gameLosses;
 
-	@Column(name = "complete_tests")
-	private int completeTests;
+	@Column(name = "games_completed")
+	private int gamesCompleted;
+	
+	@Column(name = "tests_completed")
+	private int testsCompleted;
 
 	@Column(name = "content_uploaded")
 	private int contentUploaded;
@@ -58,8 +61,12 @@ public class UserActivity {
 		wrongAnswers++;
 	}
 
-	public void incrementCompleteTests() {
-		completeTests++;
+	public void incrementTestsCompleted() {
+		testsCompleted++;
+	}
+	
+	public void incrementGamesCompleted() {
+		gamesCompleted++;
 	}
 
 	public User getUser() {
@@ -102,12 +109,20 @@ public class UserActivity {
 		this.gameLosses = gameLosses;
 	}
 
-	public int getCompleteTests() {
-		return completeTests;
+	public int getTestsCompleted() {
+		return testsCompleted;
 	}
 
-	public void setCompleteTests(int completeTests) {
-		this.completeTests = completeTests;
+	public void setTestsCompleted(int testsCompleted) {
+		this.testsCompleted = testsCompleted;
+	}
+	
+	public int getGamesCompleted() {
+		return gamesCompleted;
+	}
+	
+	public void setGamesCompleted(int gamesCompleted) {
+		this.gamesCompleted = gamesCompleted;
 	}
 
 	@Override
@@ -130,8 +145,8 @@ public class UserActivity {
 	@Override
 	public String toString() {
 		return "StudentActivity [user=" + user.getFullName() + ", rightAnswers=" + rightAnswers + ", wrongAnswers="
-				+ wrongAnswers + ", gameWins=" + gameWins + ", gameLosses=" + gameLosses + ", completeTests="
-				+ completeTests + ", contentUploaded=" + contentUploaded + "]";
+				+ wrongAnswers + ", gameWins=" + gameWins + ", gameLosses=" + gameLosses + ", testsCompleted="
+				+ testsCompleted + ", contentUploaded=" + contentUploaded + "]";
 	}
 
 }

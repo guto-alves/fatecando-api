@@ -1,22 +1,12 @@
 package com.gutotech.fatecandoapi.model;
 
-import java.util.Date;
-import java.util.Objects;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,29 +14,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "rewards")
 public class Reward {
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
 	@Enumerated(EnumType.STRING)
 	private RewardType type;
 
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date date;
+	private int score;
 
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	private int coins;
 
 	public Reward() {
 	}
 
-	public Reward(RewardType type, User user) {
+	public Reward(RewardType type, int score, int coins) {
 		this.type = type;
-		this.user = user;
+		this.score = score;
+		this.coins = coins;
 	}
 
 	public Long getId() {
@@ -65,37 +51,20 @@ public class Reward {
 		this.type = type;
 	}
 
-	public Date getDate() {
-		return date;
+	public int getScore() {
+		return score;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setScore(int score) {
+		this.score = score;
 	}
 
-	public User getUser() {
-		return user;
+	public int getCoins() {
+		return coins;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof Reward)) {
-			return false;
-		}
-		Reward other = (Reward) obj;
-		return Objects.equals(id, other.id);
+	public void setCoins(int coins) {
+		this.coins = coins;
 	}
 
 }

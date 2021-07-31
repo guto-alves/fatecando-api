@@ -1,6 +1,7 @@
 package com.gutotech.fatecandoapi.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -76,7 +77,7 @@ public class User {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	private List<Reward> rewards = new ArrayList<>();
+	private List<RewardUser> userRewards = new ArrayList<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.user")
@@ -233,13 +234,15 @@ public class User {
 				.collect(Collectors.toList());
 	}
 
-	public List<Reward> getRewards() {
-		return rewards;
+	public List<RewardUser> getUserRewards() {
+		return userRewards.stream()
+				.sorted(Comparator.comparing(RewardUser::getDate).reversed())
+				.collect(Collectors.toList());
 	}
 
 	public Long getScore() {
-		return rewards.stream() //
-				.mapToLong((r) -> r.getType().getScore()) //
+		return userRewards.stream() //
+				.mapToLong((r) -> r.getReward().getScore()) //
 				.sum();
 	}
 

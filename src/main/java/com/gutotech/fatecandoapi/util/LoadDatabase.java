@@ -87,10 +87,10 @@ public class LoadDatabase implements CommandLineRunner {
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
 
 		// Rewards
-		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, gustavo);
-		Reward reward2 = new Reward(RewardType.GAME, gustavo);
-		Reward reward3 = new Reward(RewardType.RIGHT_ANSWER, alice);
-		Reward reward4 = new Reward(RewardType.TEST_SUCCESS, alice);
+		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, 100, 0);
+		Reward reward3 = new Reward(RewardType.WRONG_ANSWER, -50, 0);
+		Reward reward2 = new Reward(RewardType.GAME, 200, 0);
+		Reward reward4 = new Reward(RewardType.TEST_COMPLETED, 150, 0);
 		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4));
 
 		// Subjects

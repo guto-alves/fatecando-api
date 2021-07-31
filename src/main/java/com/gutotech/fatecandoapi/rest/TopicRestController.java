@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Review;
+import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.TopicUser;
 import com.gutotech.fatecandoapi.model.UploadStatus;
@@ -34,6 +35,7 @@ import com.gutotech.fatecandoapi.model.assembler.TopicModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.NotificationService;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.RewardService;
 import com.gutotech.fatecandoapi.service.SubjectService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
@@ -59,6 +61,9 @@ public class TopicRestController {
 
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private RewardService rewardService;
 
 	@GetMapping
 	public ResponseEntity<List<Topic>> getApprovedTopics() {
@@ -98,6 +103,10 @@ public class TopicRestController {
 		topic.setCreatedBy(user);
 		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
+		
+		rewardService.add(RewardType.CONTRIBUTIONS, user);
+		user.getUserActivity().incrementContentUploaded();
+		userService.save(user);
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);

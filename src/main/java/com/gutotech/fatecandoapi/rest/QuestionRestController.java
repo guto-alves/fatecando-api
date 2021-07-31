@@ -26,12 +26,14 @@ import com.gutotech.fatecandoapi.model.Feedback;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionDTO;
 import com.gutotech.fatecandoapi.model.QuestionType;
+import com.gutotech.fatecandoapi.model.RewardType;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.QuestionModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.AnswerUtils;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.RewardService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -54,6 +56,9 @@ public class QuestionRestController {
 
 	@Autowired
 	private AnswerUtils answerUtils;
+	
+	@Autowired
+	private RewardService rewardService;
 
 	@Secured(Roles.ADMIN)
 	@GetMapping
@@ -84,14 +89,19 @@ public class QuestionRestController {
 					"The question must have at lest one correct alternative", request.getRequestURI()));
 		}
 
+		User user = userService.findCurrentUser();
 		question.setId(null);
 		question.setTopic(topicService.findById(question.getTopic().getId()));
-		question.setUser(userService.findCurrentUser());
+		question.setUser(user);
 		question.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
 		question.getAlternatives().stream()
 				.forEach(alternative -> alternative.getFeedback().setAlternative(alternative));
 
 		EntityModel<Question> entityModel = questionAssembler.toModel(questionService.save(question));
+		
+		rewardService.add(RewardType.CONTRIBUTIONS, user);
+		user.getUserActivity().incrementContentUploaded();
+		userService.save(user);
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);

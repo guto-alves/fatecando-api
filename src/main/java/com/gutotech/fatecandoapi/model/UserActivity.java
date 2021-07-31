@@ -69,6 +69,10 @@ public class UserActivity {
 		gamesCompleted++;
 	}
 
+	public void incrementContentUploaded() {
+		contentUploaded++;
+	}
+	
 	public User getUser() {
 		return user;
 	}
@@ -123,6 +127,14 @@ public class UserActivity {
 	
 	public void setGamesCompleted(int gamesCompleted) {
 		this.gamesCompleted = gamesCompleted;
+	}
+	
+	public int getContentUploaded() {
+		return contentUploaded;
+	}
+	
+	public void setContentUploaded(int contentUploaded) {
+		this.contentUploaded = contentUploaded;
 	}
 
 	@Override

@@ -91,7 +91,8 @@ public class LoadDatabase implements CommandLineRunner {
 		Reward reward3 = new Reward(RewardType.WRONG_ANSWER, -50, 0);
 		Reward reward2 = new Reward(RewardType.GAME, 200, 0);
 		Reward reward4 = new Reward(RewardType.TEST_COMPLETED, 150, 0);
-		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4));
+		Reward reward5 = new Reward(RewardType.CONTRIBUTIONS, 10, 0);
+		rewardRepository.saveAll(Arrays.asList(reward1, reward2, reward3, reward4, reward5));
 
 		// Subjects
 		Subject alp = new Subject("Algoritmos", "IAL002",

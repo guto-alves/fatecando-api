@@ -91,7 +91,7 @@ public class Game {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name != null ? name.trim() : null;
 	}
 
 	public List<Topic> getTopics() {

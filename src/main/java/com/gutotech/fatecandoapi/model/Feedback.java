@@ -57,7 +57,7 @@ public class Feedback {
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = title != null ? title.trim() : null;
 	}
 
 	public String getDescription() {

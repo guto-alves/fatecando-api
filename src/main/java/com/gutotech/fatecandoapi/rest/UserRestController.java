@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.RewardDTO;
+import com.gutotech.fatecandoapi.model.Role;
 import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
@@ -96,6 +97,11 @@ public class UserRestController {
 	@GetMapping("me")
 	public EntityModel<User> getCurrentUser() {
 		return assembler.toModel(userService.findCurrentUser());
+	}
+	
+	@GetMapping("me/roles")
+	public ResponseEntity<List<Role>> getUserRoles() {
+		return ResponseEntity.ok(userService.findCurrentUser().getRoles());
 	}
 
 	@GetMapping("me/subjects/last-accessed")

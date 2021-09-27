@@ -31,6 +31,8 @@ public class OAuth2ServerConfiguration {
 	                .and()
                 .csrf()
                     .disable()
+                .cors()
+                	.disable()
                 .headers()
                 	.frameOptions()
                 		.disable();

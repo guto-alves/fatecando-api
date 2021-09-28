@@ -28,6 +28,8 @@ public class Test {
 	@NotBlank
 	private String name;
 
+	private long startTime;
+
 	@ManyToOne
 	private User user;
 
@@ -61,6 +63,14 @@ public class Test {
 		this.name = name;
 	}
 
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -84,7 +94,7 @@ public class Test {
 	public void setTestQuestions(List<TestQuestion> testQuestions) {
 		this.testQuestions = testQuestions;
 	}
-	
+
 	public List<Question> getQuestions() {
 		return testQuestions.stream()
 				.map(TestQuestion::getQuestion)

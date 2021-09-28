@@ -86,7 +86,8 @@ public class TestRestController {
 		}
 		
 		test.setSubject(subject);
-		test.setUser(user);		
+		test.setUser(user);	
+		test.setStartTime(System.currentTimeMillis());
 		testService.save(test);
 		
 		List<TestQuestion> questions = questionService.generateTest(test.getTopics())

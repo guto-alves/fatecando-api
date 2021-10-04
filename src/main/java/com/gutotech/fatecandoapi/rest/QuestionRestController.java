@@ -60,9 +60,13 @@ public class QuestionRestController {
 	@Autowired
 	private RewardService rewardService;
 
-	@Secured(Roles.ADMIN)
+	@Secured({ Roles.ADMIN, Roles.TEACHER })
 	@GetMapping
 	public ResponseEntity<List<Question>> getQuestions() {
+		if (userService.hasRoles(Roles.TEACHER)) {
+			return ResponseEntity.ok(questionService.findBySubjects(userService.findCurrentUser().getSubjects()));
+		}
+		
 		return ResponseEntity.ok(questionService.findAll());
 	}
 
@@ -93,7 +97,8 @@ public class QuestionRestController {
 		question.setId(null);
 		question.setTopic(topicService.findById(question.getTopic().getId()));
 		question.setUser(user);
-		question.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
+		question.setStatus(userService.hasRoles(Roles.ADMIN, Roles.TEACHER) ?
+				UploadStatus.APPROVED : UploadStatus.WAITING_FOR_RESPONSE);
 		question.getAlternatives().stream()
 				.forEach(alternative -> alternative.getFeedback().setAlternative(alternative));
 
@@ -112,7 +117,7 @@ public class QuestionRestController {
 			HttpServletRequest request) {
 		Question currentQuestion = questionService.findById(id);
 
-		boolean hasAdminRole = userService.isCurrentUserAdmin();
+		boolean hasAdminRole = userService.hasRoles(Roles.ADMIN, Roles.STUDENT);
 
 		if (!hasAdminRole && currentQuestion.getStatus() != UploadStatus.EDITABLE) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,

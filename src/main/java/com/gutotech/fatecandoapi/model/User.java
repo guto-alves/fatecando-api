@@ -60,6 +60,10 @@ public class User {
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date birthDate;
+	
+	private boolean isTeacher;
+	
+	private boolean isAuthorizedTeacher;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private UserActivity userActivity = new UserActivity(this);
@@ -82,8 +86,23 @@ public class User {
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.user")
 	private List<SubjectUser> userSubjects = new ArrayList<>();
+	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(
+		name = "teachers_subjects", 
+		joinColumns = @JoinColumn(name = "user_id"),
+		inverseJoinColumns = @JoinColumn(name = "subject_id")
+	)
+	private List<Subject> subjects = new ArrayList<>();
 
 	public User() {
+	}
+	
+	public User(String fullName, String email, String password) {
+		this.fullName = fullName;
+		this.email = email;
+		this.password = password;
 	}
 
 	public User(String fullName, String email, String password, Gender gender, Date birthDate) {
@@ -94,34 +113,19 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
-	public User(String fullName, String email, String password, Gender gender, Date birthDate, List<Role> roles) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate, boolean isTeacher, List<Subject> subjects) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
 		this.birthDate = birthDate;
-		this.roles = roles;
+		this.isTeacher = isTeacher;
+		this.subjects = subjects;
 	}
-
-	public User(Long id, @NotBlank @Size(min = 2) String fullName, @Email String email, String password,
-			boolean enabled, Gender gender, Date birthDate, UserActivity userActivity, Date creationDate,
-			Date lastLogin, List<Role> roles) {
-		this.id = id;
-		this.fullName = fullName;
-		this.email = email;
-		this.password = password;
-		this.enabled = enabled;
-		this.gender = gender;
-		this.birthDate = birthDate;
-		this.userActivity = userActivity;
-		this.creationDate = creationDate;
-		this.lastLogin = lastLogin;
-		this.roles = roles;
-	}
-
+	
 	public static User fromDTO(UserDTO userDTO) {
 		return new User(userDTO.getFullName(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getGender(),
-				userDTO.getBirthDate());
+				userDTO.getBirthDate(), userDTO.isTeacher(), userDTO.getSubjects());
 	}
 
 	public Long getId() {
@@ -180,6 +184,22 @@ public class User {
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
+	
+	public boolean isTeacher() {
+		return isTeacher;
+	}
+
+	public void setTeacher(boolean isTeacher) {
+		this.isTeacher = isTeacher;
+	}
+
+	public boolean isAuthorizedTeacher() {
+		return isAuthorizedTeacher;
+	}
+
+	public void setAuthorizedTeacher(boolean isAuthorizedTeacher) {
+		this.isAuthorizedTeacher = isAuthorizedTeacher;
+	}
 
 	public UserActivity getUserActivity() {
 		return userActivity;
@@ -216,9 +236,17 @@ public class User {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
+	
+	public List<Subject> getSubjects() {
+		return subjects;
+	}
+	
+	public void setSubjects(List<Subject> subjects) {
+		this.subjects = subjects;
+	}
 
 	@JsonIgnore
-	public List<Subject> getSubjects() {
+	public List<Subject> getAccessedSubjects() {
 		userSubjects.sort((subject1, subject2) -> {
 			if (subject1.getAccessDate().before(subject2.getAccessDate())) {
 				return 1;
@@ -241,9 +269,7 @@ public class User {
 	}
 
 	public Long getScore() {
-		return userRewards.stream() //
-				.mapToLong((r) -> r.getReward().getScore()) //
-				.sum();
+		return 0L;
 	}
 
 	@Override

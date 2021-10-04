@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,13 @@ public class UserService {
 	public boolean isCurrentUserAdmin() {
 		return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
 				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(Roles.ADMIN));
+	}
+	
+	public boolean hasRoles(String... roles) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		return roles != null && auth != null && 
+				auth.getAuthorities().stream().anyMatch(a -> List.of(roles).contains(a.getAuthority()));
 	}
 	
 }

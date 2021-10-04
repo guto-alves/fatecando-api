@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.QuestionType;
+import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
@@ -26,6 +27,10 @@ public class QuestionService {
 
 	public List<Question> findAll() {
 		return repository.findAll();
+	}
+	
+	public List<Question> findBySubjects(List<Subject> subjects) {
+		return repository.findBySubject(subjects);
 	}
 	
 	public List<Question> findByUser(User user) {

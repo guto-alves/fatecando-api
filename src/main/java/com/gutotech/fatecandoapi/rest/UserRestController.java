@@ -27,6 +27,7 @@ import com.gutotech.fatecandoapi.model.Subject;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.UserDTO;
+import com.gutotech.fatecandoapi.model.UserRegistration;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TopicService;
@@ -71,9 +72,8 @@ public class UserRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<User>> registerUser(@RequestBody @Valid UserDTO userDto) {
-		User user = new User(userDto.getFullName(), userDto.getEmail(), userDto.getPassword(), userDto.getGender(),
-				userDto.getBirthDate());
+	public ResponseEntity<EntityModel<User>> registerUser(@RequestBody @Valid UserRegistration userDto) {
+		User user = new User(userDto.getFullName(), userDto.getEmail(), userDto.getPassword());
 		EntityModel<User> entityModel = assembler.toModel(userService.register(user));
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -81,12 +81,24 @@ public class UserRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<EntityModel<User>> updateUser(@RequestBody @Valid User user, @PathVariable Long id) {
+	public ResponseEntity<EntityModel<User>> updateUser(@RequestBody @Valid UserDTO updatedUser,
+			@PathVariable Long id) {
 		// TODO validation - check current user
 		User currentUser = userService.findById(id);
-		currentUser.setFullName(user.getFullName());
-		currentUser.setGender(user.getGender());
-		currentUser.setBirthDate(user.getBirthDate());
+		currentUser.setFullName(updatedUser.getFullName());
+		currentUser.setGender(updatedUser.getGender());
+		currentUser.setBirthDate(updatedUser.getBirthDate());
+
+		if (!currentUser.isTeacher() && updatedUser.isTeacher()) {
+			currentUser.setAuthorizedTeacher(false);
+		} else if (currentUser.isTeacher() && updatedUser.isTeacher()) {
+			if (!currentUser.getSubjects().containsAll(updatedUser.getSubjects())) {
+				currentUser.setAuthorizedTeacher(false);
+			}
+		}
+		
+		currentUser.setSubjects(updatedUser.getSubjects());
+		currentUser.setTeacher(updatedUser.isTeacher());
 
 		EntityModel<User> entityModel = assembler.toModel(userService.save(currentUser));
 
@@ -98,15 +110,20 @@ public class UserRestController {
 	public EntityModel<User> getCurrentUser() {
 		return assembler.toModel(userService.findCurrentUser());
 	}
-	
+
 	@GetMapping("me/roles")
 	public ResponseEntity<List<Role>> getUserRoles() {
 		return ResponseEntity.ok(userService.findCurrentUser().getRoles());
 	}
 
+	@GetMapping("me/subjects")
+	public ResponseEntity<List<Subject>> getMySubjects() {
+		return ResponseEntity.ok(userService.findCurrentUser().getSubjects());
+	}
+
 	@GetMapping("me/subjects/last-accessed")
 	public ResponseEntity<List<Subject>> getLatestSubjectsAccessed() {
-		return ResponseEntity.ok(userService.findCurrentUser().getSubjects());
+		return ResponseEntity.ok(userService.findCurrentUser().getAccessedSubjects());
 	}
 
 	@GetMapping("me/topics")
@@ -132,7 +149,7 @@ public class UserRestController {
 		User user = userService.findCurrentUser();
 		return ResponseEntity.ok(questionService.findByUser(user));
 	}
-	
+
 	@GetMapping("me/rewards")
 	public ResponseEntity<List<RewardDTO>> geUserRewards() {
 		User user = userService.findCurrentUser();

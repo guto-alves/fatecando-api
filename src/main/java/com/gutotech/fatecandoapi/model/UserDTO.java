@@ -1,6 +1,8 @@
 package com.gutotech.fatecandoapi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -20,8 +22,6 @@ public class UserDTO {
 	@Email
 	private String email;
 
-	@NotBlank
-	@Size(min = 4)
 	private String password;
 
 	@Enumerated(EnumType.STRING)
@@ -30,9 +30,13 @@ public class UserDTO {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date birthDate;
 
+	private boolean isTeacher;
+
+	private List<Subject> subjects = new ArrayList<>();
+
 	public UserDTO() {
 	}
-	
+
 	public UserDTO(User user) {
 		id = user.getId();
 		fullName = user.getFullName();
@@ -88,6 +92,22 @@ public class UserDTO {
 
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
+	}
+
+	public boolean isTeacher() {
+		return isTeacher;
+	}
+
+	public void setTeacher(boolean isTeacher) {
+		this.isTeacher = isTeacher;
+	}
+
+	public List<Subject> getSubjects() {
+		return subjects;
+	}
+
+	public void setSubjects(List<Subject> subjects) {
+		this.subjects = subjects;
 	}
 
 }

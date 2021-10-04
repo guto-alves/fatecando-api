@@ -29,6 +29,10 @@ public class TopicService {
 	public List<Topic> findBySubject(Subject subject) {
 		return repository.findBySubjectAndStatusOrderByItemOrder(subject, UploadStatus.APPROVED);
 	}
+	
+	public List<Topic> findBySubjects(List<Subject> subjects) {
+		return repository.findBySubjectInAndStatusOrderByItemOrder(subjects, UploadStatus.APPROVED);
+	}
 
 	public List<Topic> findByCreatedBy(User user) {
 		return repository.findByCreatedBy(user);

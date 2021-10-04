@@ -69,22 +69,23 @@ public class LoadDatabase implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// Roles
-		Role admin = new Role(Roles.ADMIN);
 		Role user = new Role(Roles.STUDENT);
-		roleRepository.saveAll(Arrays.asList(admin, user));
+		Role admin = new Role(Roles.ADMIN);
+		Role teacher = new Role(Roles.TEACHER);
+		roleRepository.saveAll(Arrays.asList(user, teacher, admin));
 
 		// Users
 		User staff = new User("Equipe Fatecando", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
-				new Date(), null);
+				new Date());
 		staff.setRoles(Arrays.asList(user, admin));
 		userService.save(staff);
 
 		User gustavo = new User("Gustavo Alves", "guto@guto.com", "123", Gender.MALE, new Date());
 		User kaik = new User("Kayk Vida", "kayk@g.com", "123", Gender.MALE, new Date());
 		User kaizer = new User("Kaizer Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date());
-		User maria = new User("Maria Silva", "maria@hotmail.com", "123", Gender.FEMALE, new Date());
+		
 		User alice = new User("Alice Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date());
-		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, maria, alice));
+		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, alice));
 
 		// Rewards
 		Reward reward1 = new Reward(RewardType.RIGHT_ANSWER, 100, 0);
@@ -166,7 +167,7 @@ public class LoadDatabase implements CommandLineRunner {
 
 		commentRepository.saveAll(Arrays.asList(new Comment("Comment 1", gustavo, forumThread1),
 				new Comment("Comment 2", kaik, forumThread1), new Comment("Comment 3", kaizer, forumThread1),
-				new Comment("Comment 4", gustavo, forumThread2), new Comment("Comment 5", maria, forumThread2),
+				new Comment("Comment 4", gustavo, forumThread2), new Comment("Comment 5", staff, forumThread2),
 				new Comment("Comment 6", alice, forumThread2), new Comment("Comment 7", alice, forumThread1)));
 
 		// Questions
@@ -186,6 +187,11 @@ public class LoadDatabase implements CommandLineRunner {
 			questions.add(question);
 		}
 		questionRepository.saveAll(questions);
+		
+		
+		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("123"), Gender.FEMALE, new Date(), true, List.of(alp));
+		maria.setRoles(Arrays.asList(teacher));
+		userService.save(maria);
 	}
 
 }

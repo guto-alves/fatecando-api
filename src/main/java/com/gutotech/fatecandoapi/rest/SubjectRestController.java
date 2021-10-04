@@ -90,10 +90,15 @@ public class SubjectRestController {
 				.body(entityModel);
 	}
 
-	@Secured(Roles.ADMIN)
+	@Secured({Roles.ADMIN, Roles.TEACHER})
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateSubject(@RequestBody @Valid Subject subject, @PathVariable Long id) {
+	public ResponseEntity<?> updateSubject(@RequestBody @Valid Subject subject, @PathVariable Long id) throws IllegalAccessException {
 		Subject currentSubject = subjectService.findById(id);
+		
+		if (userService.hasRoles(Roles.TEACHER) && !userService.findCurrentUser().getSubjects().contains(currentSubject)) {
+			throw new IllegalAccessException("Você não tem permissão para alterar a disciplina " + currentSubject.getName());
+		}
+		
 		currentSubject.setName(subject.getName());
 		currentSubject.setCode(subject.getCode());
 		currentSubject.setSemester(subject.getSemester());

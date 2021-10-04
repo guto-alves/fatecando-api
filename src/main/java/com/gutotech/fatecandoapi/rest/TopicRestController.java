@@ -12,7 +12,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,7 +60,7 @@ public class TopicRestController {
 
 	@Autowired
 	private NotificationService notificationService;
-	
+
 	@Autowired
 	private RewardService rewardService;
 
@@ -70,9 +69,13 @@ public class TopicRestController {
 		return ResponseEntity.ok(topicService.findApproved());
 	}
 
-	@Secured(Roles.ADMIN)
+	@Secured({ Roles.ADMIN, Roles.TEACHER})
 	@GetMapping("admin")
 	public ResponseEntity<List<Topic>> getTopics() {
+		if (userService.hasRoles(Roles.TEACHER)) {
+			return ResponseEntity.ok(topicService.findBySubjects(userService.findCurrentUser().getSubjects()));
+		}
+		
 		return ResponseEntity.ok(topicService.findAll());
 	}
 
@@ -98,12 +101,14 @@ public class TopicRestController {
 		}
 
 		User user = userService.findCurrentUser();
-		
+
 		topic.setSubject(subjectService.findById(topic.getSubject().getId()));
 		topic.setCreatedBy(user);
-		topic.setStatus(UploadStatus.WAITING_FOR_RESPONSE);
+		topic.setStatus(userService.hasRoles(Roles.ADMIN, Roles.TEACHER) ?
+				UploadStatus.APPROVED : UploadStatus.WAITING_FOR_RESPONSE);
+
 		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
-		
+
 		rewardService.add(RewardType.CONTRIBUTIONS, user);
 		user.getUserActivity().incrementContentUploaded();
 		userService.save(user);
@@ -115,17 +120,9 @@ public class TopicRestController {
 	@PutMapping("{id}")
 	public ResponseEntity<?> updateTopic(@RequestBody @Valid Topic updatedTopic, @PathVariable Long id,
 			HttpServletRequest request) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		String currentUserEmail = authentication.getName();
-
-		boolean hasAdminRole = authentication.getAuthorities() //
-				.stream() //
-				.anyMatch(a -> a.getAuthority().equals(Roles.ADMIN));
-
 		Topic currentTopic = topicService.findById(id);
 
-		if (hasAdminRole) {
+		if (userService.hasRoles(Roles.ADMIN, Roles.TEACHER)) {
 			if (updatedTopic.getSubject() == null || updatedTopic.getSubject().getId() == null) {
 				return ResponseEntity.badRequest().body(
 						new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid topic subject", request.getRequestURI()));
@@ -140,7 +137,7 @@ public class TopicRestController {
 
 			notificationService.save(currentTopic);
 		} else { // common user
-			if (!currentUserEmail.equals(currentTopic.getCreatedBy().getEmail())) {
+			if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(currentTopic.getCreatedBy().getEmail())) {
 				return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 						"You are trying to edit a topic that you did not create", request.getRequestURI()));
 			}
@@ -226,7 +223,7 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@Secured(Roles.ADMIN)
+	@Secured({ Roles.ADMIN, Roles.TEACHER })
 	@GetMapping("{id}/reviews")
 	public ResponseEntity<List<Review>> getReviews(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);
@@ -234,7 +231,7 @@ public class TopicRestController {
 		return ResponseEntity.ok(topic.getReviews());
 	}
 
-	@Secured(Roles.ADMIN)
+	@Secured({ Roles.ADMIN, Roles.TEACHER })
 	@PutMapping("drag/{draggedTopicId}/{relatedTopicId}")
 	public ResponseEntity<Void> dragTopic(@PathVariable("draggedTopicId") Long draggedTopicId,
 			@PathVariable("relatedTopicId") Long relatedTopicId) {

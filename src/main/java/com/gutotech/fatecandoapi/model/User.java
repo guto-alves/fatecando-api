@@ -41,8 +41,8 @@ public class User {
 	private Long id;
 
 	@NotBlank
-	@Size(min = 2)
-	@Column(name = "full_name")
+	@Size(min = 2, max = 40)
+	@Column(name = "full_name", length = 40)
 	private String fullName;
 
 	@Email

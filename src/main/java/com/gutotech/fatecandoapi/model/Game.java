@@ -34,6 +34,7 @@ public class Game {
 	private Long id;
 
 	@NotBlank(message = "Provide a name")
+	@Size(max = 30)
 	@Column(length = 30)
 	private String name;
 

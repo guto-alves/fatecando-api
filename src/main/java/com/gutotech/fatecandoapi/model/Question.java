@@ -1,6 +1,8 @@
 package com.gutotech.fatecandoapi.model;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -126,6 +128,7 @@ public class Question {
 	}
 
 	public List<Alternative> getAlternatives() {
+		Collections.shuffle(alternatives, new SecureRandom());
 		return alternatives;
 	}
 

@@ -188,8 +188,7 @@ public class LoadDatabase implements CommandLineRunner {
 		}
 		questionRepository.saveAll(questions);
 		
-		
-		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("123"), Gender.FEMALE, new Date(), true, List.of(alp));
+		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("123"), Gender.FEMALE, new Date(), true, Arrays.asList(alp));
 		maria.setRoles(Arrays.asList(teacher));
 		userService.save(maria);
 	}

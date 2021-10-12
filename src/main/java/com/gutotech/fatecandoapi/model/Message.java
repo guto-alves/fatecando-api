@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "messages")
-// @JsonSerialize(using = JacksonCustomMessageSerializer.class)
 public class Message {
 
 	@Id

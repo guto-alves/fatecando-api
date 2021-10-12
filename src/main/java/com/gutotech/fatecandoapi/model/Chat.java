@@ -19,7 +19,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @Entity
 @Table(name = "chats")
@@ -28,22 +27,25 @@ public class Chat {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private boolean pvt;
+	private String name;
+	
+	// is a private chat
+	private boolean pvt; 
 
 	private boolean blocked;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<User> users = new HashSet<>();
 
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "creation_date")
-	private Date creationDate;
-
 	@OneToOne
 	@JoinColumn(name = "last_message")
 	private Message lastMessage;
 
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "creation_date")
+	private Date creationDate;
+	
 	public Chat() {
 	}
 
@@ -60,6 +62,14 @@ public class Chat {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public boolean isPvt() {
@@ -101,14 +111,7 @@ public class Chat {
 	public void setLastMessage(Message lastMessage) {
 		this.lastMessage = lastMessage;
 	}
-
-	public User getTo() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return pvt ? users.stream()
-				.filter(u -> !u.getEmail().equals(email))
-				.findFirst().orElse(null) : null;
-	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

@@ -73,7 +73,7 @@ public class ChatRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@MessageMapping("/secured/room")
+	@MessageMapping("/messages")
 	public void sendSpecific(@Payload Message message, Principal user, @Header("simpSessionId") String sessionId)
 			throws Exception {
 		final boolean hasChatId = message.getChat() != null && message.getChat().getId() != null;
@@ -83,8 +83,8 @@ public class ChatRestController {
 			throw new IllegalArgumentException("Please provide the recipient's email or a chat id.");
 		}
 
-		message.setNewMessage(true);
 		message.setFrom(userService.findCurrentUser());
+		message.setNewMessage(true);
 
 		if (hasRecipient) {
 			message.setTo(userService.findByEmail(message.getTo().getEmail()));

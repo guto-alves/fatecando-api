@@ -69,13 +69,13 @@ public class TopicRestController {
 		return ResponseEntity.ok(topicService.findApproved());
 	}
 
-	@Secured({ Roles.ADMIN, Roles.TEACHER})
+	@Secured({ Roles.ADMIN, Roles.TEACHER })
 	@GetMapping("admin")
 	public ResponseEntity<List<Topic>> getTopics() {
 		if (userService.hasRoles(Roles.TEACHER)) {
 			return ResponseEntity.ok(topicService.findBySubjects(userService.findCurrentUser().getSubjects()));
 		}
-		
+
 		return ResponseEntity.ok(topicService.findAll());
 	}
 
@@ -104,8 +104,8 @@ public class TopicRestController {
 
 		topic.setSubject(subjectService.findById(topic.getSubject().getId()));
 		topic.setCreatedBy(user);
-		topic.setStatus(userService.hasRoles(Roles.ADMIN, Roles.TEACHER) ?
-				UploadStatus.APPROVED : UploadStatus.WAITING_FOR_RESPONSE);
+		topic.setStatus(userService.hasRoles(Roles.ADMIN, Roles.TEACHER) ? UploadStatus.APPROVED
+				: UploadStatus.WAITING_FOR_RESPONSE);
 
 		EntityModel<Topic> entityModel = assembler.toModel(topicService.save(topic));
 
@@ -137,7 +137,8 @@ public class TopicRestController {
 
 			notificationService.save(currentTopic);
 		} else { // common user
-			if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(currentTopic.getCreatedBy().getEmail())) {
+			if (!SecurityContextHolder.getContext().getAuthentication().getName()
+					.equals(currentTopic.getCreatedBy().getEmail())) {
 				return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
 						"You are trying to edit a topic that you did not create", request.getRequestURI()));
 			}
@@ -276,6 +277,13 @@ public class TopicRestController {
 	public ResponseEntity<List<Question>> getQuiz(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);
 		return ResponseEntity.ok(questionService.generateQuiz(topic));
+	}
+
+	@Secured({ Roles.ADMIN, Roles.TEACHER })
+	@GetMapping("{id}/questions")
+	public ResponseEntity<List<Question>> getTopicQuestions(@PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+		return ResponseEntity.ok(questionService.findByTopic(topic));
 	}
 
 	private TopicUser getUserInfo(Topic topic) {

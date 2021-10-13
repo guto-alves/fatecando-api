@@ -36,6 +36,10 @@ public class QuestionService {
 	public List<Question> findByUser(User user) {
 		return repository.findByUser(user);
 	}
+	
+	public List<Question> findByTopic(Topic topic) {
+		return repository.findByTopic(topic);
+	}
 
 	public List<Question> generateQuiz(Topic topic) {
 		return getRandomQuestions(QuestionType.QUIZ, Arrays.asList(topic), TOTAL_QUIZ_QUESTIONS);

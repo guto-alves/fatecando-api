@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,7 @@ public class QuestionRestController {
 
 	@Autowired
 	private AnswerUtils answerUtils;
-	
+
 	@Autowired
 	private RewardService rewardService;
 
@@ -66,18 +67,18 @@ public class QuestionRestController {
 		if (userService.hasRoles(Roles.TEACHER)) {
 			return ResponseEntity.ok(questionService.findBySubjects(userService.findCurrentUser().getSubjects()));
 		}
-		
+
 		return ResponseEntity.ok(questionService.findAll());
 	}
 
 	@GetMapping("{id}")
 	public ResponseEntity<?> getQuestion(@PathVariable Long id) {
 		Question question = questionService.findById(id);
-		
+
 		if (question.getUser() == userService.findCurrentUser() || userService.isCurrentUserAdmin()) {
 			return ResponseEntity.ok(new QuestionDTO(question));
 		}
-		
+
 		return ResponseEntity.ok(question);
 	}
 
@@ -97,13 +98,13 @@ public class QuestionRestController {
 		question.setId(null);
 		question.setTopic(topicService.findById(question.getTopic().getId()));
 		question.setUser(user);
-		question.setStatus(userService.hasRoles(Roles.ADMIN, Roles.TEACHER) ?
-				UploadStatus.APPROVED : UploadStatus.WAITING_FOR_RESPONSE);
+		question.setStatus(userService.hasRoles(Roles.ADMIN, Roles.TEACHER) ? UploadStatus.APPROVED
+				: UploadStatus.WAITING_FOR_RESPONSE);
 		question.getAlternatives().stream()
 				.forEach(alternative -> alternative.getFeedback().setAlternative(alternative));
 
 		EntityModel<Question> entityModel = questionAssembler.toModel(questionService.save(question));
-		
+
 		rewardService.add(RewardType.CONTRIBUTIONS, user);
 		user.getUserActivity().incrementContentUploaded();
 		userService.save(user);
@@ -141,6 +142,13 @@ public class QuestionRestController {
 
 		questionService.save(currentQuestion);
 
+		return ResponseEntity.noContent().build();
+	}
+
+	@Secured({ Roles.ADMIN, Roles.TEACHER })
+	@DeleteMapping("{id}")
+	public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
+		questionService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 

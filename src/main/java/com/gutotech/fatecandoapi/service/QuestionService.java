@@ -69,4 +69,8 @@ public class QuestionService {
 	public Question save(Question question) {
 		return repository.save(question);
 	}
+	
+	public void delete(Long id) {
+		repository.deleteById(id);
+	}
 }

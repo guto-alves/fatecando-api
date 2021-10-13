@@ -69,19 +69,15 @@ public class TopicService {
 	public Topic findByIdWithPreviousAndNext(Long id) {
 		Topic topic = findById(id);
 
-		List<Topic> previousAndNext = repository.findPreviousAndNext(topic.getItemOrder(), topic.getSubject().getId());
-
-		if (previousAndNext.size() == 1) {
-			Topic foundTopic = previousAndNext.get(0);
-
-			if (foundTopic.getItemOrder() < topic.getItemOrder()) {
-				topic.setPrevious(foundTopic);
-			} else {
-				topic.setNext(foundTopic);
-			}
-		} else if (previousAndNext.size() == 2) {
-			topic.setPrevious(previousAndNext.get(0));
-			topic.setNext(previousAndNext.get(1));
+		List<Topic> topics = findBySubject(topic.getSubject());
+		
+		int topicIndex = topics.indexOf(topic);
+		if (topicIndex - 1  >= 0) {
+			topic.setPrevious(topics.get(topicIndex - 1));			
+		}
+		
+		if (topicIndex + 1  < topics.size()) {
+			topic.setNext(topics.get(topicIndex + 1));			
 		}
 
 		return topic;

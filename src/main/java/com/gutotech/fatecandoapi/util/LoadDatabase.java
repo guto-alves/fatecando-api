@@ -177,13 +177,13 @@ public class LoadDatabase implements CommandLineRunner {
 					UploadStatus.APPROVED, topics.get(i % (topics.size() - 1)), staff,
 					Arrays.asList(
 							new Alternative("Alternativa 1",
-									new Feedback("Parabéns! Esta é a resposta certa!", null, true)),
+									new Feedback(null, "Parabéns! Esta é a resposta certa!", true)),
 							new Alternative("Alternativa 2",
-									new Feedback("Quasee! Estude com mais atenção!", null, false)),
+									new Feedback(null, "Quasee! Estude com mais atenção!", false)),
 							new Alternative("Alternativa 3",
-									new Feedback("Errado! Estude com mais atenção!", null, false)),
+									new Feedback(null, "Errado! Estude com mais atenção!", false)),
 							new Alternative("Alterantiva 4",
-									new Feedback("Errado! Estude com mais atenção!", null, false))));
+									new Feedback(null, "Errado! Estude com mais atenção!", false))));
 			questions.add(question);
 		}
 		questionRepository.saveAll(questions);

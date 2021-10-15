@@ -77,6 +77,7 @@ public class LoadDatabase implements CommandLineRunner {
 		// Users
 		User staff = new User("Equipe Fatecando", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
 				new Date());
+		staff.setEnabled(true);
 		staff.setRoles(Arrays.asList(user, admin));
 		userService.save(staff);
 
@@ -100,30 +101,30 @@ public class LoadDatabase implements CommandLineRunner {
 				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
 						+ "Implementação de algoritmos usando uma linguagem de programação.",
-				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 1);
+				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 1, true);
 		Subject ed = new Subject("Estrutura de Dados", "ED001",
 				"Projeto e representação de algoritmos. Estruturas de controle de fluxo de execução: seqüência,\r\n"
 						+ "seleção e repetição. Tipos de dados básicos e estruturados (vetores e registros). Rotinas. Arquivos.\r\n"
 						+ "Implementação de algoritmos usando uma linguagem de programação.",
-				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 3);
+				"Analisar problemas computacionais e projetar soluções por meio da construção de algorítmos.", 3, true);
 		Subject db = new Subject("Banco de Dados", "IBD002",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Entender fundamentos, arquitetura e técnicas de projeto e implementação de banco de dados", 4);
+				"Entender fundamentos, arquitetura e técnicas de projeto e implementação de banco de dados", 4, true);
 		Subject ldb = new Subject("Laboratório de Banco de Dados", "IBD100",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 5);
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 5, true);
 		Subject ago = new Subject("Gestão de Projetos", "AGO005A",
 				"Definição de projeto segundo concepção difundida pelas melhores práticas de gestão de projetos. Histórico do desenvolvimento do conjunto de conhecimentos de gestão de projetos. Comparação ente o gerenciamento por projetos com o gerenciamento tradicional. O ciclo de vida de um projeto. Os fatores de sucesso e insucesso de projetos e sua mensuração. As nove de conhecimento para a gestão de projetos e seus processos : Integração, Escopo, Tempo, Custo, Qualidade, Recursos Humanos, Comunicações, Riscos e Aquisições.",
-				"Conhecer e aplicar técnicas, métodos e ferramentas para uma gestão eficaz de projetos.", 6);
+				"Conhecer e aplicar técnicas, métodos e ferramentas para uma gestão eficaz de projetos.", 6, false);
 		Subject irc1 = new Subject("Laboratório de Redes", "IRC100A",
 				"Prática em laboratório de instalação física de redes e suas diversas topologias, instalação de equipamentos de conectividade, cabeamento estruturado, protocolos TCP/IP, algorítmos e protocolos de roteamento, análise de tráfego, protocolos de transporte TCP e UDP, protocolos de aplicação e instalação de servidores/serviços  de redes.",
-				"Instalar redes", 6);
+				"Instalar redes", 6, false);
 		Subject cee = new Subject("Empreendedorismo", "CEE002A",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 6);
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 6, false);
 		Subject eng1 = new Subject("Engenharia de Software I", "IES100",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 2);
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 2, true);
 		Subject eng2 = new Subject("Engenharia de Software II", "IES200",
 				"Contexto atual das empresas em relação aos projetos de tecnologia de informação. Modelagem de\r\n"
 						+ "Negócio para o desenvolvimento de software. Conceitos, evolução e importância da Engenharia de\r\n"
@@ -131,10 +132,10 @@ public class LoadDatabase implements CommandLineRunner {
 						+ "projeto. Técnicas de elicitação. Requisitos, seus tipos e matriz de rastreabilidade. Definição do sistema a partir\r\n"
 						+ "dos requisitos. Gerenciamento de requisitos.",
 				"Aplicar um processo de desenvolvimento de software, ênfase na definição e elicitação dos requisitos.",
-				3);
+				3, true);
 		Subject eng3 = new Subject("Engenharia de Software III", "IES300",
 				"Conceitos sobre empreendedorismo. Características e habilidades do empreendedor. O comportamento empreendedor: análise de oportunidades. O processo de geração de idéias e conceito de negócios. Meios para análise de oportunidades e idéias. Estratégia de negócios. Aspectos de planejamento, abertura, funcionamento e gerenciamento de um negócio. Instituições de apoio e financiamento. Desenvolvimento de planos de negócio.",
-				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 4);
+				"Desenvolver plano de negócio para empreendimento em Tecnologia da Informação.", 4, true);
 		subjectRepository.saveAll(Arrays.asList(alp, ed, ago, irc1, cee, db, ldb, eng1, eng2, eng3));
 
 		// Topics

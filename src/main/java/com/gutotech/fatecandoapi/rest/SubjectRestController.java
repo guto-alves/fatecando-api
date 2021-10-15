@@ -61,8 +61,12 @@ public class SubjectRestController {
 		} else if (withTopics) {
 			return ResponseEntity.ok(subjectService.findWithTopics());
 		}
+		
+		if (userService.hasRoles(Roles.ADMIN, Roles.TEACHER)) {
+			return ResponseEntity.ok(subjectService.findAll());
+		}
 
-		return ResponseEntity.ok(subjectService.findAll());
+		return ResponseEntity.ok(subjectService.findAllEnabled());
 	}
 
 	@GetMapping("search")
@@ -73,6 +77,10 @@ public class SubjectRestController {
 	@GetMapping("{id}")
 	public EntityModel<Subject> getSubject(@PathVariable Long id) {
 		Subject subject = subjectService.findById(id);
+		
+		if (!subject.isEnabled() && !userService.hasRoles(Roles.ADMIN, Roles.TEACHER)) {
+			throw new IllegalStateException("A disciplina que você está tentando acessar não está ativa no momento.");
+		}
 
 		SubjectUser subjectUser = subjectUserService.findById(subject, userService.findCurrentUser());
 		subjectUser.setAccessDate(new Date());
@@ -104,6 +112,7 @@ public class SubjectRestController {
 		currentSubject.setSemester(subject.getSemester());
 		currentSubject.setDescription(subject.getDescription());
 		currentSubject.setObjective(subject.getObjective());
+		currentSubject.setEnabled(subject.isEnabled());
 
 		EntityModel<Subject> entityModel = subjectAssembler.toModel(subjectService.save(currentSubject));
 
@@ -115,7 +124,9 @@ public class SubjectRestController {
 	@Secured(Roles.ADMIN)
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteSubject(@PathVariable Long id) {
-		subjectService.deleteById(id);
+		Subject subject = subjectService.findById(id);
+		subject.setEnabled(false);
+		subjectService.save(subject);
 		return ResponseEntity.noContent().build();
 	}
 

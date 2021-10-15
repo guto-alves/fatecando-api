@@ -19,9 +19,13 @@ public class SubjectService {
 		return repository.findById(id) //
 				.orElseThrow(() -> new ResourceNotFoundException("Could not find subject " + id));
 	}
-	
+
 	public List<Subject> findAll() {
 		return repository.findByOrderByName();
+	}
+	
+	public List<Subject> findAllEnabled() {
+		return repository.findEnabledByOrderByName();
 	}
 
 	public List<Subject> findBySemester(Integer semester) {
@@ -31,7 +35,7 @@ public class SubjectService {
 	public List<Subject> findWithTopics() {
 		return repository.findWithTopics();
 	}
-	
+
 	public List<Subject> findBy(String text) {
 		return repository.findBy(text);
 	}
@@ -39,8 +43,5 @@ public class SubjectService {
 	public Subject save(Subject subject) {
 		return repository.save(subject);
 	}
-
-	public void deleteById(Long id) {
-		repository.deleteById(id);
-	}
+	
 }

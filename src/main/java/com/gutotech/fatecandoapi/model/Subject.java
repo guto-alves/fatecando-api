@@ -49,6 +49,8 @@ public class Subject {
 	@Min(1)
 	@Max(12)
 	private int semester;
+	
+	private boolean enabled;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
@@ -66,15 +68,17 @@ public class Subject {
 	public Subject() {
 	}
 
-	public Subject(String name, String code, String description, String objetive, int semester) {
+	public Subject(String name, String code, String description, String objetive, int semester, boolean enabled) {
 		this.name = name;
 		this.code = code;
 		this.description = description;
 		this.objective = objetive;
 		this.semester = semester;
+		this.enabled = enabled;
 	}
 
-	// Utility methods that synchronize both ends whenever a child element is added or removed.
+	// Utility methods that synchronize both ends whenever a child element is added
+	// or removed.
 	public void addTopic(Topic topic) {
 		topics.add(topic);
 		topic.setSubject(this);
@@ -133,6 +137,14 @@ public class Subject {
 		this.semester = semester;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
 	public Set<Topic> getTopics() {
 		return topics;
 	}

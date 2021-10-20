@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class QuestionService {
 	}
 
 	public List<Question> getRandomQuestions(QuestionType type, List<Topic> topics, int quantity) {
-		List<Question> questions = repository.findByTypeAndTopicIn(type, topics);
+		List<Question> questions = findByTypeAndTopicIn(type, topics);
 
 		Collections.shuffle(questions, new SecureRandom());
 
@@ -63,6 +64,13 @@ public class QuestionService {
 		}
 
 		return questions;
+	}
+	
+	public List<Question> findByTypeAndTopicIn(QuestionType type, List<Topic> topics) {
+		List<Question> questions = repository.findByTopicIn(topics);
+		return questions.stream()
+					.filter(question -> question.getTypes().contains(type))
+					.collect(Collectors.toList());
 	}
 
 	public Question findById(Long id) {

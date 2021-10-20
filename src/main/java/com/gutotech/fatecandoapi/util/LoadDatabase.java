@@ -1,5 +1,6 @@
 package com.gutotech.fatecandoapi.util;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -28,6 +29,7 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.CommentRepository;
 import com.gutotech.fatecandoapi.repository.ForumThreadRepository;
 import com.gutotech.fatecandoapi.repository.QuestionRepository;
+import com.gutotech.fatecandoapi.repository.QuestionTypeRepository;
 import com.gutotech.fatecandoapi.repository.RewardRepository;
 import com.gutotech.fatecandoapi.repository.RoleRepository;
 import com.gutotech.fatecandoapi.repository.SubjectRepository;
@@ -53,6 +55,9 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Autowired
 	private QuestionRepository questionRepository;
+	
+	@Autowired
+	private QuestionTypeRepository questionTypeRepository;
 
 	@Autowired
 	private TopicRepository topicRepository;
@@ -65,6 +70,8 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	private static SecureRandom random = new SecureRandom();
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -172,9 +179,11 @@ public class LoadDatabase implements CommandLineRunner {
 				new Comment("Comment 6", alice, forumThread2), new Comment("Comment 7", alice, forumThread1)));
 
 		// Questions
+		List<QuestionType> questionTypes = List.of(new QuestionType("QUIZ"), new QuestionType("TEST"), new QuestionType("GAME"));
+		questionTypeRepository.saveAll(questionTypes);
 		List<Question> questions = new ArrayList<>();
 		for (int i = 0; i <= 100; i++) {
-			Question question = new Question("Pergunta " + (i + 1) + "?", QuestionType.values()[i % 3],
+			Question question = new Question("Pergunta " + (i + 1) + "?", List.of(questionTypes.get(random.nextInt(3))),
 					UploadStatus.APPROVED, topics.get(i % (topics.size() - 1)), staff,
 					Arrays.asList(
 							new Alternative("Alternativa 1",

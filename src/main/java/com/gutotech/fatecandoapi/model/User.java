@@ -29,6 +29,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -141,7 +142,7 @@ public class User {
 	}
 
 	public void setFullName(String fullName) {
-		this.fullName = fullName.trim();
+		this.fullName = StringUtils.trimWhitespace(fullName);
 	}
 
 	public String getEmail() {

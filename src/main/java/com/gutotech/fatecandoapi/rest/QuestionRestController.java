@@ -34,6 +34,7 @@ import com.gutotech.fatecandoapi.model.assembler.QuestionModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.AnswerUtils;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.QuestionTypeService;
 import com.gutotech.fatecandoapi.service.RewardService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
@@ -82,9 +83,12 @@ public class QuestionRestController {
 		return ResponseEntity.ok(question);
 	}
 
+	@Autowired
+	private QuestionTypeService questionTypeService;
+
 	@GetMapping("types")
-	public ResponseEntity<QuestionType[]> getQuestionTypes() {
-		return ResponseEntity.ok(QuestionType.values());
+	public ResponseEntity<List<QuestionType>> getQuestionTypes() {
+		return ResponseEntity.ok(questionTypeService.findAll());
 	}
 
 	@PostMapping
@@ -136,7 +140,7 @@ public class QuestionRestController {
 		}
 
 		currentQuestion.setDescription(updatedQuestion.getDescription());
-		currentQuestion.setType(updatedQuestion.getType());
+		currentQuestion.setTypes(updatedQuestion.getTypes());
 		currentQuestion.setAlternatives(updatedQuestion.getAlternatives());
 		currentQuestion.setTopic(updatedQuestion.getTopic());
 

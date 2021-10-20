@@ -17,7 +17,7 @@ public class QuestionDTO {
 	private String description;
 
 	@NotNull
-	private QuestionType type;
+	private List<QuestionType> types;
 
 	private UploadStatus status;
 
@@ -39,7 +39,7 @@ public class QuestionDTO {
 	public QuestionDTO(Question question) {
 		this.id = question.getId();
 		this.description = question.getDescription();
-		this.type = question.getType();
+		this.types = question.getTypes();
 		this.status = question.getStatus();
 		this.topic = question.getTopic();
 		this.user = question.getUser();
@@ -62,12 +62,12 @@ public class QuestionDTO {
 		this.description = description;
 	}
 
-	public QuestionType getType() {
-		return type;
+	public List<QuestionType> getTypes() {
+		return types;
 	}
-
-	public void setType(QuestionType type) {
-		this.type = type;
+	
+	public void setTypes(List<QuestionType> types) {
+		this.types = types;
 	}
 
 	public UploadStatus getStatus() {

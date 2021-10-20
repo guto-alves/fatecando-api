@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -39,8 +40,9 @@ public class Question {
 	private String description;
 
 	@NotNull
-	@Enumerated(EnumType.STRING)
-	private QuestionType type;
+	@ManyToMany
+	@Size(min = 1, message = "A questão precisa ser de pelo menos um dos tipos (QUIZ, TEST OU GAME).")
+	private List<QuestionType> types = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
 	private UploadStatus status;
@@ -69,10 +71,10 @@ public class Question {
 	public Question() {
 	}
 
-	public Question(String description, QuestionType type, UploadStatus status, Topic topic, User user,
+	public Question(String description, List<QuestionType> type, UploadStatus status, Topic topic, User user,
 			List<Alternative> alternatives) {
 		this.description = description;
-		this.type = type;
+		this.types = type;
 		this.status = status;
 		this.topic = topic;
 		this.user = user;
@@ -95,12 +97,13 @@ public class Question {
 		this.description = description;
 	}
 
-	public QuestionType getType() {
-		return type;
-	}
 
-	public void setType(QuestionType type) {
-		this.type = type;
+	public List<QuestionType> getTypes() {
+		return types;
+	}
+	
+	public void setTypes(List<QuestionType> types) {
+		this.types = types;
 	}
 
 	public UploadStatus getStatus() {

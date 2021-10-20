@@ -32,6 +32,10 @@ public class UserDTO {
 
 	private boolean isTeacher;
 
+	private boolean isAuthorizedTeacher;
+	
+	private boolean enabled;
+
 	private List<Subject> subjects = new ArrayList<>();
 
 	public UserDTO() {
@@ -100,6 +104,22 @@ public class UserDTO {
 
 	public void setTeacher(boolean isTeacher) {
 		this.isTeacher = isTeacher;
+	}
+
+	public boolean isAuthorizedTeacher() {
+		return isAuthorizedTeacher;
+	}
+
+	public void setAuthorizedTeacher(boolean isAuthorizedTeacher) {
+		this.isAuthorizedTeacher = isAuthorizedTeacher;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public List<Subject> getSubjects() {

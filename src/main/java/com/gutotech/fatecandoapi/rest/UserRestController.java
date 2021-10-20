@@ -29,6 +29,7 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.UserDTO;
 import com.gutotech.fatecandoapi.model.UserRegistration;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
+import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
@@ -96,9 +97,22 @@ public class UserRestController {
 				currentUser.setAuthorizedTeacher(false);
 			}
 		}
-		
-		currentUser.setSubjects(updatedUser.getSubjects());
+
 		currentUser.setTeacher(updatedUser.isTeacher());
+		currentUser.setSubjects(updatedUser.getSubjects());
+
+		if (userService.hasRoles(Roles.ADMIN, Roles.TEACHER)) {
+			currentUser.setEnabled(updatedUser.isEnabled());
+		}
+		
+		if (userService.hasRoles(Roles.ADMIN)) {
+			if (updatedUser.isAuthorizedTeacher()) {
+				currentUser.getRoles().add(new Role(2L, Roles.TEACHER));
+			} else {
+				currentUser.getRoles().remove(new Role(2L, Roles.TEACHER));
+			}
+			currentUser.setAuthorizedTeacher(updatedUser.isAuthorizedTeacher());
+		} 
 
 		EntityModel<User> entityModel = assembler.toModel(userService.save(currentUser));
 
@@ -119,6 +133,11 @@ public class UserRestController {
 	@GetMapping("me/subjects")
 	public ResponseEntity<List<Subject>> getMySubjects() {
 		return ResponseEntity.ok(userService.findCurrentUser().getSubjects());
+	}
+
+	@GetMapping("{id}/subjects")
+	public ResponseEntity<List<Subject>> getMySubjects(@PathVariable Long id) {
+		return ResponseEntity.ok(userService.findById(id).getSubjects());
 	}
 
 	@GetMapping("me/subjects/last-accessed")

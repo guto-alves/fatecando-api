@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gutotech.fatecandoapi.model.PasswordForm;
 import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.RewardDTO;
 import com.gutotech.fatecandoapi.model.Role;
@@ -135,6 +136,13 @@ public class UserRestController {
 
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
+	}
+	
+	@PutMapping("password")
+	public ResponseEntity<Void> updatePassword(@RequestBody PasswordForm password) {
+		User user = userService.findCurrentUser();
+		userService.updatePassoword(user, password);
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("me")

@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.gutotech.fatecandoapi.model.PasswordForm;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.repository.RoleRepository;
 import com.gutotech.fatecandoapi.repository.UserRepository;
@@ -76,6 +77,17 @@ public class UserService {
 
 	public void deleteAll() {
 		repository.deleteAll();
+	}
+	
+	public void updatePassoword(User user, PasswordForm passwordForm) {
+		if (!passwordEncoder.matches(passwordForm.getPassword(), user.getPassword())) {
+			throw new IllegalArgumentException("Senha atual incorreta");
+		}
+		if (!passwordForm.getNewPassword().equals(passwordForm.getConfirmNewPassword())) {
+			throw new IllegalArgumentException("Nova senha e confirmação são diferentes");
+		}
+		user.setPassword(passwordEncoder.encode(passwordForm.getNewPassword()));
+		repository.save(user);
 	}
 
 	public User findCurrentUser() {

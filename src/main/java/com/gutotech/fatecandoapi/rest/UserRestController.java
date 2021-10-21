@@ -2,6 +2,7 @@ package com.gutotech.fatecandoapi.rest;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.UserDTO;
 import com.gutotech.fatecandoapi.model.UserRegistration;
 import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
+import com.gutotech.fatecandoapi.repository.RoleRepository;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TopicService;
@@ -49,6 +51,9 @@ public class UserRestController {
 
 	@Autowired
 	private QuestionService questionService;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@GetMapping
 	public ResponseEntity<List<User>> getUsers() {
@@ -84,18 +89,30 @@ public class UserRestController {
 	@PutMapping("{id}")
 	public ResponseEntity<EntityModel<User>> updateUser(@RequestBody @Valid UserDTO updatedUser,
 			@PathVariable Long id) {
-		// TODO validation - check current user
 		User currentUser = userService.findById(id);
+
+		if (currentUser != userService.findCurrentUser() && !userService.hasRoles(Roles.TEACHER, Roles.ADMIN)) {
+			throw new IllegalStateException("Você não tem permissão para realizar está ação.");
+		}
+
 		currentUser.setFullName(updatedUser.getFullName());
 		currentUser.setGender(updatedUser.getGender());
 		currentUser.setBirthDate(updatedUser.getBirthDate());
+
+		Role teacherRole = roleRepository.findByName(Roles.TEACHER);
 
 		if (!currentUser.isTeacher() && updatedUser.isTeacher()) {
 			currentUser.setAuthorizedTeacher(false);
 		} else if (currentUser.isTeacher() && updatedUser.isTeacher()) {
 			if (!currentUser.getSubjects().containsAll(updatedUser.getSubjects())) {
 				currentUser.setAuthorizedTeacher(false);
+				currentUser.getRoles().remove(teacherRole);
 			}
+		} else if (currentUser.isTeacher() && !updatedUser.isTeacher()) {
+			currentUser.setAuthorizedTeacher(false);
+			currentUser.setTeacher(false);
+			currentUser.getRoles().remove(teacherRole);
+			updatedUser.getSubjects().clear();
 		}
 
 		currentUser.setTeacher(updatedUser.isTeacher());
@@ -104,15 +121,15 @@ public class UserRestController {
 		if (userService.hasRoles(Roles.ADMIN, Roles.TEACHER)) {
 			currentUser.setEnabled(updatedUser.isEnabled());
 		}
-		
+
 		if (userService.hasRoles(Roles.ADMIN)) {
 			if (updatedUser.isAuthorizedTeacher()) {
-				currentUser.getRoles().add(new Role(2L, Roles.TEACHER));
+				currentUser.getRoles().add(teacherRole);
 			} else {
-				currentUser.getRoles().remove(new Role(2L, Roles.TEACHER));
+				currentUser.getRoles().remove(teacherRole);
 			}
 			currentUser.setAuthorizedTeacher(updatedUser.isAuthorizedTeacher());
-		} 
+		}
 
 		EntityModel<User> entityModel = assembler.toModel(userService.save(currentUser));
 
@@ -126,7 +143,7 @@ public class UserRestController {
 	}
 
 	@GetMapping("me/roles")
-	public ResponseEntity<List<Role>> getUserRoles() {
+	public ResponseEntity<Set<Role>> getUserRoles() {
 		return ResponseEntity.ok(userService.findCurrentUser().getRoles());
 	}
 

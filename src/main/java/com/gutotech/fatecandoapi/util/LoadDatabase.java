@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -85,7 +86,7 @@ public class LoadDatabase implements CommandLineRunner {
 		User staff = new User("Equipe Fatecando", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
 				new Date());
 		staff.setEnabled(true);
-		staff.setRoles(Arrays.asList(user, admin));
+		staff.setRoles(Set.of(user, admin));
 		userService.save(staff);
 
 		User gustavo = new User("Gustavo Alves", "guto@guto.com", "123", Gender.MALE, new Date());
@@ -199,7 +200,7 @@ public class LoadDatabase implements CommandLineRunner {
 		questionRepository.saveAll(questions);
 		
 		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("123"), Gender.FEMALE, new Date(), true, Arrays.asList(alp));
-		maria.setRoles(Arrays.asList(teacher));
+		maria.setRoles(Set.of(teacher));
 		userService.save(maria);
 	}
 

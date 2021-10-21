@@ -3,6 +3,7 @@ package com.gutotech.fatecandoapi.service;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -56,7 +57,7 @@ public class UserService {
 
 	public User register(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(Arrays.asList(roleRepository.findByName(Roles.STUDENT)));
+		user.setRoles(Set.of(roleRepository.findByName(Roles.STUDENT)));
 		user.setEnabled(true);
 		return repository.save(user);
 	}

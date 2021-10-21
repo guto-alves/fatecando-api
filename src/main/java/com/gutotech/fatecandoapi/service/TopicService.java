@@ -31,7 +31,7 @@ public class TopicService {
 	}
 	
 	public List<Topic> findBySubjects(List<Subject> subjects) {
-		return repository.findBySubjectInAndStatusOrderByItemOrder(subjects, UploadStatus.APPROVED);
+		return repository.findBySubjectInOrderByItemOrder(subjects);
 	}
 
 	public List<Topic> findByCreatedBy(User user) {

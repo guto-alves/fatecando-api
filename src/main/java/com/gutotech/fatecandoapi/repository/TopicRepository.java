@@ -17,7 +17,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 	List<Topic> findBySubjectAndStatusOrderByItemOrder(Subject subject, UploadStatus status);
 	
-	List<Topic> findBySubjectInAndStatusOrderByItemOrder(List<Subject> subjects, UploadStatus status);
+	List<Topic> findBySubjectInOrderByItemOrder(List<Subject> subjects);
 
 	@Query("select t from Topic t where t.status = ?1 order by t.subject.semester, t.itemOrder")
 	List<Topic> findByStatus(UploadStatus status);

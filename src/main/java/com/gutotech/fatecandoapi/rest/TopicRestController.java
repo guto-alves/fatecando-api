@@ -239,6 +239,12 @@ public class TopicRestController {
 		Topic draggedTopic = topicService.findById(draggedTopicId);
 		Topic relatedTopic = topicService.findById(relatedTopicId);
 
+		User currentUser = userService.findCurrentUser();
+		if (userService.hasRoles(Roles.TEACHER) && !currentUser.getSubjects().contains(draggedTopic.getSubject())) {
+			throw new IllegalStateException("Você não tem permissão para alterar a ordem dos tópicos da disciplina "
+					+ draggedTopic.getSubject().getName());
+		}
+
 		List<Topic> topics = draggedTopic.getItemOrder() < relatedTopic.getItemOrder()
 				? topicService.findBetween(draggedTopic.getItemOrder(), relatedTopic.getItemOrder(),
 						draggedTopic.getSubject().getId())

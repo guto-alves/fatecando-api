@@ -76,7 +76,7 @@ public class QuestionRestController {
 	public ResponseEntity<?> getQuestion(@PathVariable Long id) {
 		Question question = questionService.findById(id);
 
-		if (question.getUser() == userService.findCurrentUser() || userService.isCurrentUserAdmin()) {
+		if (question.getUser() == userService.findCurrentUser() || userService.hasRoles(Roles.TEACHER, Roles.ADMIN)) {
 			return ResponseEntity.ok(new QuestionDTO(question));
 		}
 

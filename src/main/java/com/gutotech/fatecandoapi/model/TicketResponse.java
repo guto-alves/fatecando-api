@@ -16,6 +16,8 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "ticket_responses")
 public class TicketResponse {
@@ -30,6 +32,7 @@ public class TicketResponse {
 	@ManyToOne
 	private User user;
 
+	@JsonIgnore
 	@ManyToOne
 	private Ticket ticket;
 

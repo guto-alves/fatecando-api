@@ -83,17 +83,20 @@ public class SupportRestController {
 			@RequestBody @Valid TicketResponse response) {
 		Ticket ticket = ticketService.findById(id);
 
-		if (!hasPermission(ticket.getUser().getEmail())) {
-			return ResponseEntity.badRequest().build();
+		if (ticket.getStatus() == Status.CLOSED || !hasPermission(ticket.getUser().getEmail())) {
+			throw new IllegalStateException("Este Ticket já foi fechado ou você não tem permissão para responde-lo.");
 		}
 
+		response.setId(null);
 		response.setUser(userService.findCurrentUser());
 		ticket.getResponses().add(response);
 		response.setTicket(ticket);
 
 		EntityModel<Ticket> entityModel = assembler.toModel(ticketService.save(ticket));
 
-		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(response);
+		return ResponseEntity //
+				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+				.body(response);
 	}
 
 	private boolean hasPermission(String onwerEmail) {

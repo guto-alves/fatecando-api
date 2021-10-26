@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,10 +41,10 @@ public class SupportRestController {
 	@Autowired
 	private UserService userService;
 
+	@Secured(Roles.ADMIN)
 	@GetMapping
 	public ResponseEntity<List<Ticket>> getTickets() {
-		return ResponseEntity
-				.ok(ticketService.findByUser(SecurityContextHolder.getContext().getAuthentication().getName()));
+		return ResponseEntity.ok(ticketService.findAll());
 	}
 
 	@GetMapping("{id}")
@@ -67,6 +69,15 @@ public class SupportRestController {
 				.body(entityModel);
 	}
 
+	@Secured(Roles.ADMIN)
+	@PutMapping("{id}/status")
+	public ResponseEntity<Void> updateTicketStatus(@PathVariable Long id, @RequestBody Ticket.Status status) {
+		Ticket ticket = ticketService.findById(id);
+		ticket.setStatus(status);
+		ticketService.save(ticket);
+		return ResponseEntity.noContent().build();
+	}
+
 	@GetMapping("{id}/responses")
 	public ResponseEntity<List<TicketResponse>> getTicketResponses(@PathVariable Long id) {
 		Ticket ticket = ticketService.findById(id);
@@ -87,6 +98,10 @@ public class SupportRestController {
 			throw new IllegalStateException("Este Ticket já foi fechado ou você não tem permissão para responde-lo.");
 		}
 
+		if (userService.hasRoles(Roles.ADMIN)) {
+			ticket.setStatus(Status.ANSWERED);
+		}
+
 		response.setId(null);
 		response.setUser(userService.findCurrentUser());
 		ticket.getResponses().add(response);
@@ -99,6 +114,7 @@ public class SupportRestController {
 				.body(response);
 	}
 
+	// Is the owner of the ticket or has the role of ADMINISTRATOR
 	private boolean hasPermission(String onwerEmail) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return auth != null && (auth.getName().equals(onwerEmail)

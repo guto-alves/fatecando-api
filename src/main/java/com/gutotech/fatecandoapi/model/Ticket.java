@@ -58,6 +58,7 @@ public class Ticket {
 	private Status status;
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private Category category;
 
 	@JsonIgnore

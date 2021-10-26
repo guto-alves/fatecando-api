@@ -26,6 +26,7 @@ import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.RewardDTO;
 import com.gutotech.fatecandoapi.model.Role;
 import com.gutotech.fatecandoapi.model.Subject;
+import com.gutotech.fatecandoapi.model.Ticket;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.UserDTO;
@@ -34,6 +35,7 @@ import com.gutotech.fatecandoapi.model.assembler.UserModelAssembler;
 import com.gutotech.fatecandoapi.repository.RoleRepository;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.QuestionService;
+import com.gutotech.fatecandoapi.service.TicketService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
 
@@ -55,6 +57,9 @@ public class UserRestController {
 
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private TicketService ticketService;
 
 	@GetMapping
 	public ResponseEntity<List<User>> getUsers() {
@@ -137,7 +142,7 @@ public class UserRestController {
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
 	}
-	
+
 	@PutMapping("password")
 	public ResponseEntity<Void> updatePassword(@RequestBody PasswordForm password) {
 		User user = userService.findCurrentUser();
@@ -192,6 +197,12 @@ public class UserRestController {
 	public ResponseEntity<List<Question>> getUserQuestions() {
 		User user = userService.findCurrentUser();
 		return ResponseEntity.ok(questionService.findByUser(user));
+	}
+	
+	@GetMapping("me/tickets")
+	public ResponseEntity<List<Ticket>> getUserTickets() {
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		return ResponseEntity.ok(ticketService.findByUser(name));
 	}
 
 	@GetMapping("me/rewards")

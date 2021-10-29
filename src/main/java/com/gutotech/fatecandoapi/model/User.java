@@ -272,7 +272,9 @@ public class User {
 	}
 
 	public Long getScore() {
-		return 0L;
+		return userRewards.stream() //
+				.mapToLong((r) -> r.getReward().getScore()) //
+				.sum();
 	}
 
 	@Override

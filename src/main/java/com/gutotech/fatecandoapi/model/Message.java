@@ -19,9 +19,12 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.gutotech.fatecandoapi.rest.JacksonCustomMessageSerializer;
 
 @Entity
 @Table(name = "messages")
+@JsonSerialize(using = JacksonCustomMessageSerializer.class)
 public class Message {
 
 	@Id

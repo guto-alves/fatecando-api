@@ -20,17 +20,21 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.gutotech.fatecandoapi.rest.JacksonCustomChatSerializer;
+
 @Entity
 @Table(name = "chats")
+@JsonSerialize(using = JacksonCustomChatSerializer.class)
 public class Chat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
-	
+
 	// is a private chat
-	private boolean pvt; 
+	private boolean pvt;
 
 	private boolean blocked;
 
@@ -45,7 +49,7 @@ public class Chat {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creation_date")
 	private Date creationDate;
-	
+
 	public Chat() {
 	}
 
@@ -63,11 +67,11 @@ public class Chat {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -111,7 +115,7 @@ public class Chat {
 	public void setLastMessage(Message lastMessage) {
 		this.lastMessage = lastMessage;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

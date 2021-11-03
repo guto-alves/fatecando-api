@@ -27,7 +27,7 @@ public class JacksonCustomChatSerializer extends StdSerializer<Chat> {
 	@Override
 	public void serialize(Chat chat, JsonGenerator jgen, SerializerProvider provider) throws IOException {
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-		
+
 		jgen.writeStartObject();
 
 		if (chat.getId() == null) {
@@ -44,6 +44,7 @@ public class JacksonCustomChatSerializer extends StdSerializer<Chat> {
 		jgen.writeObjectFieldStart("lastMessage"); // start lastMessage
 		jgen.writeNumberField("id", chat.getLastMessage().getId());
 		jgen.writeStringField("body", chat.getLastMessage().getBody());
+		jgen.writeBooleanField("newMessage", chat.getLastMessage().isNewMessage());
 
 		jgen.writeObjectFieldStart("from"); // start from
 		jgen.writeNumberField("id", chat.getLastMessage().getFrom().getId());
@@ -51,7 +52,7 @@ public class JacksonCustomChatSerializer extends StdSerializer<Chat> {
 		jgen.writeStringField("email", chat.getLastMessage().getFrom().getEmail());
 		jgen.writeBooleanField("authorizedTeacher", chat.getLastMessage().getFrom().isAuthorizedTeacher());
 		jgen.writeEndObject(); // end from
-		
+
 		jgen.writeObjectFieldStart("to"); // start to
 		jgen.writeNumberField("id", chat.getLastMessage().getTo().getId());
 		jgen.writeStringField("fullName", chat.getLastMessage().getTo().getFullName());

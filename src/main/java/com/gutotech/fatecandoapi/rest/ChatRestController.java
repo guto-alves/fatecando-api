@@ -53,13 +53,26 @@ public class ChatRestController {
 			throw new IllegalArgumentException("You don't have permission to access the messages of the chat " + id);
 		}
 
-		return ResponseEntity.ok(messageService.findByChat(chat));
+		List<Message> messages = messageService.findByChat(chat);
+		messages.forEach((message) -> {
+			message.setNewMessage(false);
+		});
+		messageService.saveAll(messages);
+
+		return ResponseEntity.ok(messages);
 	}
 
 	@GetMapping("messages/private/{email}")
 	public ResponseEntity<List<Message>> getPrivateMessages(@PathVariable String email) {
 		Chat chat = chatService.getPrivateChat(userService.findCurrentUser(), userService.findByEmail(email));
-		return ResponseEntity.ok(messageService.findByChat(chat));
+
+		List<Message> messages = messageService.findByChat(chat);
+		messages.forEach((message) -> {
+			message.setNewMessage(false);
+		});
+		messageService.saveAll(messages);
+
+		return ResponseEntity.ok(messages);
 	}
 
 	@GetMapping("messages/{id}")

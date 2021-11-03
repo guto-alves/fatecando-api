@@ -27,7 +27,7 @@ public class JacksonCustomMessageSerializer extends StdSerializer<Message> {
 	@Override
 	public void serialize(Message message, JsonGenerator jgen, SerializerProvider provider) throws IOException {
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-		
+
 		jgen.writeStartObject();
 
 		if (message.getId() == null) {

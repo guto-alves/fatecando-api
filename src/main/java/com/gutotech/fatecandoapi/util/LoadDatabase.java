@@ -201,6 +201,7 @@ public class LoadDatabase implements CommandLineRunner {
 		
 		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("123"), Gender.FEMALE, new Date(), true, Arrays.asList(alp));
 		maria.setRoles(Set.of(teacher));
+		maria.setEnabled(true);
 		userService.save(maria);
 	}
 

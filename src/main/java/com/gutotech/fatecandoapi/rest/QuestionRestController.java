@@ -122,7 +122,7 @@ public class QuestionRestController {
 			HttpServletRequest request) {
 		Question currentQuestion = questionService.findById(id);
 
-		boolean hasAdminRole = userService.hasRoles(Roles.ADMIN, Roles.STUDENT);
+		boolean hasAdminRole = userService.hasRoles(Roles.ADMIN, Roles.TEACHER);
 
 		if (!hasAdminRole && currentQuestion.getStatus() != UploadStatus.EDITABLE) {
 			return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST,
@@ -137,6 +137,8 @@ public class QuestionRestController {
 
 		if (hasAdminRole) {
 			currentQuestion.setStatus(updatedQuestion.getStatus());
+		} else {
+			currentQuestion.setStatus(UploadStatus.EDITED);
 		}
 
 		currentQuestion.setDescription(updatedQuestion.getDescription());

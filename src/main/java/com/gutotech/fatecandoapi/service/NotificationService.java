@@ -51,7 +51,7 @@ public class NotificationService {
 					"Revisamos seu tópico " + topic.getName() + " e vimos que pode ser melhorado!", "users/topics",
 					userService.findCurrentUser());
 		}
-
-		return save(notification);
+		
+		return notification != null ? save(notification) : null;
 	}
 }

@@ -102,6 +102,7 @@ public class UserRestController {
 		}
 
 		currentUser.setFullName(updatedUser.getFullName());
+		currentUser.setDescription(updatedUser.getDescription());
 		currentUser.setGender(updatedUser.getGender());
 		currentUser.setBirthDate(updatedUser.getBirthDate());
 

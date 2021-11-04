@@ -16,8 +16,11 @@ public class UserDTO {
 	private Long id;
 
 	@NotBlank
-	@Size(min = 2)
+	@Size(min = 2, max = 40)
 	private String fullName;
+
+	@Size(max = 100)
+	private String description;
 
 	@Email
 	private String email;
@@ -33,7 +36,7 @@ public class UserDTO {
 	private boolean isTeacher;
 
 	private boolean isAuthorizedTeacher;
-	
+
 	private boolean enabled;
 
 	private List<Subject> subjects = new ArrayList<>();
@@ -64,6 +67,14 @@ public class UserDTO {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getEmail() {
@@ -113,11 +124,11 @@ public class UserDTO {
 	public void setAuthorizedTeacher(boolean isAuthorizedTeacher) {
 		this.isAuthorizedTeacher = isAuthorizedTeacher;
 	}
-	
+
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}

@@ -48,6 +48,9 @@ public class User {
 	@Column(name = "full_name", length = 40)
 	private String fullName;
 
+	@Size(max = 100)
+	private String description;
+
 	@Email
 	@Column(unique = true)
 	private String email;
@@ -63,9 +66,9 @@ public class User {
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date birthDate;
-	
+
 	private boolean isTeacher;
-	
+
 	private boolean isAuthorizedTeacher;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -89,19 +92,15 @@ public class User {
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.user")
 	private List<SubjectUser> userSubjects = new ArrayList<>();
-	
+
 	@JsonIgnore
 	@ManyToMany
-	@JoinTable(
-		name = "teachers_subjects", 
-		joinColumns = @JoinColumn(name = "user_id"),
-		inverseJoinColumns = @JoinColumn(name = "subject_id")
-	)
+	@JoinTable(name = "teachers_subjects", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
 	private List<Subject> subjects = new ArrayList<>();
 
 	public User() {
 	}
-	
+
 	public User(String fullName, String email, String password) {
 		this.fullName = fullName;
 		this.email = email;
@@ -116,7 +115,8 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
-	public User(String fullName, String email, String password, Gender gender, Date birthDate, boolean isTeacher, List<Subject> subjects) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate, boolean isTeacher,
+			List<Subject> subjects) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
@@ -125,7 +125,7 @@ public class User {
 		this.isTeacher = isTeacher;
 		this.subjects = subjects;
 	}
-	
+
 	public static User fromDTO(UserDTO userDTO) {
 		return new User(userDTO.getFullName(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getGender(),
 				userDTO.getBirthDate(), userDTO.isTeacher(), userDTO.getSubjects());
@@ -145,6 +145,14 @@ public class User {
 
 	public void setFullName(String fullName) {
 		this.fullName = StringUtils.trimWhitespace(fullName);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getEmail() {
@@ -187,7 +195,7 @@ public class User {
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
-	
+
 	public boolean isTeacher() {
 		return isTeacher;
 	}
@@ -239,11 +247,11 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-	
+
 	public List<Subject> getSubjects() {
 		return subjects;
 	}
-	
+
 	public void setSubjects(List<Subject> subjects) {
 		this.subjects = subjects;
 	}
@@ -266,8 +274,7 @@ public class User {
 	}
 
 	public List<RewardUser> getUserRewards() {
-		return userRewards.stream()
-				.sorted(Comparator.comparing(RewardUser::getDate).reversed())
+		return userRewards.stream().sorted(Comparator.comparing(RewardUser::getDate).reversed())
 				.collect(Collectors.toList());
 	}
 

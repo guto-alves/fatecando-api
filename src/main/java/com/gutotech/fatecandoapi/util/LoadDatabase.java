@@ -83,17 +83,17 @@ public class LoadDatabase implements CommandLineRunner {
 		roleRepository.saveAll(Arrays.asList(user, teacher, admin));
 
 		// Users
-		User staff = new User("Equipe Fatecando", "staff@fatecando.com", passwordEncoder.encode("123"), Gender.MALE,
+		User staff = new User("Equipe Fatecando", "staff@fatecando.com", passwordEncoder.encode("1234"), Gender.MALE,
 				new Date());
 		staff.setEnabled(true);
 		staff.setRoles(Set.of(user, admin));
 		userService.save(staff);
 
-		User gustavo = new User("Gustavo Alves", "guto@guto.com", "123", Gender.MALE, new Date());
-		User kaik = new User("Kayk Vida", "kayk@g.com", "123", Gender.MALE, new Date());
-		User kaizer = new User("Kaizer Variola", "kaizer@gmail.com", "123", Gender.MALE, new Date());
+		User gustavo = new User("Gustavo Alves", "guto@guto.com", "1234", Gender.MALE, new Date());
+		User kaik = new User("Kayk Vida", "kayk@g.com", "1234", Gender.MALE, new Date());
+		User kaizer = new User("Kaizer Variola", "kaizer@gmail.com", "1234", Gender.MALE, new Date());
 		
-		User alice = new User("Alice Bianca", "alice@hotmail.com", "123", Gender.FEMALE, new Date());
+		User alice = new User("Alice Bianca", "alice@hotmail.com", "1234", Gender.FEMALE, new Date());
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, alice));
 
 		// Rewards
@@ -199,7 +199,7 @@ public class LoadDatabase implements CommandLineRunner {
 		}
 		questionRepository.saveAll(questions);
 		
-		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("123"), Gender.FEMALE, new Date(), true, Arrays.asList(alp));
+		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("1234"), Gender.FEMALE, new Date(), true, Arrays.asList(alp));
 		maria.setRoles(Set.of(teacher));
 		maria.setEnabled(true);
 		userService.save(maria);

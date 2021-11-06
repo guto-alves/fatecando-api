@@ -210,6 +210,19 @@ public class TopicRestController {
 
 		return ResponseEntity.noContent().build();
 	}
+	
+	@DeleteMapping("{id}/annotation")
+	public ResponseEntity<Void> deleteAnnotation(@PathVariable Long id) {
+		Topic topic = topicService.findById(id);
+
+		TopicUser topicUser = getUserInfo(topic);
+
+		topicUser.setAnnotation(null);
+
+		topicService.save(topic);
+
+		return ResponseEntity.noContent().build();
+	}
 
 	@PutMapping("{id}/review")
 	public ResponseEntity<Void> saveReview(@RequestBody Review review, @PathVariable Long id) {

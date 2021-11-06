@@ -30,7 +30,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.favorite = true order by t.subject.name, t.itemOrder")
 	List<Topic> findFavorites(String email);
 
-	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.annotation != '' or u.annotation != '<p><br></p>' order by t.subject.name, t.itemOrder")
+	@Query("select t from Topic t join t.topicUsers u where u.id.user.email = ?1 and u.annotation != '' order by t.subject.name, t.itemOrder")
 	List<Topic> findAnnotated(String email);
 
 	@Query("select t from Topic t where t.subject.id = ?2 and (t.itemOrder = ?1 - 1L or t.itemOrder = ?1 + 1L) order by t.itemOrder")

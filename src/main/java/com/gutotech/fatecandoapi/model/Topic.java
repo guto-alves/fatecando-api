@@ -199,7 +199,7 @@ public class Topic {
 		this.topicUsers = topicUsers;
 	}
 
-	public TopicUser getUser() {
+	public TopicUser getUserStats() {
 		String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		return topicUsers.stream() //

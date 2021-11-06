@@ -161,7 +161,7 @@ public class Subject {
 		this.subjectUsers = subjectUsers;
 	}
 
-	public SubjectUser getUser() {
+	public SubjectUser getUserStats() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		return subjectUsers.stream() //

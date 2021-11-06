@@ -3,6 +3,7 @@ package com.gutotech.fatecandoapi.model;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -70,11 +71,16 @@ public class SubjectUser {
 	}
 
 	public int getProgress() {
-		Set<Topic> topics = id.getSubject().getTopics();
+		Set<Topic> requiredTopics = id.getSubject().getTopics()
+				.stream()
+				.filter(Topic::isRequired)
+				.collect(Collectors.toSet());
 
-		long totalFinished = topics.stream().filter(topic -> topic.getUser().isFinished()).count();
+		long totalFinished = requiredTopics.stream()
+				.filter(topic -> topic.getUserStats().isFinished())
+				.count();
 
-		return totalFinished > 0 ? (int) ((double) totalFinished / topics.size() * 100) : 0;
+		return totalFinished > 0 ? (int) ((double) totalFinished / requiredTopics.size() * 100) : 0;
 	}
 
 	@Override

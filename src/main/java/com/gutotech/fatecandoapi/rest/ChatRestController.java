@@ -43,8 +43,14 @@ public class ChatRestController {
 		User user = userService.findCurrentUser();
 		return ResponseEntity.ok(chatService.findByUser(user));
 	}
+	
+	@GetMapping("private/{email}")
+	public ResponseEntity<Chat> getPrivateChat(@PathVariable String email) {
+		Chat chat = chatService.getPrivateChat(userService.findCurrentUser(), userService.findByEmail(email));
+		return ResponseEntity.ok(chat);
+	}
 
-	@GetMapping("{id}")
+	@GetMapping("{id}/messages")
 	public ResponseEntity<List<Message>> getMessages(@PathVariable Long id) {
 		Chat chat = chatService.findById(id);
 		User user = userService.findCurrentUser();

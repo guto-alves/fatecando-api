@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -64,6 +66,9 @@ public class Subject {
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.subject")
 	private List<SubjectUser> subjectUsers = new ArrayList<>();
+	
+	@ManyToMany(mappedBy = "subjects")
+	private List<User> teachers = new ArrayList<>();
 
 	public Subject() {
 	}
@@ -174,6 +179,12 @@ public class Subject {
 		return subjectUsers.stream() //
 				.filter(SubjectUser::isLiked) //
 				.count();
+	}
+	
+	public List<User> getTeachers() {
+		return teachers.stream() //
+				.filter(User::isAuthorizedTeacher) //
+				.collect(Collectors.toList());
 	}
 
 	@Override

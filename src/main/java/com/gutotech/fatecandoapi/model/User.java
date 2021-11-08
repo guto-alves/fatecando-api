@@ -95,7 +95,10 @@ public class User {
 
 	@JsonIgnore
 	@ManyToMany
-	@JoinTable(name = "teachers_subjects", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
+	@JoinTable(
+		name = "teachers_subjects", 
+		joinColumns = @JoinColumn(name = "user_id"),
+		inverseJoinColumns = @JoinColumn(name = "subject_id"))
 	private List<Subject> subjects = new ArrayList<>();
 
 	public User() {

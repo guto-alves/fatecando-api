@@ -3,7 +3,7 @@ package com.gutotech.fatecandoapi.rest;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -141,9 +141,22 @@ public class ForumRestController {
 	}
 
 	@GetMapping("{id}/comments")
-	public ResponseEntity<Set<Comment>> getComments(@PathVariable("id") Long id) {
+	public ResponseEntity<List<Comment>> getComments(@PathVariable("id") Long id) {
 		ForumThread forumThread = forumThreadService.findById(id);
-		return ResponseEntity.ok(forumThread.getComments());
+		List<Comment> comments = forumThread.getComments()
+				.stream()
+				.collect(Collectors.toList());
+		
+		Optional<Comment> acceptedComment = comments.stream()
+			.filter(Comment::isAccepted)
+			.findFirst();
+		if (acceptedComment.isPresent()) {
+			Comment comment = acceptedComment.get();
+			comments.remove(comment);
+			comments.add(0, comment);			
+		}
+		
+		return ResponseEntity.ok(comments);
 	}
 
 	@PostMapping("{id}/comments")

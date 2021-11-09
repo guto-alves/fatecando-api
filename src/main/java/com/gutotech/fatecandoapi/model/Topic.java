@@ -211,9 +211,11 @@ public class Topic {
 	@JsonIgnore
 	public List<Review> getReviews() {
 		return topicUsers.stream()
-					.filter(topicUser -> topicUser.getReview() != null && topicUser.getReview().getStars() != null)
-					.map(TopicUser::getReview)
-					.collect(Collectors.toList());
+				.filter(topicUser -> topicUser.getReview() != null && topicUser.getReview().getStars() != null)
+				.map(topicUser -> {
+					return topicUser.getReview().setUser(topicUser.getUser());
+				})
+				.collect(Collectors.toList());
 	}
 	
 	public long getTotalReviews() {

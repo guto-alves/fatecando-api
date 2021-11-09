@@ -229,7 +229,7 @@ public class TopicRestController {
 		Topic topic = topicService.findById(id);
 
 		TopicUser topicUser = getUserInfo(topic);
-
+		review.setDate(new Date());
 		topicUser.setReview(review);
 
 		topicService.save(topic);

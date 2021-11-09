@@ -4,6 +4,17 @@ This is the backend of the [Fatecando application](https://github.com/guto-alves
 
 ## Running locally
 
+### Database Configuration
+In its default configuration, Fatecando uses the PostgreSQL database which gets populated at startup with data. 
+Before running Fatecando, check the properties defined in application-postgresql.properties file.
+
+```
+spring.datasource.url=jdbc:postgresql://localhost:5432/fatecando
+spring.datasource.username=postgres
+spring.datasource.password=toor
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+```
+
 ### With [maven](https://maven.apache.org/install.html) command line
 
 ```

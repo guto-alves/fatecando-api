@@ -17,6 +17,9 @@ You can then access fatecando here: [http://localhost:8081](http://localhost:808
 ## Swagger REST API documentation presented here (after application start):
 [http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
 
+## Screenshot of the Fatecando Application Client
+<img width="1042" alt="everyone-screenshot" src="https://user-images.githubusercontent.com/48946749/140944337-07f98804-6fc6-4671-8f2a-9673247f6dd8.png">
+
 ## In case you find a bug/suggested improvement for Fatecando
 Our issue tracker is available here: https://github.com/guto-alves/fatecando-api/issues
 

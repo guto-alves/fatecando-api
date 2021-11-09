@@ -17,6 +17,9 @@ You can then access fatecando here: [http://localhost:8081](http://localhost:808
 ## Swagger REST API documentation presented here (after application start):
 [http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
 
+## In case you find a bug/suggested improvement for Fatecando
+Our issue tracker is available here: https://github.com/guto-alves/fatecando-web/issues
+
 ## Working with Fatecando in Eclipse / Spring Tool Suite (STS)
 
 ### Prerequisites

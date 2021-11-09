@@ -1,15 +1,15 @@
-# fatecando-api
+# Fatecando REST API
 
-This is the backend of the Fatecando application, providing only a REST API. <b>There is no UI</b>. The [fatecando-web](https://github.com/guto-alves/fatecando-web) project is a front-end application that consumes the REST API.
+This is the backend of the [Fatecando application](https://github.com/guto-alves/fatecando-web), providing only a REST API. <b>There is no UI</b>. The [fatecando-web](https://github.com/guto-alves/fatecando-web) project is a front-end application that consumes the REST API.
 
 ## Running locally
 
-### With maven command line
+### With [maven](https://maven.apache.org/install.html) command line
 
 ```
 https://github.com/guto-alves/fatecando-api.git
 cd fatecando-api
-./mvnw spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev,postgresql
 ```
 
 You can then access fatecando here: [http://localhost:8081](http://localhost:8081)
@@ -18,7 +18,7 @@ You can then access fatecando here: [http://localhost:8081](http://localhost:808
 [http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
 
 ## In case you find a bug/suggested improvement for Fatecando
-Our issue tracker is available here: https://github.com/guto-alves/fatecando-web/issues
+Our issue tracker is available here: https://github.com/guto-alves/fatecando-api/issues
 
 ## Working with Fatecando in Eclipse / Spring Tool Suite (STS)
 

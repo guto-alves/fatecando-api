@@ -24,7 +24,10 @@ public class OAuth2ServerConfiguration {
 	                    return fsi;
 	                }
 	            })
-	            .antMatchers(HttpMethod.GET, "/api/subjects")
+	            .antMatchers(HttpMethod.GET, "/" , "/swagger-resources/**",
+	                    "/swagger-ui.html", "/swagger-ui/**",
+	                    "/v2/api-docs",  "/webjars/**",  "favicon.ico",
+	                    "/api/subjects")
 	            	.permitAll()
             	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login")
             		.permitAll()

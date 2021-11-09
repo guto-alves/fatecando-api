@@ -98,7 +98,7 @@ public class UserRestController {
 		User currentUser = userService.findById(id);
 
 		if (currentUser != userService.findCurrentUser() && !userService.hasRoles(Roles.TEACHER, Roles.ADMIN)) {
-			throw new IllegalStateException("Você não tem permissão para realizar está ação.");
+			throw new IllegalStateException("Você não tem permissão para realizar esta ação.");
 		}
 
 		currentUser.setFullName(updatedUser.getFullName());

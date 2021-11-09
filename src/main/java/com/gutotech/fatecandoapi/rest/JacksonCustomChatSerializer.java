@@ -45,6 +45,7 @@ public class JacksonCustomChatSerializer extends StdSerializer<Chat> {
 		jgen.writeNumberField("id", chat.getLastMessage().getId());
 		jgen.writeStringField("body", chat.getLastMessage().getBody());
 		jgen.writeBooleanField("newMessage", chat.getLastMessage().isNewMessage());
+		jgen.writeStringField("date", formatter.format(chat.getLastMessage().getDate()));
 
 		jgen.writeObjectFieldStart("from"); // start from
 		jgen.writeNumberField("id", chat.getLastMessage().getFrom().getId());

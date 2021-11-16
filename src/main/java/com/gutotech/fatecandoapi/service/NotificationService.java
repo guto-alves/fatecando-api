@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gutotech.fatecandoapi.model.Notification;
+import com.gutotech.fatecandoapi.model.Question;
 import com.gutotech.fatecandoapi.model.Topic;
 import com.gutotech.fatecandoapi.model.UploadStatus;
 import com.gutotech.fatecandoapi.model.User;
@@ -16,9 +17,6 @@ public class NotificationService {
 
 	@Autowired
 	private NotificationRepository repository;
-
-	@Autowired
-	private UserService userService;
 
 	public Notification findById(Long id) {
 		return repository.findById(id).orElse(null);
@@ -31,7 +29,7 @@ public class NotificationService {
 	public Notification save(Notification notification) {
 		return repository.save(notification);
 	}
-	
+
 	public void saveAll(List<Notification> notifications) {
 		repository.saveAll(notifications);
 	}
@@ -40,18 +38,32 @@ public class NotificationService {
 		Notification notification = null;
 
 		if (topic.getStatus() == UploadStatus.APPROVED) {
-			notification = new Notification(
-					"Seu tópico " + topic.getName() + " foi aprovado e em breve estará disponível aos Fatecandos!",
-					"/topic/" + topic.getId(), userService.findCurrentUser());
+			notification = new Notification("Seu tópico " + topic.getName() + " foi aprovado!",
+					"/topic/" + topic.getId(), topic.getCreatedBy());
 		} else if (topic.getStatus() == UploadStatus.DISAPPROVED) {
 			notification = new Notification("Seu tópico " + topic.getName() + " foi considerado spam!", "/users/topics",
-					userService.findCurrentUser());
+					topic.getCreatedBy());
 		} else if (topic.getStatus() == UploadStatus.EDITABLE) {
 			notification = new Notification(
 					"Revisamos seu tópico " + topic.getName() + " e vimos que pode ser melhorado!", "users/topics",
-					userService.findCurrentUser());
+					topic.getCreatedBy());
 		}
-		
+
+		return notification != null ? save(notification) : null;
+	}
+
+	public Notification save(Question question) {
+		Notification notification = null;
+
+		if (question.getStatus() == UploadStatus.APPROVED) {
+			notification = new Notification("Questão aprovada!", "/questions/" + question.getId(), question.getUser());
+		} else if (question.getStatus() == UploadStatus.DISAPPROVED) {
+			notification = new Notification("Questão reprovada!", "/questions", question.getUser());
+		} else if (question.getStatus() == UploadStatus.EDITABLE) {
+			notification = new Notification("Revisamos sua questão e vimos que pode ser melhorada!", "/questions",
+					question.getUser());
+		}
+
 		return notification != null ? save(notification) : null;
 	}
 }

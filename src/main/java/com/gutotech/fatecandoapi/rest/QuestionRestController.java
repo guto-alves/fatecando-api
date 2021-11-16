@@ -33,6 +33,7 @@ import com.gutotech.fatecandoapi.model.User;
 import com.gutotech.fatecandoapi.model.assembler.QuestionModelAssembler;
 import com.gutotech.fatecandoapi.security.Roles;
 import com.gutotech.fatecandoapi.service.AnswerUtils;
+import com.gutotech.fatecandoapi.service.NotificationService;
 import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.QuestionTypeService;
 import com.gutotech.fatecandoapi.service.RewardService;
@@ -61,6 +62,9 @@ public class QuestionRestController {
 
 	@Autowired
 	private RewardService rewardService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	@Secured({ Roles.ADMIN, Roles.TEACHER })
 	@GetMapping
@@ -137,6 +141,7 @@ public class QuestionRestController {
 
 		if (hasAdminRole) {
 			currentQuestion.setStatus(updatedQuestion.getStatus());
+			notificationService.save(currentQuestion);
 		} else {
 			currentQuestion.setStatus(UploadStatus.EDITED);
 		}

@@ -237,7 +237,6 @@ public class TopicRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@Secured({ Roles.ADMIN, Roles.TEACHER })
 	@GetMapping("{id}/reviews")
 	public ResponseEntity<List<Review>> getReviews(@PathVariable Long id) {
 		Topic topic = topicService.findById(id);

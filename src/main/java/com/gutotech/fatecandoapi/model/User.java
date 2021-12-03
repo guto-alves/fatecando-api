@@ -28,6 +28,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -62,6 +63,7 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
+	@Past(message = "Data de nascimento deve ser menor do que a data atual.")
 	@Column(name = "birth_date")
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")

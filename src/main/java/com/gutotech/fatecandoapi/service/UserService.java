@@ -59,7 +59,6 @@ public class UserService {
 	public User register(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRoles(Set.of(roleRepository.findByName(Roles.STUDENT)));
-		user.setEnabled(true);
 		return repository.save(user);
 	}
 

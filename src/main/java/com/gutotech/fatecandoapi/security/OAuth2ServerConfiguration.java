@@ -29,7 +29,7 @@ public class OAuth2ServerConfiguration {
 	                    "/v2/api-docs",  "/webjars/**",  "favicon.ico",
 	                    "/api/subjects")
 	            	.permitAll()
-            	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login")
+            	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login", "/api/users/registration-confirm/**")
             		.permitAll()
             	.anyRequest()
  	            	.authenticated()

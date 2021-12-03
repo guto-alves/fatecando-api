@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ import com.gutotech.fatecandoapi.service.QuestionService;
 import com.gutotech.fatecandoapi.service.TicketService;
 import com.gutotech.fatecandoapi.service.TopicService;
 import com.gutotech.fatecandoapi.service.UserService;
+import com.gutotech.fatecandoapi.service.email.VerificationToken;
+import com.gutotech.fatecandoapi.service.email.VerificationTokenService;
 
 @RestController
 @RequestMapping("api/users")
@@ -57,9 +60,12 @@ public class UserRestController {
 
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private TicketService ticketService;
+
+	@Autowired
+	private VerificationTokenService verificationTokenService;
 
 	@GetMapping
 	public ResponseEntity<List<User>> getUsers() {
@@ -84,12 +90,32 @@ public class UserRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<User>> registerUser(@RequestBody @Valid UserRegistration userDto) {
+	public ResponseEntity<EntityModel<User>> registerUser(@RequestBody @Valid UserRegistration userDto,
+			HttpServletRequest request) {
 		User user = new User(userDto.getFullName(), userDto.getEmail(), userDto.getPassword());
 		EntityModel<User> entityModel = assembler.toModel(userService.register(user));
 
+		verificationTokenService.createVerificationToken(user);
+
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
+	}
+
+	@PostMapping("registration-confirm/{token}")
+	public ResponseEntity<VerificationToken> confirmRegistration(@PathVariable String token) {
+		VerificationToken verificationToken = verificationTokenService.findByToken(token);
+
+		if (verificationToken == null) {
+			throw new IllegalArgumentException("Token inválido ou talvez você já tenha usado");
+		}
+
+		User user = verificationToken.getUser();
+		user.setEnabled(true);
+		userService.save(user);
+
+		verificationTokenService.delete(verificationToken);
+
+		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("{id}")
@@ -199,7 +225,7 @@ public class UserRestController {
 		User user = userService.findCurrentUser();
 		return ResponseEntity.ok(questionService.findByUser(user));
 	}
-	
+
 	@GetMapping("me/tickets")
 	public ResponseEntity<List<Ticket>> getUserTickets() {
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();

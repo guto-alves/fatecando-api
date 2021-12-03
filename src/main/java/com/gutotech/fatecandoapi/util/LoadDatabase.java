@@ -56,7 +56,7 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Autowired
 	private QuestionRepository questionRepository;
-	
+
 	@Autowired
 	private QuestionTypeRepository questionTypeRepository;
 
@@ -71,7 +71,7 @@ public class LoadDatabase implements CommandLineRunner {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	private static SecureRandom random = new SecureRandom();
 
 	@Override
@@ -84,16 +84,16 @@ public class LoadDatabase implements CommandLineRunner {
 
 		// Users
 		User staff = new User("Equipe Fatecando", "staff@fatecando.com", passwordEncoder.encode("1234"), Gender.MALE,
-				new Date());
+				new Date(), true);
 		staff.setEnabled(true);
 		staff.setRoles(Set.of(user, admin));
 		userService.save(staff);
 
-		User gustavo = new User("Gustavo Alves", "guto@guto.com", "1234", Gender.MALE, new Date());
-		User kaik = new User("Kayk Vida", "kayk@g.com", "1234", Gender.MALE, new Date());
-		User kaizer = new User("Kaizer Variola", "kaizer@gmail.com", "1234", Gender.MALE, new Date());
-		
-		User alice = new User("Alice Bianca", "alice@hotmail.com", "1234", Gender.FEMALE, new Date());
+		User gustavo = new User("Gustavo Alves", "guto@guto.com", "1234", Gender.MALE, new Date(), true);
+		User kaik = new User("Kayk Vida", "kayk@g.com", "1234", Gender.MALE, new Date(), true);
+		User kaizer = new User("Kaizer Variola", "kaizer@gmail.com", "1234", Gender.MALE, new Date(), true);
+
+		User alice = new User("Alice Bianca", "alice@hotmail.com", "1234", Gender.FEMALE, new Date(), true);
 		userService.registerAll(Arrays.asList(gustavo, kaik, kaizer, alice));
 
 		// Rewards
@@ -180,7 +180,8 @@ public class LoadDatabase implements CommandLineRunner {
 				new Comment("Comment 6", alice, forumThread2), new Comment("Comment 7", alice, forumThread1)));
 
 		// Questions
-		List<QuestionType> questionTypes = List.of(new QuestionType("QUIZ"), new QuestionType("TEST"), new QuestionType("GAME"));
+		List<QuestionType> questionTypes = List.of(new QuestionType("QUIZ"), new QuestionType("TEST"),
+				new QuestionType("GAME"));
 		questionTypeRepository.saveAll(questionTypes);
 		List<Question> questions = new ArrayList<>();
 		for (int i = 0; i <= 100; i++) {
@@ -198,10 +199,10 @@ public class LoadDatabase implements CommandLineRunner {
 			questions.add(question);
 		}
 		questionRepository.saveAll(questions);
-		
-		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("1234"), Gender.FEMALE, new Date(), true, Arrays.asList(alp));
+
+		User maria = new User("Maria Silva", "maria@hotmail.com", passwordEncoder.encode("1234"), Gender.FEMALE,
+				new Date(), true /* enabled */, true /* isTeacher */, Arrays.asList(alp));
 		maria.setRoles(Set.of(teacher));
-		maria.setEnabled(true);
 		userService.save(maria);
 	}
 

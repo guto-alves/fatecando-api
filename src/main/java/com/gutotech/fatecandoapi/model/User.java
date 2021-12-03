@@ -97,10 +97,7 @@ public class User {
 
 	@JsonIgnore
 	@ManyToMany
-	@JoinTable(
-		name = "teachers_subjects", 
-		joinColumns = @JoinColumn(name = "user_id"),
-		inverseJoinColumns = @JoinColumn(name = "subject_id"))
+	@JoinTable(name = "teachers_subjects", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
 	private List<Subject> subjects = new ArrayList<>();
 
 	public User() {
@@ -112,28 +109,30 @@ public class User {
 		this.password = password;
 	}
 
-	public User(String fullName, String email, String password, Gender gender, Date birthDate) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate, boolean enabled) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
 		this.birthDate = birthDate;
+		this.enabled = enabled;
 	}
 
-	public User(String fullName, String email, String password, Gender gender, Date birthDate, boolean isTeacher,
-			List<Subject> subjects) {
+	public User(String fullName, String email, String password, Gender gender, Date birthDate, boolean enabled,
+			boolean isTeacher, List<Subject> subjects) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
 		this.birthDate = birthDate;
+		this.enabled = enabled;
 		this.isTeacher = isTeacher;
 		this.subjects = subjects;
 	}
 
 	public static User fromDTO(UserDTO userDTO) {
 		return new User(userDTO.getFullName(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getGender(),
-				userDTO.getBirthDate(), userDTO.isTeacher(), userDTO.getSubjects());
+				userDTO.getBirthDate(), userDTO.isEnabled(), userDTO.isTeacher(), userDTO.getSubjects());
 	}
 
 	public Long getId() {

@@ -27,7 +27,7 @@ public class VerificationTokenService {
 		VerificationToken verificationToken = new VerificationToken(token, user);
 		verificationTokenRepository.save(verificationToken);
 
-		emailService.sendVerificationTokenEmail(verificationToken);
+		emailService.sendVerificationToken(verificationToken);
 	}
 
 	public void delete(VerificationToken verificationToken) {

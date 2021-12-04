@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<title th:remove="all">Order Confirmation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div>
+		Obrigado por se inscrever no Fatecando! Você deve seguir este link
+		para ativar sua conta:
+
+		<p th:text="${link}">link</p>
+
+		<p>Divirta-se e não hesite em nos contactar com os seus comentários. </p>
+			
+		<div>
+			<span>Equipe Fatecando</span>
+			<br>
+			<span>https://github.com/guto-alves/fatecando-web<span>
+			<br>
+			<span>https://github.com/guto-alves/fatecando-api<span>
+		</div>
+	</div>
+</body>
+</html>

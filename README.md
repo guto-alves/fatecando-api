@@ -1,6 +1,6 @@
 # Fatecando REST API
 
-This is the backend of the [Fatecando application](https://github.com/guto-alves/fatecando-web), providing only a REST API. <b>There is no UI</b>. The [fatecando-web](https://github.com/guto-alves/fatecando-web) project is a front-end application that consumes the REST API.
+This is the backend of the [Fatecando application](https://github.com/guto-alves/fatecando), providing only a REST API. <b>There is no UI</b>. The [fatecando-web](https://github.com/guto-alves/fatecando) project is a front-end application that consumes the REST API.
 
 ## Running locally
 

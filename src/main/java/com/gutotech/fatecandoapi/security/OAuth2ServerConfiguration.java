@@ -24,9 +24,9 @@ public class OAuth2ServerConfiguration {
 	                    return fsi;
 	                }
 	            })
-	            .antMatchers(HttpMethod.GET, "/" , "/swagger-resources/**",
+	            .antMatchers(HttpMethod.GET, "/", "/swagger-resources/**",
 	                    "/swagger-ui.html", "/swagger-ui/**",
-	                    "/v2/api-docs",  "/webjars/**",  "favicon.ico",
+	                    "/v2/api-docs", "/webjars/**", "favicon.ico",
 	                    "/api/subjects")
 	            	.permitAll()
             	.antMatchers(HttpMethod.POST, "/api/users", "/api/users/login", "/api/users/registration-confirm/**")
@@ -43,10 +43,7 @@ public class OAuth2ServerConfiguration {
                 .csrf()
                     .disable()
                 .cors()
-                	.disable()
-                .headers()
-                	.frameOptions()
-                		.disable();
+                	.disable();
         }
     }
 }

@@ -50,7 +50,8 @@ public class Topic {
 
 	private boolean required;
 
-	@Column(name = "item_order", columnDefinition = "SERIAL", insertable = false)
+	// TODO: columnDefinition = "SERIAL" does not work with h2 database
+	@Column(name = "item_order" /*, columnDefinition = "SERIAL", insertable = false*/)
 	private long itemOrder;
 
 	@NotNull

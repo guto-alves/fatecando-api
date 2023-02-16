@@ -24,8 +24,10 @@ public class OAuth2ServerConfiguration {
 	                    return fsi;
 	                }
 	            })
+	            .antMatchers("/h2-console/**")
+	            	.permitAll()
 	            .antMatchers(HttpMethod.GET, "/", "/swagger-resources/**",
-	                    "/swagger-ui.html", "/swagger-ui/**",
+	                    "/swagger-ui.html", "/swagger-ui", "/swagger-ui/**",
 	                    "/v2/api-docs", "/webjars/**", "favicon.ico",
 	                    "/api/subjects")
 	            	.permitAll()
@@ -43,6 +45,8 @@ public class OAuth2ServerConfiguration {
                 .csrf()
                     .disable()
                 .cors()
+                	.disable()
+                .headers().frameOptions()
                 	.disable();
         }
     }

@@ -3,8 +3,23 @@
 This is the backend of the [Fatecando application](https://github.com/guto-alves/fatecando), providing only a REST API. <b>There is no UI</b>. The [fatecando-web](https://github.com/guto-alves/fatecando) project is a front-end application that consumes the REST API.
 
 ## Running locally
+### With maven command line
+```
+git clone https://github.com/guto-alves/fatecando-api.git
+cd fatecando-api
+mvnw spring-boot:run -Dspring-boot.run.profiles=dev,h2
+```
 
-### Database Configuration
+You can then access fatecando here: [http://localhost:8081](http://localhost:8081)
+
+## Swagger REST API documentation presented here (after application start):
+You can reach the swagger UI with this URL [http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
+
+## In case you find a bug/suggested improvement for Fatecando
+Our issue tracker is available here: https://github.com/guto-alves/fatecando-api/issues
+
+
+## Database Configuration
 In its default configuration, Fatecando uses the PostgreSQL database which gets populated at startup with data. 
 Before running Fatecando, check the properties defined in application-postgresql.properties file.
 
@@ -14,25 +29,6 @@ spring.datasource.username=postgres
 spring.datasource.password=toor
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 ```
-
-### With [maven](https://maven.apache.org/install.html) command line
-
-```
-https://github.com/guto-alves/fatecando-api.git
-cd fatecando-api
-mvn spring-boot:run -Dspring-boot.run.profiles=dev,postgresql
-```
-
-You can then access fatecando here: [http://localhost:8081](http://localhost:8081)
-
-## Swagger REST API documentation presented here (after application start):
-[http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
-
-## Screenshot of the Fatecando Application Client
-<img width="1042" alt="everyone-screenshot" src="https://user-images.githubusercontent.com/48946749/140944337-07f98804-6fc6-4671-8f2a-9673247f6dd8.png">
-
-## In case you find a bug/suggested improvement for Fatecando
-Our issue tracker is available here: https://github.com/guto-alves/fatecando-api/issues
 
 ## Working with Fatecando in Eclipse / Spring Tool Suite (STS)
 
